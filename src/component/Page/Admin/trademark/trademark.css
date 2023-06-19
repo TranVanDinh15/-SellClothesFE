@@ -1,0 +1,12 @@
+.btnButton {
+    display: flex;
+    align-items: center;
+}
+.titleTable {
+    display: flex;
+    justify-content: space-between;
+}
+.titleTable__Heading {
+    font-size: 16px;
+    font-weight: 500;
+}

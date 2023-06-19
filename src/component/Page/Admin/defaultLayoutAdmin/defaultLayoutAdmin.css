@@ -1,0 +1,15 @@
+.titleOption {
+    margin-left: 26px;
+    font-size: 16px;
+    margin-bottom: 10px;
+    color: #ffffffa6;
+}
+.SearchAdminContainer {
+    height: 100%;
+    width: 26%;
+    display: flex;
+    align-items: center;
+}
+.userAdmin {
+    margin-left: 20px;
+}
