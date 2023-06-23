@@ -34,6 +34,7 @@ interface DataTypeProduct {
     sold: string;
     createdAt: string;
 }
+
 interface PropsTable {
     name: string;
     title: () => ReactNode;
@@ -213,11 +214,58 @@ const CustomTable = ({ name, title, dataSource, paginationConfig, showModalUpdat
             dataIndex: 'createdAt',
         },
     ];
+    // collums cua CategoryProduct
+    const columnsCategory: ColumnsType<DataTypeBrand> = [
+        {
+            title: 'Loại quần áo',
+            dataIndex: 'value',
+        },
+        {
+            title: 'Ngày tạo',
+            dataIndex: 'createAt',
+            render: (value, record, index) => <span>{covertCreateAt(value)}</span>,
+        },
+        {
+            title: 'Action',
+            dataIndex: 'updatedAt',
+            render: (text, record, index) => (
+                <div>
+                    <Button
+                        icon={<HiOutlinePencilSquare />}
+                        type="text"
+                        onClick={() => {
+                            // showModalUpdate();
+                            // setDataUpdate(record);
+                        }}
+                    ></Button>
+                    <DeleteCustom
+                        title="Xóa thương hiệu"
+                        description="Bạn chắc chắn muốn xóa?"
+                        confirm={confirmDeleteBrand}
+                        cancel={cancelDeleteBrand}
+                    >
+                        <Button
+                            icon={<BsTrash />}
+                            type="text"
+                            onClick={() => {
+                                // setIdDelete(record?.id);
+                            }}
+                        ></Button>
+                    </DeleteCustom>
+                </div>
+            ),
+        },
+    ];
     return (
         <React.Fragment>
             {name == 'Users' ? <Table columns={columns} dataSource={data} onChange={onChange} title={title} /> : ''}
             {name == 'Trademark' ? (
                 <Table columns={columnsBrand} dataSource={dataSource} title={title} pagination={paginationConfig} />
+            ) : (
+                ''
+            )}
+            {name == 'Category' ? (
+                <Table columns={columnsCategory} dataSource={dataSource} title={title} pagination={paginationConfig} />
             ) : (
                 ''
             )}

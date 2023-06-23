@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import Content from '../Admin/common/Content/Content';
-import { getListProduct } from '../../utils/Api/Api';
+import { createCategory, getAllCategory } from '../../utils/Api/Api';
 import IsLoading from '../Admin/common/IsLoading/IsLoading';
 import CustomTable from '../../Table/TableCustom';
 import { PlusOutlined } from '@ant-design/icons';
-import { Button, Col, Form, Input, Modal, Row, TablePaginationConfig } from 'antd';
-
+import { Button, Col, Form, Input, Modal, Row, TablePaginationConfig, message } from 'antd';
 export default function ProductCategory() {
     const [page, setPage] = useState<number>(1);
     const [pageSize, setPageSize] = useState<number>(5);
@@ -14,26 +13,23 @@ export default function ProductCategory() {
     const [isModalUpdate, setIsModalUpdate] = useState(false);
     const [dataTable, setDataTable] = useState<[]>([]);
     const [total, setTotal] = useState<any>();
-
-    const getListProductFun = async () => {
-        const response = await getListProduct(page, pageSize);
+    const [isFetchBrand, setIsFetchBrand] = useState(false);
+    const getListCategoryFun = async () => {
+        const response = await getAllCategory(page, pageSize);
         if (response && response.status == 200) {
-            const dataTableMap = response.data.data.map((item: any, index: any) => {
+            const filterData = response.data.data.map((item: any, index: number) => {
                 return {
                     key: index,
                     id: item?.id,
-                    name: item?.name,
-                    contentMarkdown: item?.contentMarkdown,
-                    contentHtml: item?.contentHtml,
-                    madeBy: item?.madeBy,
-                    material: item?.material,
-                    brandId: item?.brandId,
-                    sold: item?.sold,
-                    createdAt: item?.createdAt,
+                    value: item?.value,
+                    createAt: item?.createdAt,
+                    code: item?.code,
+                    type: item?.type,
                 };
             });
             setTotal(response.data.meta.totalItems);
-            setDataTable(dataTableMap);
+            setIsLoading(false);
+            setDataTable(filterData);
         }
     };
     const handleOkAdd = () => {
@@ -46,7 +42,25 @@ export default function ProductCategory() {
         setIsModalOpenAdd(true);
     };
     // Khi submit form Tạo product
-    const onFinishAdd = async (values: any) => {};
+    const onFinishAdd = async (values: any) => {
+        const data = {
+            type: 'CATEGORY',
+            value: values.value,
+        };
+        setIsLoading(true);
+        const response = await createCategory(data);
+        console.log(response);
+        if (response && response.status == 201) {
+            message.success('Thành công!');
+            if (isFetchBrand) {
+                setIsFetchBrand(false);
+            } else {
+                setIsFetchBrand(true);
+            }
+            handleCancelAdd();
+            setIsLoading(false);
+        }
+    };
     //   Khi xảy ra lỗi trong form Tạo Product
     const onFinishFailedAdd = (errorInfo: any) => {
         console.log('Failed:', errorInfo);
@@ -56,15 +70,14 @@ export default function ProductCategory() {
         return (
             <div className="titleTable">
                 <div className="titleTable__Heading">
-                    <span>Danh sách thương hiệu</span>
+                    <span>Loại sản phẩm </span>
                 </div>
                 <div className="titleTable__btn">
                     <Button type="primary" icon={<PlusOutlined />} className="btnButton" onClick={showModalAdd}>
-                        Thêm thương hiệu
+                        Thêm loại sản phẩm
                     </Button>
-
                     <Modal
-                        title="Tạo thương hiệu"
+                        title="Tạo loại sản phẩm"
                         open={isModalOpenAdd}
                         onOk={handleOkAdd}
                         onCancel={handleCancelAdd}
@@ -73,35 +86,23 @@ export default function ProductCategory() {
                         <Form
                             name="basic"
                             labelCol={{ span: 24 }}
-                            // style={{ minWidth: 700 }}
+                            wrapperCol={{ span: 24 }}
+                            style={{ maxWidth: 600 }}
                             initialValues={{ remember: true }}
                             onFinish={onFinishAdd}
                             onFinishFailed={onFinishFailedAdd}
                             autoComplete="off"
                         >
-                            <Row gutter={16}>
-                                <Col span={12}>
-                                    <Form.Item
-                                        label="Tên sản phẩm "
-                                        name="name"
-                                        rules={[{ required: true, message: 'Vui lòng nhập tên thương hiệu!' }]}
-                                    >
-                                        <Input placeholder="VD: Yody...." width={'100%'} />
-                                    </Form.Item>
-                                </Col>
-                                <Col span={12}>
-                                    <Form.Item
-                                        label="Tên sản phẩm "
-                                        name="name"
-                                        rules={[{ required: true, message: 'Vui lòng nhập tên thương hiệu!' }]}
-                                    >
-                                        <Input placeholder="VD: Yody...." />
-                                    </Form.Item>
-                                </Col>
-                            </Row>
+                            <Form.Item
+                                label="Tên loại sản phẩm"
+                                name="value"
+                                rules={[{ required: true, message: 'Vui lòng nhập tên thương hiệu!' }]}
+                            >
+                                <Input placeholder="VD: Sweater...." />
+                            </Form.Item>
 
                             <Form.Item
-                                wrapperCol={{ span: 24 }}
+                                // wrapperCol={{ offset: 8, span: 16 }}
                                 style={{
                                     display: 'flex',
                                     justifyContent: 'center',
@@ -142,16 +143,16 @@ export default function ProductCategory() {
         setIsModalUpdate(true);
     };
     useEffect(() => {
-        getListProductFun();
-    }, [page, pageSize]);
+        getListCategoryFun();
+    }, [page, pageSize, isFetchBrand]);
     return (
-        <Content title={'Quản lý sản phẩm'}>
+        <Content title={'Loại sản phẩm'}>
             <div className="productWrapper">
                 {isLoading ? (
                     <IsLoading />
                 ) : (
                     <CustomTable
-                        name="Product"
+                        name="Category"
                         title={TitleTable}
                         dataSource={dataTable}
                         paginationConfig={paginationConfig}

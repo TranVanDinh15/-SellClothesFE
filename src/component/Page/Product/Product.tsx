@@ -5,6 +5,7 @@ import IsLoading from '../Admin/common/IsLoading/IsLoading';
 import CustomTable from '../../Table/TableCustom';
 import { PlusOutlined } from '@ant-design/icons';
 import { Button, Col, Form, Input, Modal, Row, TablePaginationConfig } from 'antd';
+import SelectCustomer from '../Admin/common/Select/Select';
 
 export default function Product() {
     const [page, setPage] = useState<number>(1);
@@ -69,11 +70,12 @@ export default function Product() {
                         onOk={handleOkAdd}
                         onCancel={handleCancelAdd}
                         footer
+                        width={'80%'}
                     >
                         <Form
                             name="basic"
                             labelCol={{ span: 24 }}
-                            // style={{ minWidth: 700 }}
+                            // style={{ width: 700 }}
                             initialValues={{ remember: true }}
                             onFinish={onFinishAdd}
                             onFinishFailed={onFinishFailedAdd}
@@ -99,7 +101,56 @@ export default function Product() {
                                     </Form.Item>
                                 </Col>
                             </Row>
-
+                            <Row gutter={16} style={{}}>
+                                <Col span={12}>
+                                    <Form.Item
+                                        label="Tên sản phẩm"
+                                        name="name"
+                                        rules={[{ required: true, message: 'Vui lòng nhập tên thương hiệu!' }]}
+                                    >
+                                        <SelectCustomer
+                                            option={[
+                                                {
+                                                    value: 'jack',
+                                                    label: 'Jack',
+                                                },
+                                                {
+                                                    value: 'lucy',
+                                                    label: 'Lucy',
+                                                },
+                                                {
+                                                    value: 'tom',
+                                                    label: 'Tom',
+                                                },
+                                            ]}
+                                        />
+                                    </Form.Item>
+                                </Col>
+                                <Col span={12}>
+                                    <Form.Item
+                                        label="Tên sản phẩm"
+                                        name="name"
+                                        rules={[{ required: true, message: 'Vui lòng nhập tên thương hiệu!' }]}
+                                    >
+                                        <SelectCustomer
+                                            option={[
+                                                {
+                                                    value: 'jack',
+                                                    label: 'Jack',
+                                                },
+                                                {
+                                                    value: 'lucy',
+                                                    label: 'Lucy',
+                                                },
+                                                {
+                                                    value: 'tom',
+                                                    label: 'Tom',
+                                                },
+                                            ]}
+                                        />
+                                    </Form.Item>
+                                </Col>
+                            </Row>
                             <Form.Item
                                 wrapperCol={{ span: 24 }}
                                 style={{

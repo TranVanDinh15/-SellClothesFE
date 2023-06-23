@@ -19,6 +19,14 @@ export const deleteBrand = (id: any) => {
 export const loginAdmin = (data: any) => {
     return AxiosInstance.post('/auth/login', data);
 };
+// get category
+export const getAllCategory = (page: any, pagesize: any) => {
+    return AxiosInstance.get(`/all-code/CATEGORY?page=${page}&size=${pagesize}`);
+};
+// Tạo category
+export const createCategory = (data: any) => {
+    return AxiosInstance.post('/all-code', data);
+};
 // get Product by page and size
 export const getListProduct = (page: any, size: any) => {
     return AxiosInstance.get(`/product?page=${page}&size=${size}`);
