@@ -11,8 +11,12 @@ import ListUser from './component/Page/Admin/User/listUser';
 import DefaultLayoutClient from './component/Page/Client/defaultLayoutClient/defaultLayoutClient';
 import LoginAdmin from './component/Page/Admin/LoginAdmin/LoginAdmin';
 import TrademarkManage from './component/Page/Admin/trademark/trademark';
+import Product from './component/Page/Product/Product';
+import ProductCategory from './component/Page/Product/CategoryProduct';
 
 function App() {
+    const token = localStorage.getItem('token');
+    console.log(token);
     const router = createBrowserRouter([
         {
             path: '/Admin',
@@ -45,6 +49,16 @@ function App() {
                 {
                     path: 'TradeMark',
                     element: <TrademarkManage />,
+                    errorElement: <NotFound type={'notRole'} />,
+                },
+                {
+                    path: 'Product',
+                    element: <Product />,
+                    errorElement: <NotFound type={'notRole'} />,
+                },
+                {
+                    path: 'Product/Category',
+                    element: <ProductCategory />,
                     errorElement: <NotFound type={'notRole'} />,
                 },
             ],

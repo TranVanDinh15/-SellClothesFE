@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { DesktopOutlined, FileOutlined, PieChartOutlined, TeamOutlined, UserOutlined } from '@ant-design/icons';
 import { FaUserAlt, FaBloggerB } from 'react-icons/fa';
 import { AiFillTrademarkCircle } from 'react-icons/ai';
-
+import { RiProductHuntLine } from 'react-icons/ri';
 import type { MenuProps } from 'antd';
 import { Breadcrumb, Image, Layout, Menu, theme } from 'antd';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
@@ -25,18 +25,21 @@ function getItem(label: React.ReactNode, key: React.Key, icon?: React.ReactNode,
 }
 
 const items: MenuItem[] = [
-    getItem('Trang chủ', '/Admin', <PieChartOutlined />),
-    getItem('Quản lý thương hiệu', '/Admin/TradeMark', <AiFillTrademarkCircle />),
-    getItem('Quản lý người dùng', '/Admin/User', <FaUserAlt />, [
+    getItem('Trang chủ', '/Admin', <PieChartOutlined className="iconSidebarCss" />),
+    getItem('Quản lý thương hiệu', '/Admin/TradeMark', <AiFillTrademarkCircle className="iconSidebarCss" />),
+    getItem('Quản lý sản phẩm', '/Admin/Product', <RiProductHuntLine className="iconSidebarCss" />, [
+        getItem('Danh sách sản phẩm', '/Admin/Product'),
+        getItem('Loại quần áo', '/Admin/Product/Category'),
+        getItem('Màu sắc', '/Admin/Product/Color'),
+    ]),
+    getItem('Quản lý người dùng', '/Admin/User', <FaUserAlt className="iconSidebarCss" />, [
         getItem('Danh sách Users', '/Admin/User/listUser'),
         getItem('Thêm User', '/Admin/Blog/addBlog'),
     ]),
-
-    getItem('Quản lý bài đăng', '/Admin/Blog', <FaBloggerB />, [
+    getItem('Quản lý bài đăng', '/Admin/Blog', <FaBloggerB className="iconSidebarCss" />, [
         getItem('Danh sách bài đăng', '/Admin/Blog/listBlog'),
         getItem('Thêm bài đăng', '/Admin/Blog/addBlog'),
     ]),
-
     // getItem('User', 'sub1', <UserOutlined />, [getItem('Tom', '3'), getItem('Bill', '4'), getItem('Alex', '5')]),
     // getItem('Team', 'sub2', <TeamOutlined />, [getItem('Team 1', '6'), getItem('Team 2', '8')]),
 ];
@@ -99,7 +102,7 @@ export default function DefaultLayoutAdmin() {
                 <Content style={{ height: '100vh' }}>
                     <Outlet />
                 </Content>
-                <Footer style={{ textAlign: 'center' }}>Ant Design ©2023 Created by Ant UED</Footer>
+                {/* <Footer style={{ textAlign: 'center' }}>Ant Design ©2023 Created by Ant UED</Footer> */}
             </Layout>
         </Layout>
     );

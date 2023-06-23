@@ -10,3 +10,6 @@
     font-size: 16px;
     font-weight: 500;
 }
+.brandWrapper {
+    min-height: 100vh;
+}

@@ -1,9 +1,13 @@
 import React, { ReactNode } from 'react';
-import { Button, Table } from 'antd';
-import type { ColumnsType, TableProps, ColumnType } from 'antd/es/table';
+
+import { Button, Table, message } from 'antd';
+import type { ColumnsType, TableProps, ColumnType, TablePaginationConfig } from 'antd/es/table';
 import { HiOutlinePencilSquare } from 'react-icons/hi2';
 import { BsTrash } from 'react-icons/bs';
 import { covertCreateAt } from '../../component/Page/Admin/common/method/method';
+import { GetContext } from '../Page/Admin/common/Context/Context';
+import DeleteCustom from '../Page/Admin/common/Delete/DeleteCustom';
+import { deleteBrand } from '../utils/Api/Api';
 interface DataType {
     key: React.Key;
     name: string;
@@ -12,14 +16,30 @@ interface DataType {
     english: number;
 }
 interface DataTypeBrand {
-    // key: React.Key;
+    key: React.Key;
     value: string;
+    createdAt: string;
+    code: any;
+    id: any;
+}
+interface DataTypeProduct {
+    key: React.Key;
+    id: any;
+    name: string;
+    contentMarkdown: string;
+    contentHtml: string;
+    madeBy: string;
+    material: string;
+    brandId: string;
+    sold: string;
     createdAt: string;
 }
 interface PropsTable {
     name: string;
     title: () => ReactNode;
     dataSource: [];
+    paginationConfig: TablePaginationConfig;
+    showModalUpdate: () => void;
 }
 const columns: ColumnsType<DataType> = [
     {
@@ -51,27 +71,7 @@ const columns: ColumnsType<DataType> = [
         },
     },
 ];
-const columnsBrand: ColumnsType<DataTypeBrand> = [
-    {
-        title: 'Tên thương hiệu',
-        dataIndex: 'value',
-    },
-    {
-        title: 'Ngày thành lập',
-        dataIndex: 'createAt',
-        render: (value, record, index) => <span>{covertCreateAt(value)}</span>,
-    },
-    {
-        title: 'Action',
-        dataIndex: 'updatedAt',
-        render: (text) => (
-            <div>
-                <Button icon={<BsTrash />} type="text"></Button>
-                <Button icon={<HiOutlinePencilSquare />} type="text"></Button>
-            </div>
-        ),
-    },
-];
+
 const data: DataType[] = [
     {
         key: '1',
@@ -107,12 +107,125 @@ const onChange: TableProps<DataType>['onChange'] = (pagination, filters, sorter,
     console.log('params', pagination, filters, sorter, extra);
 };
 
-const CustomTable = ({ name, title, dataSource }: PropsTable) => {
-    console.log(dataSource);
+const CustomTable = ({ name, title, dataSource, paginationConfig, showModalUpdate }: PropsTable) => {
+    const { dataUpdate, setDataUpdate, isDelete, setIsDelete, idDelete, setIdDelete }: any = GetContext();
+    console.log(idDelete);
+    const confirmDeleteBrand = async (e: any) => {
+        const response = await deleteBrand(idDelete);
+        if (response && response.status == 200) {
+            console.log(response);
+            message.success('Xóa thành công !');
+            if (isDelete) {
+                setIsDelete(false);
+            } else {
+                setIsDelete(true);
+            }
+        }
+    };
+
+    const cancelDeleteBrand = (e: any) => {
+        console.log(e);
+        message.error('Click on No');
+    };
+    const columnsBrand: ColumnsType<DataTypeBrand> = [
+        {
+            title: 'Tên thương hiệu',
+            dataIndex: 'value',
+        },
+        {
+            title: 'Ngày thành lập',
+            dataIndex: 'createAt',
+            render: (value, record, index) => <span>{covertCreateAt(value)}</span>,
+        },
+        {
+            title: 'Action',
+            dataIndex: 'updatedAt',
+            render: (text, record, index) => (
+                <div>
+                    <Button
+                        icon={<HiOutlinePencilSquare />}
+                        type="text"
+                        onClick={() => {
+                            showModalUpdate();
+                            setDataUpdate(record);
+                        }}
+                    ></Button>
+                    <DeleteCustom
+                        title="Xóa thương hiệu"
+                        description="Bạn chắc chắn muốn xóa?"
+                        confirm={confirmDeleteBrand}
+                        cancel={cancelDeleteBrand}
+                    >
+                        <Button
+                            icon={<BsTrash />}
+                            type="text"
+                            onClick={() => {
+                                setIdDelete(record?.id);
+                            }}
+                        ></Button>
+                    </DeleteCustom>
+                </div>
+            ),
+        },
+    ];
+    // Collums của Product
+    const collumsProduct: ColumnType<DataTypeProduct>[] = [
+        {
+            title: 'ID',
+            dataIndex: 'id',
+        },
+        {
+            title: 'Tên sản phẩm',
+            dataIndex: 'name',
+        },
+        {
+            title: 'Mô tả ',
+            dataIndex: 'contentMarkdown',
+            render: () => {
+                return <Button>Xem</Button>;
+            },
+        },
+        {
+            title: 'Bảng Nháp',
+            dataIndex: 'contentHtml',
+            render: () => {
+                return <Button>Xem</Button>;
+            },
+        },
+        {
+            title: 'Nơi sản xuât',
+            dataIndex: 'madeBy',
+        },
+        {
+            title: 'Chất liệu',
+            dataIndex: 'material',
+        },
+        {
+            title: 'Thương hiệu',
+            dataIndex: 'brandId',
+        },
+        {
+            title: 'Số lượng bán',
+            dataIndex: 'sold',
+        },
+        {
+            title: 'Ngày tạo',
+            dataIndex: 'createdAt',
+        },
+    ];
     return (
         <React.Fragment>
             {name == 'Users' ? <Table columns={columns} dataSource={data} onChange={onChange} title={title} /> : ''}
-            {name == 'Trademark' ? <Table columns={columnsBrand} dataSource={dataSource} title={title} /> : ''}
+            {name == 'Trademark' ? (
+                <Table columns={columnsBrand} dataSource={dataSource} title={title} pagination={paginationConfig} />
+            ) : (
+                ''
+            )}
+            {name == 'Product' ? (
+                <Table columns={collumsProduct} dataSource={dataSource} title={title} pagination={paginationConfig} />
+            ) : (
+                ''
+            )}
         </React.Fragment>
     );
 };

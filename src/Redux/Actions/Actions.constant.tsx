@@ -1,0 +1,6 @@
+export const authConstant = {
+    LOGIN__REQUEST: 'LOGIN__REQUEST',
+    LOGIN__FAILUE: 'LOGIN__FAILUE',
+    LOGOUT__SUCCESS: 'LOGOUT__SUCCESS',
+    LOGIN__SUCCESS: 'LOGIN__SUCCESS',
+};
