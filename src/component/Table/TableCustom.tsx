@@ -1,5 +1,4 @@
 import React, { ReactNode } from 'react';
-
 import { Button, Table, message } from 'antd';
 import type { ColumnsType, TableProps, ColumnType, TablePaginationConfig } from 'antd/es/table';
 import { HiOutlinePencilSquare } from 'react-icons/hi2';
@@ -109,7 +108,18 @@ const onChange: TableProps<DataType>['onChange'] = (pagination, filters, sorter,
 };
 
 const CustomTable = ({ name, title, dataSource, paginationConfig, showModalUpdate }: PropsTable) => {
-    const { dataUpdate, setDataUpdate, isDelete, setIsDelete, idDelete, setIdDelete }: any = GetContext();
+    const {
+        isModalViewDes,
+        setModalViewDes,
+        dataUpdate,
+        setDataUpdate,
+        isDelete,
+        setIsDelete,
+        idDelete,
+        setIdDelete,
+        isSaveDesProduct,
+        setIsSaveDesProduct,
+    }: any = GetContext();
     console.log(idDelete);
     const confirmDeleteBrand = async (e: any) => {
         const response = await deleteBrand(idDelete);
@@ -181,26 +191,36 @@ const CustomTable = ({ name, title, dataSource, paginationConfig, showModalUpdat
         },
         {
             title: 'Mô tả ',
-            dataIndex: 'contentMarkdown',
-            render: () => {
-                return <Button>Xem</Button>;
-            },
-        },
-        {
-            title: 'Bảng Nháp',
             dataIndex: 'contentHtml',
-            render: () => {
-                return <Button>Xem</Button>;
+            render: (value) => {
+                return (
+                    <Button
+                        onClick={() => {
+                            setModalViewDes(true);
+                            setIsSaveDesProduct(value);
+                            console.log(value);
+                        }}
+                    >
+                        Xem
+                    </Button>
+                );
             },
         },
-        {
-            title: 'Nơi sản xuât',
-            dataIndex: 'madeBy',
-        },
-        {
-            title: 'Chất liệu',
-            dataIndex: 'material',
-        },
+        // {
+        //     title: 'Bảng Nháp',
+        //     dataIndex: 'contentHtml',
+        //     render: () => {
+        //         return <Button>Xem</Button>;
+        //     },
+        // },
+        // {
+        //     title: 'Nơi sản xuât',
+        //     dataIndex: 'madeBy',
+        // },
+        // {
+        //     title: 'Chất liệu',
+        //     dataIndex: 'material',
+        // },
         {
             title: 'Thương hiệu',
             dataIndex: 'brandId',
@@ -212,6 +232,9 @@ const CustomTable = ({ name, title, dataSource, paginationConfig, showModalUpdat
         {
             title: 'Ngày tạo',
             dataIndex: 'createdAt',
+            render: (value) => {
+                return <span>{covertCreateAt(value)}</span>;
+            },
         },
     ];
     // collums cua CategoryProduct

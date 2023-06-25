@@ -2,7 +2,8 @@ import React from 'react';
 import { Select } from 'antd';
 
 interface SelectsProps {
-    // onChange: (e: string) => void;
+    onChange: any;
+    onSearch: any;
     option: {
         value: string;
         label: string;
@@ -16,16 +17,14 @@ const onSearch = (value: string) => {
     console.log('search:', value);
 };
 
-const SelectCustomer = ({ option }: SelectsProps) => (
+const SelectCustomer = ({ option, onChange, onSearch }: SelectsProps) => (
     <Select
         showSearch
         placeholder="Select a person"
         optionFilterProp="children"
         onChange={onChange}
         onSearch={onSearch}
-        // filterOption={(input, option) =>
-        //   (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
-        // }
+        filterOption={(input, option) => (option?.label ?? '').toLowerCase().includes(input.toLowerCase())}
         options={option}
     />
 );

@@ -3,6 +3,10 @@ import AxiosInstance from './Axios-custom';
 export const getAllBrand = (page: any, pagesize: any) => {
     return AxiosInstance.get(`/all-code/BRAND?page=${page}&size=${pagesize}`);
 };
+// get Brand select
+export const getBrandSelect = () => {
+    return AxiosInstance.get(`/all-code/BRAND`);
+};
 // Tạo thương hiệu
 export const createBrand = (data: any) => {
     return AxiosInstance.post('/all-code', data);
@@ -19,9 +23,13 @@ export const deleteBrand = (id: any) => {
 export const loginAdmin = (data: any) => {
     return AxiosInstance.post('/auth/login', data);
 };
-// get category
+// get category paginate
 export const getAllCategory = (page: any, pagesize: any) => {
     return AxiosInstance.get(`/all-code/CATEGORY?page=${page}&size=${pagesize}`);
+};
+// get category
+export const getCategory = () => {
+    return AxiosInstance.get(`/all-code/CATEGORY`);
 };
 // Tạo category
 export const createCategory = (data: any) => {
@@ -34,4 +42,8 @@ export const getListProduct = (page: any, size: any) => {
 // create new Prodcut
 export const createNewProduct = (data: any) => {
     return AxiosInstance.post('/product', data);
+};
+// get status product
+export const getStatus = () => {
+    return AxiosInstance.get(`/all-code/STATUS`);
 };
