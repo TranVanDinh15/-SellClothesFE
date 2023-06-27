@@ -1,0 +1,14 @@
+.DetailProductWrapper {
+    margin-top: 10px;
+}
+.DetailProductEmty {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    /* align-items: center; */
+}
+.titleTable__btn {
+    display: flex;
+    gap: 20px;
+}

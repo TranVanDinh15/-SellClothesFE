@@ -35,9 +35,20 @@ export const getCategory = () => {
 export const createCategory = (data: any) => {
     return AxiosInstance.post('/all-code', data);
 };
+// Update danh mục sản phẩm
+export const updateCategoy = (data: {}) => {
+    return AxiosInstance.put('/all-code', data);
+};
+// Delete danh mục sản phẩm
+export const deleteCategory = (id: any) => {
+    return AxiosInstance.delete(`/all-code/${id}`);
+};
 // get Product by page and size
 export const getListProduct = (page: any, size: any) => {
     return AxiosInstance.get(`/product?page=${page}&size=${size}`);
+};
+export const getProductById = (id: string) => {
+    return AxiosInstance.get(`/product/${id}`);
 };
 // create new Prodcut
 export const createNewProduct = (data: any) => {
@@ -46,4 +57,28 @@ export const createNewProduct = (data: any) => {
 // get status product
 export const getStatus = () => {
     return AxiosInstance.get(`/all-code/STATUS`);
+};
+// Delete sản phẩm
+export const deleteProdcut = (id: any) => {
+    return AxiosInstance.delete(`/product/${id}`);
+};
+// Upload Image
+export const uploadImageRequest = (mulFile: any) => {
+    console.log(mulFile);
+    return AxiosInstance({
+        method: 'post',
+        url: '/upload/images',
+        data: mulFile,
+        headers: {
+            'Content-Type': 'multipart/form-data',
+        },
+    });
+};
+// get Product detail by ProductId
+export const getProductDetailById = (productId: number) => {
+    return AxiosInstance.get(`/product/detail/${productId}`);
+};
+// get All code color
+export const getColorSelect = () => {
+    return AxiosInstance.get(`/all-code/COLOR`);
 };

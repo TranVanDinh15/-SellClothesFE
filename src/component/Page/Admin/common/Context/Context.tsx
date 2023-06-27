@@ -10,10 +10,18 @@ type MyContextType = {
     setIsDelete: React.Dispatch<React.SetStateAction<any>>;
     idDelete: any;
     setIdDelete: React.Dispatch<React.SetStateAction<any>>;
+    idDeleteProdcut: any;
+    setIdDeleteProduct: React.Dispatch<React.SetStateAction<any>>;
     isModalViewDes: boolean;
     setModalViewDes: React.Dispatch<React.SetStateAction<boolean>>;
     isSaveDesProduct: any;
     setIsSaveDesProduct: React.Dispatch<React.SetStateAction<any>>;
+    isSaveDetailProduct: any;
+    setIsSaveDetailProduct: React.Dispatch<React.SetStateAction<any>>;
+    isOpenDetailP: boolean;
+    setIsOpenDetailP: React.Dispatch<React.SetStateAction<boolean>>;
+    imagesUploadMultiple: any;
+    setImagesUploadMultiple: React.Dispatch<React.SetStateAction<any>>;
 };
 const ChatContext = createContext<MyContextType | undefined>(undefined);
 const ChatProvide = ({ children }: childrenProps) => {
@@ -23,8 +31,14 @@ const ChatProvide = ({ children }: childrenProps) => {
     const [isModalViewDes, setModalViewDes] = useState(false);
     // Quản lý thông tin của một sản phẩm (dùng để lấy ra Description để hiển thị) khi click xem mô tả
     const [isSaveDesProduct, setIsSaveDesProduct] = useState();
-    // // Delete brand Id
+    // // Delete brand Id, product,...
     const [idDelete, setIdDelete] = useState();
+    // Quản lý thông tin chi tiết sản phẩm
+    const [isSaveDetailProduct, setIsSaveDetailProduct] = useState();
+    // Quản lý ảnh upload
+    const [imagesUploadMultiple, setImagesUploadMultiple] = useState([]);
+    const [isOpenDetailP, setIsOpenDetailP] = useState(false);
+    const [idDeleteProdcut, setIdDeleteProduct] = useState();
 
     return (
         <ChatContext.Provider
@@ -39,6 +53,14 @@ const ChatProvide = ({ children }: childrenProps) => {
                 setIdDelete,
                 isSaveDesProduct,
                 setIsSaveDesProduct,
+                idDeleteProdcut,
+                setIdDeleteProduct,
+                isSaveDetailProduct,
+                setIsSaveDetailProduct,
+                isOpenDetailP,
+                setIsOpenDetailP,
+                imagesUploadMultiple,
+                setImagesUploadMultiple,
             }}
         >
             {children}

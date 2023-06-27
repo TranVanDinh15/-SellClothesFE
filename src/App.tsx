@@ -13,6 +13,7 @@ import LoginAdmin from './component/Page/Admin/LoginAdmin/LoginAdmin';
 import TrademarkManage from './component/Page/Admin/trademark/trademark';
 import Product from './component/Page/Product/Product';
 import ProductCategory from './component/Page/Product/CategoryProduct';
+import DetailProductCreate from './component/Page/Product/DetailProductCreate';
 
 function App() {
     const token = localStorage.getItem('token');
@@ -54,6 +55,11 @@ function App() {
                 {
                     path: 'Product',
                     element: <Product />,
+                    errorElement: <NotFound type={'notRole'} />,
+                },
+                {
+                    path: 'Product/DetailProduct/:id',
+                    element: <DetailProductCreate />,
                     errorElement: <NotFound type={'notRole'} />,
                 },
                 {

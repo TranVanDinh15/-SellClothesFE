@@ -6,7 +6,8 @@ import { BsTrash } from 'react-icons/bs';
 import { covertCreateAt } from '../../component/Page/Admin/common/method/method';
 import { GetContext } from '../Page/Admin/common/Context/Context';
 import DeleteCustom from '../Page/Admin/common/Delete/DeleteCustom';
-import { deleteBrand } from '../utils/Api/Api';
+import { deleteBrand, deleteCategory, deleteProdcut } from '../utils/Api/Api';
+import { useNavigate } from 'react-router-dom';
 interface DataType {
     key: React.Key;
     name: string;
@@ -33,7 +34,15 @@ interface DataTypeProduct {
     sold: string;
     createdAt: string;
 }
-
+interface DataTypeProductDetail {
+    key: React.Key;
+    id: number;
+    name: string;
+    originalPrice: number;
+    discountPrice: number;
+    description: string;
+    colorId: any;
+}
 interface PropsTable {
     name: string;
     title: () => ReactNode;
@@ -108,6 +117,7 @@ const onChange: TableProps<DataType>['onChange'] = (pagination, filters, sorter,
 };
 
 const CustomTable = ({ name, title, dataSource, paginationConfig, showModalUpdate }: PropsTable) => {
+    const navigate = useNavigate();
     const {
         isModalViewDes,
         setModalViewDes,
@@ -119,6 +129,10 @@ const CustomTable = ({ name, title, dataSource, paginationConfig, showModalUpdat
         setIdDelete,
         isSaveDesProduct,
         setIsSaveDesProduct,
+        idDeleteProdcut,
+        setIdDeleteProduct,
+        setIsSaveDetailProduct,
+        setIsOpenDetailP,
     }: any = GetContext();
     console.log(idDelete);
     const confirmDeleteBrand = async (e: any) => {
@@ -133,11 +147,35 @@ const CustomTable = ({ name, title, dataSource, paginationConfig, showModalUpdat
             }
         }
     };
-
+    const confirmDeleteProduct = async (e: any) => {
+        const response = await deleteProdcut(idDeleteProdcut);
+        if (response && response.status == 200) {
+            console.log(response);
+            message.success('Xóa thành công !');
+            if (isDelete) {
+                setIsDelete(false);
+            } else {
+                setIsDelete(true);
+            }
+        }
+    };
     const cancelDeleteBrand = (e: any) => {
         console.log(e);
         message.error('Click on No');
     };
+    const confirmDeleteCategory = async (e: any) => {
+        const response = await deleteCategory(idDelete);
+        if (response && response.status == 200) {
+            console.log(response);
+            message.success('Xóa thành công !');
+            if (isDelete) {
+                setIsDelete(false);
+            } else {
+                setIsDelete(true);
+            }
+        }
+    };
+    const cancelDeleteCategory = () => {};
     const columnsBrand: ColumnsType<DataTypeBrand> = [
         {
             title: 'Tên thương hiệu',
@@ -188,6 +226,8 @@ const CustomTable = ({ name, title, dataSource, paginationConfig, showModalUpdat
         {
             title: 'Tên sản phẩm',
             dataIndex: 'name',
+            // width: '20%',
+            width: '30%',
         },
         {
             title: 'Mô tả ',
@@ -206,27 +246,13 @@ const CustomTable = ({ name, title, dataSource, paginationConfig, showModalUpdat
                 );
             },
         },
-        // {
-        //     title: 'Bảng Nháp',
-        //     dataIndex: 'contentHtml',
-        //     render: () => {
-        //         return <Button>Xem</Button>;
-        //     },
-        // },
-        // {
-        //     title: 'Nơi sản xuât',
-        //     dataIndex: 'madeBy',
-        // },
-        // {
-        //     title: 'Chất liệu',
-        //     dataIndex: 'material',
-        // },
+
         {
-            title: 'Thương hiệu',
+            title: 'TH',
             dataIndex: 'brandId',
         },
         {
-            title: 'Số lượng bán',
+            title: 'Đã bán',
             dataIndex: 'sold',
         },
         {
@@ -236,8 +262,54 @@ const CustomTable = ({ name, title, dataSource, paginationConfig, showModalUpdat
                 return <span>{covertCreateAt(value)}</span>;
             },
         },
+        {
+            title: 'Chi tiết',
+            // dataIndex: 'contentHtml',
+            render: (value) => {
+                return (
+                    <Button
+                        onClick={() => {
+                            setIsSaveDetailProduct(value);
+                            navigate(`/Admin/Product/DetailProduct/${value.id}`);
+                        }}
+                    >
+                        Xem
+                    </Button>
+                );
+            },
+        },
+        {
+            title: 'Action',
+            dataIndex: 'updatedAt',
+            render: (text, record, index) => (
+                <div>
+                    <Button
+                        icon={<HiOutlinePencilSquare />}
+                        type="text"
+                        onClick={() => {
+                            // showModalUpdate();
+                            // setDataUpdate(record);
+                        }}
+                    ></Button>
+                    <DeleteCustom
+                        title="Xóa sản phẩm"
+                        description="Bạn chắc chắn muốn xóa?"
+                        confirm={confirmDeleteProduct}
+                        cancel={cancelDeleteBrand}
+                    >
+                        <Button
+                            icon={<BsTrash />}
+                            type="text"
+                            onClick={() => {
+                                setIdDeleteProduct(record?.id);
+                            }}
+                        ></Button>
+                    </DeleteCustom>
+                </div>
+            ),
+        },
     ];
-    // collums cua CategoryProduct
+    // collums của CategoryProduct
     const columnsCategory: ColumnsType<DataTypeBrand> = [
         {
             title: 'Loại quần áo',
@@ -264,14 +336,14 @@ const CustomTable = ({ name, title, dataSource, paginationConfig, showModalUpdat
                     <DeleteCustom
                         title="Xóa thương hiệu"
                         description="Bạn chắc chắn muốn xóa?"
-                        confirm={confirmDeleteBrand}
-                        cancel={cancelDeleteBrand}
+                        confirm={confirmDeleteCategory}
+                        cancel={cancelDeleteCategory}
                     >
                         <Button
                             icon={<BsTrash />}
                             type="text"
                             onClick={() => {
-                                // setIdDelete(record?.id);
+                                setIdDelete(record?.id);
                             }}
                         ></Button>
                     </DeleteCustom>
@@ -279,6 +351,49 @@ const CustomTable = ({ name, title, dataSource, paginationConfig, showModalUpdat
             ),
         },
     ];
+    // key: React.Key;
+    // id: number;
+    // name: string;
+    // contentMarkdown: string;
+    // contentHtml: string;
+    // categoryId: string;
+    // statusId: string;
+    // brandId: string;
+    // color: string;
+    // material: string;
+    //    collums của detail Product
+    const collumsDetailProduct: ColumnType<DataTypeProductDetail>[] = [
+        {
+            title: 'tên Sp',
+            dataIndex: 'name',
+        },
+        {
+            title: 'Mô tả Sp',
+            dataIndex: 'contentHtml',
+            // render: (value, record, index) => <span>{covertCreateAt(value)}</span>,
+        },
+        {
+            title: 'Danh mục Sp',
+            dataIndex: 'categoryId',
+        },
+        {
+            title: 'Thương hiệu',
+            dataIndex: 'brandId',
+        },
+        {
+            title: 'Màu sắc',
+            dataIndex: 'color',
+        },
+        {
+            title: 'Chất liệu',
+            dataIndex: 'material',
+        },
+        {
+            title: 'Tình trạng',
+            dataIndex: 'statusId',
+        },
+    ];
+
     return (
         <React.Fragment>
             {name == 'Users' ? <Table columns={columns} dataSource={data} onChange={onChange} title={title} /> : ''}
@@ -294,6 +409,16 @@ const CustomTable = ({ name, title, dataSource, paginationConfig, showModalUpdat
             )}
             {name == 'Product' ? (
                 <Table columns={collumsProduct} dataSource={dataSource} title={title} pagination={paginationConfig} />
+            ) : (
+                ''
+            )}
+            {name == 'DetailProduct' ? (
+                <Table
+                    columns={collumsDetailProduct}
+                    dataSource={dataSource}
+                    title={title}
+                    pagination={paginationConfig}
+                />
             ) : (
                 ''
             )}

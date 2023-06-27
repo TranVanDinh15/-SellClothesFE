@@ -5,6 +5,7 @@ import {
     getAllCategory,
     getBrandSelect,
     getCategory,
+    getColorSelect,
     getListProduct,
     getStatus,
 } from '../../utils/Api/Api';
@@ -20,6 +21,7 @@ import MdEditor from 'react-markdown-editor-lite';
 import 'react-markdown-editor-lite/lib/index.css';
 import ModalCustomer from '../Admin/common/Modal/ModalCustomer';
 import { GetContext } from '../Admin/common/Context/Context';
+import DetailProductCreate from './DetailProductCreate';
 var MarkdownIt = require('markdown-it');
 const mdParser = new MarkdownIt(/* Markdown-it options */);
 interface markdownProps {
@@ -27,7 +29,8 @@ interface markdownProps {
     text: any;
 }
 export default function Product() {
-    const { isModalViewDes, setModalViewDes, isSaveDesProduct }: any = GetContext();
+    const { isModalViewDes, setModalViewDes, isSaveDesProduct, isDelete, isOpenDetailP, setIsOpenDetailP }: any =
+        GetContext();
     const [page, setPage] = useState<number>(1);
     const [pageSize, setPageSize] = useState<number>(5);
     const [isLoading, setIsLoading] = useState(false);
@@ -41,12 +44,15 @@ export default function Product() {
     const [brandSave, setBrandSave] = useState<any>();
     const [categorySave, setCategorySave] = useState<any>();
     const [statusSave, setStatusSave] = useState<any>();
+    const [saveColorSelect, setSaveColorSelect] = useState([]);
     // const [isModalViewDes, setModalViewDes] = useState(false);
     // Quản lý giá trị của Markdown editor
     const [value, setValue] = useState<any>('**Hello world!!!**');
     const [text, setText] = useState<any>('**Hello world!!!**');
     const getListProductFun = async () => {
+        setIsLoading(true);
         const response = await getListProduct(page, pageSize);
+        console.log(response);
         if (response && response.status == 200) {
             const dataTableMap = response.data.data.map((item: any, index: any) => {
                 return {
@@ -59,11 +65,13 @@ export default function Product() {
                     material: item?.material,
                     brandId: item?.brandId,
                     sold: item?.sold,
+                    detail: item?.detail,
                     createdAt: item?.createdAt,
                 };
             });
             setTotal(response.data.meta.totalItems);
             setDataTable(dataTableMap);
+            setIsLoading(false);
         }
     };
     // lấy loại sản phẩm
@@ -139,41 +147,64 @@ export default function Product() {
     const onSearchStatusSelect = (value: string) => {
         console.log('search:', value);
     };
-    // Khi submit form Tạo product
+
     const onFinishAdd = async (values: any) => {
         const dataSubmit = {
             name: values.name,
             contentMarkdown: text,
             contentHtml: value,
-            categoryId: categorySave,
-            statusId: statusSave,
-            brandId: brandSave,
+            categoryId: values.categoryId,
+            statusId: values.statusId,
+            brandId: values.brandId,
+            colorCodes: values.color,
+            material: values.material,
         };
+        // console.log(dataSubmit);
+        // console.log(values);
         setIsLoading(true);
         const response = await createNewProduct(dataSubmit);
         if (response && response.status == 201) {
+            console.log(response);
             message.success('Tạo thành công !!');
             getListProductFun();
             setIsLoading(false);
             handleCancelAdd();
         }
-        console.log(dataSubmit);
     };
     //   Khi xảy ra lỗi trong form Tạo Product
     const onFinishFailedAdd = (errorInfo: any) => {
         console.log('Failed:', errorInfo);
     };
-
+    // Lấy màu sắc
+    const hanleGetSelectColor = async () => {
+        const response = await getColorSelect();
+        if (response && response.status == 200) {
+            console.log(response);
+            if (response.data.data.length > 0) {
+                const result = response.data.data.map((item: any) => {
+                    return {
+                        value: item.code,
+                        label: item.value,
+                    };
+                });
+                setSaveColorSelect(result);
+            }
+        }
+    };
+    const onChangeColorSelect = (value: string) => {
+        console.log(value);
+    };
+    const onSearchColorSelect = (value: string) => {};
     // dùng để hiển thị title của table
     const TitleTable = () => {
         return (
             <div className="titleTable">
                 <div className="titleTable__Heading">
-                    <span>Danh sách thương hiệu</span>
+                    <span>Danh sách sản phẩm</span>
                 </div>
                 <div className="titleTable__btn">
                     <Button type="primary" icon={<PlusOutlined />} className="btnButton" onClick={showModalAdd}>
-                        Thêm thương hiệu
+                        Thêm sản phẩm
                     </Button>
 
                     <Modal
@@ -210,14 +241,24 @@ export default function Product() {
                                         rules={[{ required: true, message: 'Vui lòng nhập tên thương hiệu!' }]}
                                     >
                                         <SelectCustomer
+                                            mode=""
                                             option={[...brandProduct]}
-                                            onChange={onChangeBrandSelect}
-                                            onSearch={onSearchBrandSelect}
+                                            onChange={onChangeColorSelect}
+                                            onSearch={onSearchColorSelect}
                                         />
                                     </Form.Item>
                                 </Col>
                             </Row>
-                            <Row gutter={16} style={{}}>
+                            <Row gutter={16}>
+                                <Col span={12}>
+                                    <Form.Item
+                                        label="Chất liệu"
+                                        name="material"
+                                        rules={[{ required: true, message: 'Vui lòng nhập chất liệu sản phẩm!' }]}
+                                    >
+                                        <Input placeholder="VD: cotton, thun, ... " width={'100%'} />
+                                    </Form.Item>
+                                </Col>
                                 <Col span={12}>
                                     <Form.Item
                                         label="Danh mục sản phẩm"
@@ -225,12 +266,15 @@ export default function Product() {
                                         rules={[{ required: true, message: 'Vui lòng chọn danh mục sản phẩm !!' }]}
                                     >
                                         <SelectCustomer
+                                            mode=""
                                             option={[...listCategory]}
                                             onChange={onChangeCategorySelect}
                                             onSearch={onSearchCategorySelect}
                                         />
                                     </Form.Item>
                                 </Col>
+                            </Row>
+                            <Row gutter={16} style={{}}>
                                 <Col span={12}>
                                     <Form.Item
                                         label="Trạng thái"
@@ -238,13 +282,30 @@ export default function Product() {
                                         rules={[{ required: true, message: 'Vui lòng nhập tên thương hiệu!' }]}
                                     >
                                         <SelectCustomer
+                                            mode=""
                                             option={[...statusProduct]}
                                             onChange={onChangeStatusSelect}
                                             onSearch={onSearchStatusSelect}
                                         />
                                     </Form.Item>
                                 </Col>
+                                <Col span={12}>
+                                    <Form.Item
+                                        // wrapperCol={{ span: 24 }}
+                                        label="Màu sắc"
+                                        name="color"
+                                        rules={[{ required: true, message: 'Vui lòng nhập tên thương hiệu!' }]}
+                                    >
+                                        <SelectCustomer
+                                            mode="multiple"
+                                            option={[...saveColorSelect]}
+                                            onChange={onChangeColorSelect}
+                                            onSearch={onSearchColorSelect}
+                                        />
+                                    </Form.Item>
+                                </Col>
                             </Row>
+
                             <Form.Item
                                 wrapperCol={{ span: 24 }}
                                 style={{
@@ -281,6 +342,13 @@ export default function Product() {
             </div>
         );
     };
+    // <CustomTable
+    //     name="Product"
+    //     title={TitleTable}
+    //     dataSource={dataTable}
+    //     paginationConfig={paginationConfig}
+    //     showModalUpdate={showModalUpdate}
+    // />
     const paginationConfig: TablePaginationConfig = {
         total: total, // Tổng số mục dữ liệu
         pageSize: pageSize, // Số mục dữ liệu trên mỗi trang
@@ -301,7 +369,6 @@ export default function Product() {
     };
     // Finish!
     function handleEditorChange({ html, text }: markdownProps) {
-        console.log('handleEditorChange', html, text);
         setText(text);
         setValue(html);
     }
@@ -315,13 +382,15 @@ export default function Product() {
     };
     useEffect(() => {
         getListProductFun();
-    }, [page, pageSize]);
+    }, [page, pageSize, isDelete]);
     useEffect(() => {
         getCategoryProduct();
     }, []);
     useEffect(() => {
         getStatusproduct();
         getBrandProduct();
+        setIsOpenDetailP(false);
+        hanleGetSelectColor();
     }, []);
     return (
         <Content title={'Quản lý sản phẩm'}>

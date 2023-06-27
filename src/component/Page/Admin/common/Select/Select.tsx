@@ -8,6 +8,7 @@ interface SelectsProps {
         value: string;
         label: string;
     }[];
+    mode: any;
 }
 const onChange = (value: string) => {
     console.log(`selected ${value}`);
@@ -17,8 +18,9 @@ const onSearch = (value: string) => {
     console.log('search:', value);
 };
 
-const SelectCustomer = ({ option, onChange, onSearch }: SelectsProps) => (
+const SelectCustomer = ({ option, onChange, onSearch, mode }: SelectsProps) => (
     <Select
+        mode={mode}
         showSearch
         placeholder="Select a person"
         optionFilterProp="children"

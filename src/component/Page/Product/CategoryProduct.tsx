@@ -5,7 +5,9 @@ import IsLoading from '../Admin/common/IsLoading/IsLoading';
 import CustomTable from '../../Table/TableCustom';
 import { PlusOutlined } from '@ant-design/icons';
 import { Button, Col, Form, Input, Modal, Row, TablePaginationConfig, message } from 'antd';
+import { GetContext } from '../Admin/common/Context/Context';
 export default function ProductCategory() {
+    const { isDelete }: any = GetContext();
     const [page, setPage] = useState<number>(1);
     const [pageSize, setPageSize] = useState<number>(5);
     const [isLoading, setIsLoading] = useState(false);
@@ -15,8 +17,10 @@ export default function ProductCategory() {
     const [total, setTotal] = useState<any>();
     const [isFetchBrand, setIsFetchBrand] = useState(false);
     const getListCategoryFun = async () => {
+        setIsLoading(true);
         const response = await getAllCategory(page, pageSize);
         if (response && response.status == 200) {
+            console.log(response);
             const filterData = response.data.data.map((item: any, index: number) => {
                 return {
                     key: index,
@@ -30,6 +34,7 @@ export default function ProductCategory() {
             setTotal(response.data.meta.totalItems);
             setIsLoading(false);
             setDataTable(filterData);
+            setIsLoading(false);
         }
     };
     const handleOkAdd = () => {
@@ -70,7 +75,7 @@ export default function ProductCategory() {
         return (
             <div className="titleTable">
                 <div className="titleTable__Heading">
-                    <span>Loại sản phẩm </span>
+                    <span>Quản lý Danh mục </span>
                 </div>
                 <div className="titleTable__btn">
                     <Button type="primary" icon={<PlusOutlined />} className="btnButton" onClick={showModalAdd}>
@@ -144,9 +149,9 @@ export default function ProductCategory() {
     };
     useEffect(() => {
         getListCategoryFun();
-    }, [page, pageSize, isFetchBrand]);
+    }, [page, pageSize, isFetchBrand, isDelete]);
     return (
-        <Content title={'Loại sản phẩm'}>
+        <Content title={'Danh mục sản phẩm'}>
             <div className="productWrapper">
                 {isLoading ? (
                     <IsLoading />
