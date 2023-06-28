@@ -5,6 +5,7 @@ import type { RcFile, UploadProps } from 'antd/es/upload';
 import type { UploadFile } from 'antd/es/upload/interface';
 import { uploadImageRequest } from '../../../../utils/Api/Api';
 import { GetContext } from '../Context/Context';
+import { itemsMultipleFile } from './UploadInterface';
 interface uploadImageProps {
     multilple: any;
 }
@@ -17,7 +18,8 @@ const getBase64 = (file: RcFile): Promise<string> =>
     });
 export default function UploadImageCustomer({ multilple }: uploadImageProps) {
     const { imagesUploadMultiple, setImagesUploadMultiple }: any = GetContext();
-    const [previewOpen, setPreviewOpen] = useState(false);
+    console.log(imagesUploadMultiple);
+    const [previewOpen, setPreviewOpen] = useState<boolean>(false);
     const [previewImage, setPreviewImage] = useState('');
     const [previewTitle, setPreviewTitle] = useState('');
     const [fileList, setFileList] = useState<UploadFile[]>([]);
@@ -39,13 +41,26 @@ export default function UploadImageCustomer({ multilple }: uploadImageProps) {
             formData.append('images', file);
             const response = await uploadImageRequest(formData);
             if (response) {
-                console.log(response.data.images[0]);
-                setImagesUploadMultiple((state: any) => [...state, response.data.images[0]]);
+                setImagesUploadMultiple((state: any) => [
+                    ...state,
+                    {
+                        id: file.uid,
+                        image: response.data.images[0],
+                    },
+                ]);
                 onSuccess(file);
             }
         } catch (error) {
             onError(file);
         }
+    };
+    // Xử lý khi remove ảnh
+    const hanleRemove = (file: any) => {
+        console.log(imagesUploadMultiple);
+        const filterRemove = imagesUploadMultiple.filter((item: any) => {
+            return item.id != file.uid;
+        });
+        setImagesUploadMultiple(filterRemove);
     };
     // Xử lý khi update một ảnh
     const uploadImageSingle = () => {};
@@ -70,6 +85,10 @@ export default function UploadImageCustomer({ multilple }: uploadImageProps) {
                 onChange={handleChange}
                 accept="image/*"
                 multiple={multilple ? multilple : false}
+                onRemove={(file) => {
+                    hanleRemove(file);
+                    console.log('ok');
+                }}
             >
                 {fileList.length >= 8 ? null : uploadButton}
             </Upload>

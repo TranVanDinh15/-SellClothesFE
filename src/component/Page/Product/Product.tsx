@@ -410,6 +410,7 @@ export default function Product() {
             {/* Modal xem description của sản phẩm  */}
             <div className="modalDescription">
                 <ModalCustomer
+                    footer={true}
                     isModalOpen={isModalViewDes}
                     showModal={showModalViewDes}
                     handleOk={handleOkViewDes}

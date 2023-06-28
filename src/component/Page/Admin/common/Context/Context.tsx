@@ -22,6 +22,16 @@ type MyContextType = {
     setIsOpenDetailP: React.Dispatch<React.SetStateAction<boolean>>;
     imagesUploadMultiple: any;
     setImagesUploadMultiple: React.Dispatch<React.SetStateAction<any>>;
+    isModalAddDPOpen: boolean;
+    setIsModalAddDpOpen: React.Dispatch<React.SetStateAction<boolean>>;
+    isSaveItemsDp: any;
+    setIsSaveItmDp: React.Dispatch<React.SetStateAction<any>>;
+    openFullDp: boolean;
+    setOpenFullDp: React.Dispatch<React.SetStateAction<boolean>>;
+    saveItemDp: any;
+    setSaveItemDp: React.Dispatch<React.SetStateAction<any>>;
+    isModalAddSize: boolean;
+    setIsModalAddSize: React.Dispatch<React.SetStateAction<boolean>>;
 };
 const ChatContext = createContext<MyContextType | undefined>(undefined);
 const ChatProvide = ({ children }: childrenProps) => {
@@ -38,8 +48,15 @@ const ChatProvide = ({ children }: childrenProps) => {
     // Quản lý ảnh upload
     const [imagesUploadMultiple, setImagesUploadMultiple] = useState([]);
     const [isOpenDetailP, setIsOpenDetailP] = useState(false);
+    // đóng mở product detail
+    const [isModalAddDPOpen, setIsModalAddDpOpen] = useState(false);
+    // Quản lý thông tin item detail Product
+    const [isSaveItemsDp, setIsSaveItmDp] = useState();
     const [idDeleteProdcut, setIdDeleteProduct] = useState();
-
+    const [openFullDp, setOpenFullDp] = useState<boolean>(false);
+    const [saveItemDp, setSaveItemDp] = useState<any>();
+    // đóng mở modal add size
+    const [isModalAddSize, setIsModalAddSize] = useState<boolean>(false);
     return (
         <ChatContext.Provider
             value={{
@@ -61,6 +78,16 @@ const ChatProvide = ({ children }: childrenProps) => {
                 setIsOpenDetailP,
                 imagesUploadMultiple,
                 setImagesUploadMultiple,
+                isModalAddDPOpen,
+                setIsModalAddDpOpen,
+                isSaveItemsDp,
+                setIsSaveItmDp,
+                openFullDp,
+                setOpenFullDp,
+                saveItemDp,
+                setSaveItemDp,
+                isModalAddSize,
+                setIsModalAddSize,
             }}
         >
             {children}

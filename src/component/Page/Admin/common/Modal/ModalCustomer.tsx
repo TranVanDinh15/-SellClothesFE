@@ -7,11 +7,18 @@ interface ModalProps {
     handleCancel: () => void;
     children: React.ReactNode;
     title: string;
+    footer: boolean;
 }
-const ModalCustomer = ({ isModalOpen, showModal, handleOk, handleCancel, children, title }: ModalProps) => {
+const ModalCustomer = ({ isModalOpen, handleOk, handleCancel, children, title, footer }: ModalProps) => {
     return (
         <>
-            <Modal title={title} open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
+            <Modal
+                title={title}
+                open={isModalOpen}
+                onOk={handleOk}
+                onCancel={handleCancel}
+                footer={footer ? footer : <></>}
+            >
                 {children}
             </Modal>
         </>

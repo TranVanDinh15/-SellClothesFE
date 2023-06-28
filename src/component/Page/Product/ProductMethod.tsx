@@ -1,0 +1,206 @@
+import { message } from 'antd';
+import {
+    GetColorProductById,
+    createProductDetail,
+    createProductDetailSize,
+    getColorSelect,
+    getProductById,
+} from '../../utils/Api/Api';
+
+// Get Product By Id
+export const handleGetProductById = async (
+    id: string,
+    setIsLoading: React.Dispatch<React.SetStateAction<boolean>>,
+    setGetDetailP: React.Dispatch<React.SetStateAction<any>>,
+) => {
+    if (id) {
+        setIsLoading(true);
+        const response = await getProductById(id);
+        if (response && response.status == 200) {
+            const product = response.data.product;
+            console.log(product);
+            if (product.detail.length > 0) {
+                const result = product.detail.map((item: any) => {
+                    return {
+                        id: item.id,
+                        name: item.name,
+                        contentMarkdown: product.contentMarkdown,
+                        contentHtml: product.contentHtml,
+                        categoryId: product.categoryId,
+                        statusId: product.statusId,
+                        brandId: product.brandId,
+                        material: product.material,
+                        images: item.images,
+                        color: item.color.value,
+                        originalPrice: item.originalPrice,
+                        discountPrice: item.discountPrice,
+                    };
+                });
+                setGetDetailP(result);
+                setIsLoading(false);
+            }
+        }
+    }
+};
+// Get Color Product By Id
+export const handleGetColorById = async (id: string, setSelectColor: React.Dispatch<React.SetStateAction<any>>) => {
+    if (id) {
+        const response = await GetColorProductById(parseInt(id));
+        console.log(response);
+        if (response && response.status == 200) {
+            if (response.data.length > 0) {
+                const result = response.data.map((item: any) => {
+                    return {
+                        value: item?.code,
+                        label: item?.value,
+                    };
+                });
+                setSelectColor(result);
+            }
+        }
+    } else {
+    }
+};
+// Open Modal Add detail Product
+export const showModalAddDp = (setIsModalAddDpOpen: React.Dispatch<React.SetStateAction<boolean>>) => {
+    setIsModalAddDpOpen(true);
+};
+// Handle Submit Modal Add detail Product
+export const handleOkAddDp = () => {};
+// HandleCancel Add Detail Product
+export const handleCancelDp = (setIsModalAddDpOpen: React.Dispatch<React.SetStateAction<boolean>>) => {
+    setIsModalAddDpOpen(false);
+};
+
+export const handleOkUpdate = () => {};
+export const handleShowUpdate = (setIsModalUpdate: React.Dispatch<React.SetStateAction<boolean>>) => {
+    setIsModalUpdate(true);
+};
+export const handleCancelUpdate = (setIsModalUpdate: React.Dispatch<React.SetStateAction<boolean>>) => {
+    setIsModalUpdate(false);
+};
+// Lấy màu sắc
+export const hanleGetSelectColor = async (setSaveColor: React.Dispatch<React.SetStateAction<any>>) => {
+    const response = await getColorSelect();
+    if (response && response.status == 200) {
+        console.log(response);
+        if (response.data.data.length > 0) {
+            const result = response.data.data.map((item: any) => {
+                return {
+                    value: item.code,
+                    label: item.value,
+                };
+            });
+            setSaveColor(result);
+        }
+    }
+};
+export const onFinishUpdate = (values: any) => {
+    // console.log(values);
+    // const reqUpdate = {
+    //     productId: 6,
+    //     name: 'APN4396-DEN',
+    //     originalPrice: 2000,
+    //     discountPrice: 1400,
+    //     description: 'hdhhdhd',
+    //     images: imagesUpload,
+    //     colorId: 'red',
+    // };
+};
+export const onFailUpdate = (errorInfo: any) => {
+    console.log('Failed:', errorInfo);
+};
+// Khi submit form add detail product
+export const onFinishAdd = async (
+    values: any,
+    id: any,
+    setIsLoading: React.Dispatch<React.SetStateAction<boolean>>,
+    imagesUploadMultiple: any,
+    setIsModalAddDpOpen: React.Dispatch<React.SetStateAction<boolean>>,
+    isFetchDp: boolean,
+    setIsFetchDp: React.Dispatch<React.SetStateAction<boolean>>,
+) => {
+    setIsLoading(true);
+    if (id) {
+        const reqUpdate = {
+            productId: parseInt(id),
+            name: values?.name,
+            originalPrice: parseInt(values?.originalPrice),
+            discountPrice: parseInt(values?.discountPrice),
+            // description: values?.description,
+            images: imagesUploadMultiple.map((item: any) => {
+                return item.image;
+            }),
+            colorId: values.colorId,
+        };
+        console.log(values);
+        const response = await createProductDetail(reqUpdate);
+        if (response && response.status == 201) {
+            message.success('Tạo thành công');
+            handleCancelDp(setIsModalAddDpOpen);
+            if (isFetchDp) {
+                setIsFetchDp(false);
+            } else {
+                setIsFetchDp(true);
+            }
+        }
+    } else {
+        message.error('Đã có vấn đề trong lúc tạo !!');
+    }
+};
+
+export const onFailAdd = (errorInfo: any) => {
+    console.log('Failed:', errorInfo);
+};
+// Lấy thông tin sản phẩm
+export const getProductDetail = async (setIsLoading: React.Dispatch<React.SetStateAction<boolean>>) => {
+    setIsLoading(true);
+};
+export const onChangeColorSelect = (value: string) => {};
+
+export const onSearchColorSelect = (value: string) => {
+    console.log('search:', value);
+};
+// handle đóng mở view full detail product
+export const showViewFullDp = (setOpenFullDp: React.Dispatch<React.SetStateAction<boolean>>) => {
+    setOpenFullDp(true);
+};
+export const onViewCloseFullDp = (setOpenFullDp: React.Dispatch<React.SetStateAction<boolean>>) => {
+    setOpenFullDp(false);
+};
+// handle mở add size
+export const showAddSizeDp = (setIsModalAddSize: React.Dispatch<React.SetStateAction<boolean>>) => {
+    setIsModalAddSize(true);
+};
+// handle submit add size
+export const handleSubmitAddSize = async (
+    values: any,
+    productId: any,
+    setIsLoading: React.Dispatch<React.SetStateAction<boolean>>,
+    setIsModalAddSize: React.Dispatch<React.SetStateAction<boolean>>,
+) => {
+    console.log(productId);
+    console.log(values);
+    const reqAddSize = {
+        productDetailId: productId,
+        name: values.name,
+        width: values.width,
+        height: values.height,
+        weight: values.weight,
+    };
+    setIsLoading(true);
+    const response = await createProductDetailSize(reqAddSize);
+    if (response && response.status == 201) {
+        console.log(response);
+        message.success(response.data.message);
+        setIsLoading(false);
+        cancelAddSizeDp(setIsModalAddSize);
+    }
+};
+// handle submit fail add size
+export const handleokaddsize = () => {};
+export const handleSubmitFailSize = () => {};
+// Handle cancel add size
+export const cancelAddSizeDp = (setIsModalAddSize: React.Dispatch<React.SetStateAction<boolean>>) => {
+    setIsModalAddSize(false);
+};

@@ -1,3 +1,4 @@
+import { reqProductSize } from './ApiInterFace';
 import AxiosInstance from './Axios-custom';
 // get thương hiệu
 export const getAllBrand = (page: any, pagesize: any) => {
@@ -77,6 +78,18 @@ export const uploadImageRequest = (mulFile: any) => {
 // get Product detail by ProductId
 export const getProductDetailById = (productId: number) => {
     return AxiosInstance.get(`/product/detail/${productId}`);
+};
+// create Product detail
+export const createProductDetail = (data: any) => {
+    return AxiosInstance.post('/product/detail', data);
+};
+// create product detail size
+export const createProductDetailSize = (data: reqProductSize) => {
+    return AxiosInstance.post('/product/size', data);
+};
+// Get color product by Id
+export const GetColorProductById = (id: number) => {
+    return AxiosInstance.get(`/product/colors/${id}`);
 };
 // get All code color
 export const getColorSelect = () => {

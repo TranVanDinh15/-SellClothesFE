@@ -1,13 +1,15 @@
 import React, { ReactNode } from 'react';
-import { Button, Table, message } from 'antd';
+import { Button, Popover, Table, message } from 'antd';
 import type { ColumnsType, TableProps, ColumnType, TablePaginationConfig } from 'antd/es/table';
 import { HiOutlinePencilSquare } from 'react-icons/hi2';
 import { BsTrash } from 'react-icons/bs';
+import { GiClothes } from 'react-icons/gi';
 import { covertCreateAt } from '../../component/Page/Admin/common/method/method';
 import { GetContext } from '../Page/Admin/common/Context/Context';
 import DeleteCustom from '../Page/Admin/common/Delete/DeleteCustom';
 import { deleteBrand, deleteCategory, deleteProdcut } from '../utils/Api/Api';
 import { useNavigate } from 'react-router-dom';
+import { FolderAddOutlined } from '@ant-design/icons';
 interface DataType {
     key: React.Key;
     name: string;
@@ -119,20 +121,20 @@ const onChange: TableProps<DataType>['onChange'] = (pagination, filters, sorter,
 const CustomTable = ({ name, title, dataSource, paginationConfig, showModalUpdate }: PropsTable) => {
     const navigate = useNavigate();
     const {
-        isModalViewDes,
         setModalViewDes,
-        dataUpdate,
         setDataUpdate,
         isDelete,
         setIsDelete,
         idDelete,
         setIdDelete,
-        isSaveDesProduct,
         setIsSaveDesProduct,
         idDeleteProdcut,
         setIdDeleteProduct,
         setIsSaveDetailProduct,
-        setIsOpenDetailP,
+        setIsSaveItmDp,
+        setOpenFullDp,
+        setSaveItemDp,
+        setIsModalAddSize,
     }: any = GetContext();
     console.log(idDelete);
     const confirmDeleteBrand = async (e: any) => {
@@ -351,31 +353,36 @@ const CustomTable = ({ name, title, dataSource, paginationConfig, showModalUpdat
             ),
         },
     ];
-    // key: React.Key;
-    // id: number;
-    // name: string;
-    // contentMarkdown: string;
-    // contentHtml: string;
-    // categoryId: string;
-    // statusId: string;
-    // brandId: string;
-    // color: string;
-    // material: string;
-    //    collums của detail Product
     const collumsDetailProduct: ColumnType<DataTypeProductDetail>[] = [
         {
             title: 'tên Sp',
             dataIndex: 'name',
+            render: (value, record, index) => (
+                <Popover content={<div>Xem chi tiết sản phẩm</div>} title="Chi tiết sản phẩm">
+                    <Button
+                        style={{
+                            color: 'red',
+                        }}
+                        type="text"
+                        onClick={() => {
+                            setSaveItemDp(record);
+                            setOpenFullDp(true);
+                        }}
+                    >
+                        {value}
+                    </Button>
+                </Popover>
+            ),
         },
         {
             title: 'Mô tả Sp',
             dataIndex: 'contentHtml',
-            // render: (value, record, index) => <span>{covertCreateAt(value)}</span>,
+            render: (value, record, index) => <Button>Xem</Button>,
         },
-        {
-            title: 'Danh mục Sp',
-            dataIndex: 'categoryId',
-        },
+        // {
+        //     title: 'Danh mục Sp',
+        //     dataIndex: 'categoryId',
+        // },
         {
             title: 'Thương hiệu',
             dataIndex: 'brandId',
@@ -383,14 +390,66 @@ const CustomTable = ({ name, title, dataSource, paginationConfig, showModalUpdat
         {
             title: 'Màu sắc',
             dataIndex: 'color',
+            render: (value, record, index) => <span>{value}</span>,
         },
-        {
-            title: 'Chất liệu',
-            dataIndex: 'material',
-        },
+        // {
+        //     title: 'Chất liệu',
+        //     dataIndex: 'material',
+        // },
         {
             title: 'Tình trạng',
             dataIndex: 'statusId',
+        },
+        {
+            title: 'Action',
+            // dataIndex: 'updatedAt',
+            width: '150px',
+            render: (value, record) => (
+                <div>
+                    <Popover content={<div>Thêm kích thước</div>} title="Chi tiết sản phẩm">
+                        <Button
+                            icon={
+                                <GiClothes
+                                    style={{
+                                        fontSize: '16px',
+                                    }}
+                                />
+                            }
+                            type="text"
+                            onClick={() => {
+                                setIsSaveItmDp(record);
+                                setIsModalAddSize(true);
+                            }}
+                        ></Button>
+                    </Popover>
+                    <Popover content={<div>Cập nhật chi tiết sản phẩm</div>} title="Chi tiết sản phẩm">
+                        <Button
+                            icon={<HiOutlinePencilSquare />}
+                            type="text"
+                            onClick={() => {
+                                // showModalUpdate();
+                                // setDataUpdate(record);
+                            }}
+                        ></Button>
+                    </Popover>
+                    <DeleteCustom
+                        title="Xóa thương hiệu"
+                        description="Bạn chắc chắn muốn xóa?"
+                        confirm={confirmDeleteCategory}
+                        cancel={cancelDeleteCategory}
+                    >
+                        <Popover content={<div>Xóa chi tiết sản phẩm</div>} title="Chi tiết sản phẩm">
+                            <Button
+                                icon={<BsTrash />}
+                                type="text"
+                                onClick={() => {
+                                    setIdDelete(record?.id);
+                                }}
+                            ></Button>
+                        </Popover>
+                    </DeleteCustom>
+                </div>
+            ),
         },
     ];
 

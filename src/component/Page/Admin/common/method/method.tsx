@@ -3,3 +3,9 @@ export const covertCreateAt = (createAt: string) => {
     const localTime = createdAt.toLocaleString();
     return localTime;
 };
+export const convertVND = (number: number) => {
+    if (!number) {
+        return;
+    }
+    return number.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
+};

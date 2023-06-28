@@ -22,7 +22,7 @@ const SelectCustomer = ({ option, onChange, onSearch, mode }: SelectsProps) => (
     <Select
         mode={mode}
         showSearch
-        placeholder="Select a person"
+        placeholder="Nhập từ khóa cần tìm"
         optionFilterProp="children"
         onChange={onChange}
         onSearch={onSearch}
