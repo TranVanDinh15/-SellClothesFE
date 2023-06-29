@@ -17,7 +17,13 @@ import {
 import { PlusOutlined } from '@ant-design/icons';
 import { GetContext } from '../Admin/common/Context/Context';
 import UploadImageCustomer from '../Admin/common/UploadImage/UploadImage';
-import { GetColorProductById, createProductDetail, getColorSelect, getProductById } from '../../utils/Api/Api';
+import {
+    GetColorProductById,
+    createProductDetail,
+    getColorSelect,
+    getProductById,
+    getProductDetailSize,
+} from '../../utils/Api/Api';
 import SelectCustomer from '../Admin/common/Select/Select';
 import ModalCustomer from '../Admin/common/Modal/ModalCustomer';
 import Content from '../Admin/common/Content/Content';
@@ -29,13 +35,19 @@ import {
     cancelAddSizeDp,
     handleCancelDp,
     handleCancelUpdate,
+    handleCancelUpdateSizeDp,
     handleGetColorById,
     handleGetProductById,
+    handleGetSizeDp,
     handleOkAddDp,
     handleOkUpdate,
+    handleOkUpdateSizeDp,
     handleShowUpdate,
+    handleShowUpdateSizeDp,
     handleSubmitAddSize,
     handleSubmitFailSize,
+    handleSubmitFailUpdateSize,
+    handleSubmitUpdateSize,
     hanleGetSelectColor,
     onChangeColorSelect,
     onFailAdd,
@@ -64,6 +76,14 @@ export default function DetailProductCreate() {
         setIsModalAddSize,
         isOpenDrawerSize,
         setIsOpenDrawerSize,
+        saveIDp,
+        setSaveSizeDp,
+        saveSizeDp,
+        isModalUpdateSize,
+        setIsModalUpdateSize,
+        detailSize,
+        setDetailSize,
+        formUpdate,
     }: any = GetContext();
     console.log(saveItemDp);
     const [isModalUpdate, setIsModalUpdate] = useState<boolean>(false);
@@ -75,9 +95,12 @@ export default function DetailProductCreate() {
     const [GetDetailP, setGetDetailP] = useState<[]>([]);
     const [selectColor, setSelectColor] = useState<[]>([]);
     const [isFetchDp, setIsFetchDp] = useState<boolean>(false);
-    // console.log(isSaveItemsDp);
-    console.log(GetDetailP);
-    //
+    const [initialValue, setInitialValue] = useState('dasdad');
+    console.log(initialValue);
+    console.log(detailSize);
+    const titileSizeDp = () => {
+        return <span></span>;
+    };
     const titleDetail = () => {
         return (
             <div className="titleTable">
@@ -114,6 +137,7 @@ export default function DetailProductCreate() {
         pageSizeOptions: ['5', '10', '20', '50', '100'], // Tùy chọn kích thước trang
         position: ['bottomCenter'],
     };
+    const paginationSizeConfig: TablePaginationConfig = {};
     useEffect(() => {
         hanleGetSelectColor(setSaveColor);
         if (id) {
@@ -125,7 +149,11 @@ export default function DetailProductCreate() {
             handleGetProductById(id, setIsLoading, setGetDetailP);
         }
     }, [isFetchDp]);
-
+    useEffect(() => {
+        if (saveIDp) {
+            handleGetSizeDp(saveIDp, setSaveSizeDp);
+        }
+    }, [saveIDp]);
     return (
         <Content title={'Chi tiết sản phẩm'}>
             {GetDetailP.length > 0 ? (
@@ -207,7 +235,7 @@ export default function DetailProductCreate() {
                                         message: 'Vui lòng nhập chính xác và không để trống!',
                                     },
                                 ]}
-                                initialValue={isSaveDetailProduct?.name}
+                                // initialValue={initialValue}
                             >
                                 <Input placeholder="VD: Áo thun ...." width={'100%'} />
                             </Form.Item>
@@ -495,6 +523,88 @@ export default function DetailProductCreate() {
                     </Form.Item>
                 </Form>
             </ModalCustomer>
+            {/* Modal update size for detail Product */}
+            <ModalCustomer
+                footer={false}
+                isModalOpen={isModalUpdateSize}
+                showModal={() => {
+                    handleShowUpdateSizeDp(setIsModalUpdateSize);
+                }}
+                handleOk={handleOkUpdateSizeDp}
+                handleCancel={() => {
+                    handleCancelUpdateSizeDp(setIsModalUpdateSize);
+                }}
+                title={'Cập nhật Size'}
+            >
+                <Form
+                    form={formUpdate}
+                    name=""
+                    labelCol={{ span: 24 }}
+                    // style={{ width: 700 }}
+                    // initialValues={{ remember: true }}
+                    onFinish={(values) => {
+                        handleSubmitUpdateSize(
+                            values,
+                            detailSize,
+                            setIsLoading,
+                            setIsModalUpdateSize,
+                            saveIDp,
+                            setSaveSizeDp,
+                        );
+                    }}
+                    onFinishFailed={handleSubmitFailUpdateSize}
+                    autoComplete="off"
+                >
+                    <Row gutter={16}>
+                        <Col span={12}>
+                            <Form.Item label="Tên" name="name">
+                                <Input placeholder={detailSize?.name} width={'100%'} />
+                            </Form.Item>
+                        </Col>
+                        <Col span={12}>
+                            <Form.Item label="Chiều rộng" name="width">
+                                <Input placeholder={detailSize?.width} width={'100%'} />
+                            </Form.Item>
+                        </Col>
+                    </Row>
+                    <Row gutter={16} style={{}}>
+                        <Col span={12}>
+                            <Form.Item label="Chiều dài" name="height">
+                                <Input placeholder={detailSize?.height} width={'100%'} />
+                            </Form.Item>
+                        </Col>
+                        <Col span={12}>
+                            <Form.Item label="Cân nặng" name="weight">
+                                <Input placeholder={detailSize?.weight} width={'100%'} />
+                            </Form.Item>
+                        </Col>
+                        <Col span={12}>
+                            <Form.Item label="Số lượng" name="quantity">
+                                <Input placeholder={detailSize?.quantity} width={'100%'} />
+                            </Form.Item>
+                        </Col>
+                    </Row>
+
+                    <Form.Item
+                        wrapperCol={{ span: 24 }}
+                        style={{
+                            display: 'flex',
+                            justifyContent: 'center',
+                        }}
+                    >
+                        <Button
+                            type="primary"
+                            htmlType="submit"
+                            style={{
+                                width: '100px',
+                            }}
+                            loading={isLoading ? true : false}
+                        >
+                            Tạo size
+                        </Button>
+                    </Form.Item>
+                </Form>
+            </ModalCustomer>
             {/* Xem full chi tiết sản phẩm */}
             <Drawer
                 placement="right"
@@ -536,16 +646,27 @@ export default function DetailProductCreate() {
             </Drawer>
             {/* Xem size của sản phẩm */}
             <Drawer
-                title="Basic Drawer"
+                title="Bảng size sản phẩm"
+                width={'50%'}
                 placement="right"
                 onClose={() => {
                     showCloseSize(setIsOpenDrawerSize);
                 }}
                 open={isOpenDrawerSize}
             >
-                <p>Some contents...</p>
-                <p>Some contents...</p>
-                <p>Some contents...</p>
+                {saveSizeDp ? (
+                    <CustomTable
+                        name="SizeDetailProduct"
+                        dataSource={saveSizeDp}
+                        title={titileSizeDp}
+                        paginationConfig={paginationSizeConfig}
+                        showModalUpdate={() => {
+                            // handleShowUpdate(setIsModalUpdate);
+                        }}
+                    />
+                ) : (
+                    <Empty />
+                )}
             </Drawer>
         </Content>
     );

@@ -14,3 +14,11 @@ export interface reqProductSize {
     height: string;
     weight: string;
 }
+export interface reqUpdateSize {
+    productDetailId: number;
+    name: string;
+    width: string;
+    height: string;
+    weight: string;
+    quantity: number;
+}

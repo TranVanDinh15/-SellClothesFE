@@ -27,7 +27,6 @@ function App() {
             children: [
                 {
                     index: true,
-                    // path: 'Dashboard',
                     element: <DashBoad />,
                     errorElement: <NotFound type={'notRole'} />,
                     // loader: teamLoader,

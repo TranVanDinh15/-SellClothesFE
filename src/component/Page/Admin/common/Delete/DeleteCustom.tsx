@@ -7,9 +7,10 @@ interface childrenProps {
     description: string;
     confirm: any;
     cancel: any;
+    placement: any;
 }
 
-const DeleteCustom = ({ children, title, description, confirm, cancel }: childrenProps) => (
+const DeleteCustom = ({ children, title, description, confirm, cancel, placement }: childrenProps) => (
     <Popconfirm
         title={title}
         description={description}
@@ -17,6 +18,7 @@ const DeleteCustom = ({ children, title, description, confirm, cancel }: childre
         onCancel={cancel}
         okText="Xóa"
         cancelText="Trở lại"
+        placement={placement}
     >
         {children}
     </Popconfirm>

@@ -5,7 +5,10 @@ import {
     createProductDetailSize,
     getColorSelect,
     getProductById,
+    getProductDetailSize,
+    updateProductDetailSize,
 } from '../../utils/Api/Api';
+import { detaiSizeIF } from './interfaceProduct/interfaceProduct';
 
 // Get Product By Id
 export const handleGetProductById = async (
@@ -20,20 +23,21 @@ export const handleGetProductById = async (
             const product = response.data.product;
             console.log(product);
             if (product.detail.length > 0) {
-                const result = product.detail.map((item: any) => {
+                const result = product.detail.map((item: any, index: any) => {
                     return {
+                        key: index,
                         id: item.id,
                         name: item.name,
-                        contentMarkdown: product.contentMarkdown,
-                        contentHtml: product.contentHtml,
-                        categoryId: product.categoryId,
-                        statusId: product.statusId,
-                        brandId: product.brandId,
-                        material: product.material,
-                        images: item.images,
-                        color: item.color.value,
-                        originalPrice: item.originalPrice,
-                        discountPrice: item.discountPrice,
+                        contentMarkdown: product?.contentMarkdown,
+                        contentHtml: product?.contentHtml,
+                        categoryId: product?.categoryId,
+                        statusId: product?.statusId,
+                        brandId: product?.brandId,
+                        material: product?.material,
+                        images: item?.images,
+                        color: item?.color?.value,
+                        originalPrice: item?.originalPrice,
+                        discountPrice: item?.discountPrice,
                     };
                 });
                 setGetDetailP(result);
@@ -87,8 +91,8 @@ export const hanleGetSelectColor = async (setSaveColor: React.Dispatch<React.Set
         if (response.data.data.length > 0) {
             const result = response.data.data.map((item: any) => {
                 return {
-                    value: item.code,
-                    label: item.value,
+                    value: item?.code,
+                    label: item?.value,
                 };
             });
             setSaveColor(result);
@@ -211,4 +215,56 @@ export const showDrawerSize = (setState: React.Dispatch<React.SetStateAction<boo
 // Handle show drawer size
 export const showCloseSize = (setState: React.Dispatch<React.SetStateAction<boolean>>) => {
     setState(false);
+};
+// handle Get size detail product
+export const handleGetSizeDp = async (id: number, setSaveSizeDp: React.Dispatch<React.SetStateAction<any>>) => {
+    const response = await getProductDetailSize(id);
+    if (response && response.status == 200) {
+        console.log(response);
+        const sizes = response.data;
+        setSaveSizeDp(sizes);
+    }
+};
+// Hanlde show modal update size
+export const handleShowUpdateSizeDp = (setState: React.Dispatch<React.SetStateAction<boolean>>) => {
+    setState(true);
+};
+// Hanlde cancel modal update size
+export const handleCancelUpdateSizeDp = (setState: React.Dispatch<React.SetStateAction<boolean>>) => {
+    setState(false);
+};
+// Hanlde ok modal update size
+export const handleOkUpdateSizeDp = () => {};
+// Handle submit update add size
+export const handleSubmitUpdateSize = async (
+    values: any,
+    detailSize: detaiSizeIF,
+    setIsLoading: React.Dispatch<React.SetStateAction<boolean>>,
+    setIsModalUpdateSize: React.Dispatch<React.SetStateAction<boolean>>,
+    id: number,
+    setSaveSizeDp: React.Dispatch<React.SetStateAction<any>>,
+) => {
+    if (detailSize) {
+        const reqUpdate = {
+            productDetailId: detailSize.productDetailId,
+            name: values?.name || detailSize.name,
+            width: values?.width || detailSize.width,
+            height: values?.height || detailSize.height,
+            weight: values?.weight || detailSize.weight,
+            quantity: parseInt(values?.quantity) || detailSize.quantity,
+        };
+        console.log(reqUpdate);
+        setIsLoading(true);
+        const response = await updateProductDetailSize(reqUpdate, detailSize.id);
+        if (response) {
+            console.log(response);
+            message.success(response?.data?.message);
+            setIsLoading(false);
+            handleCancelUpdateSizeDp(setIsModalUpdateSize);
+            handleGetSizeDp(id, setSaveSizeDp);
+        }
+    }
+};
+export const handleSubmitFailUpdateSize = (errorInfo: any) => {
+    console.log(errorInfo);
 };

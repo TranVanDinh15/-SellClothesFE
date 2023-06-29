@@ -20,7 +20,6 @@ export default function ProductCategory() {
         setIsLoading(true);
         const response = await getAllCategory(page, pageSize);
         if (response && response.status == 200) {
-            console.log(response);
             const filterData = response.data.data.map((item: any, index: number) => {
                 return {
                     key: index,

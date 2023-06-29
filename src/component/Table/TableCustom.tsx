@@ -10,6 +10,8 @@ import DeleteCustom from '../Page/Admin/common/Delete/DeleteCustom';
 import { deleteBrand, deleteCategory, deleteProdcut } from '../utils/Api/Api';
 import { useNavigate } from 'react-router-dom';
 import { FolderAddOutlined } from '@ant-design/icons';
+import { DataTypeSizeProductDetail } from './TableInterface';
+import { handleGetSizeDp } from '../Page/Product/ProductMethod';
 interface DataType {
     key: React.Key;
     name: string;
@@ -136,6 +138,12 @@ const CustomTable = ({ name, title, dataSource, paginationConfig, showModalUpdat
         setSaveItemDp,
         setIsModalAddSize,
         setIsOpenDrawerSize,
+        setSaveIdDp,
+        saveIDp,
+        setSaveSizeDp,
+        setIsModalUpdateSize,
+        setDetailSize,
+        formUpdate,
     }: any = GetContext();
     console.log(idDelete);
     const confirmDeleteBrand = async (e: any) => {
@@ -207,6 +215,7 @@ const CustomTable = ({ name, title, dataSource, paginationConfig, showModalUpdat
                         description="Bạn chắc chắn muốn xóa?"
                         confirm={confirmDeleteBrand}
                         cancel={cancelDeleteBrand}
+                        placement={'topRight'}
                     >
                         <Button
                             icon={<BsTrash />}
@@ -220,6 +229,8 @@ const CustomTable = ({ name, title, dataSource, paginationConfig, showModalUpdat
             ),
         },
     ];
+    const confirmDeleteDetailSize = () => {};
+    const cancelDeleteDetailSize = () => {};
     // Collums của Product
     const collumsProduct: ColumnType<DataTypeProduct>[] = [
         {
@@ -299,6 +310,7 @@ const CustomTable = ({ name, title, dataSource, paginationConfig, showModalUpdat
                         description="Bạn chắc chắn muốn xóa?"
                         confirm={confirmDeleteProduct}
                         cancel={cancelDeleteBrand}
+                        placement={'topRight'}
                     >
                         <Button
                             icon={<BsTrash />}
@@ -325,7 +337,6 @@ const CustomTable = ({ name, title, dataSource, paginationConfig, showModalUpdat
         },
         {
             title: 'Action',
-            dataIndex: 'updatedAt',
             render: (text, record, index) => (
                 <div>
                     <Button
@@ -341,6 +352,7 @@ const CustomTable = ({ name, title, dataSource, paginationConfig, showModalUpdat
                         description="Bạn chắc chắn muốn xóa?"
                         confirm={confirmDeleteCategory}
                         cancel={cancelDeleteCategory}
+                        placement={'topRight'}
                     >
                         <Button
                             icon={<BsTrash />}
@@ -380,10 +392,7 @@ const CustomTable = ({ name, title, dataSource, paginationConfig, showModalUpdat
             dataIndex: 'contentHtml',
             render: (value, record, index) => <Button>Xem</Button>,
         },
-        // {
-        //     title: 'Danh mục Sp',
-        //     dataIndex: 'categoryId',
-        // },
+
         {
             title: 'Thương hiệu',
             dataIndex: 'brandId',
@@ -396,10 +405,12 @@ const CustomTable = ({ name, title, dataSource, paginationConfig, showModalUpdat
         {
             title: 'Size',
             // dataIndex: 'material',
-            render: () => (
+            render: (value, record) => (
                 <Button
                     onClick={() => {
                         setIsOpenDrawerSize(true);
+                        setSaveIdDp(record?.id);
+                        handleGetSizeDp(saveIDp, setSaveSizeDp);
                     }}
                 >
                     Xem
@@ -447,6 +458,7 @@ const CustomTable = ({ name, title, dataSource, paginationConfig, showModalUpdat
                         description="Bạn chắc chắn muốn xóa?"
                         confirm={confirmDeleteCategory}
                         cancel={cancelDeleteCategory}
+                        placement={'topRight'}
                     >
                         <Popover content={<div>Xóa chi tiết sản phẩm</div>} title="Chi tiết sản phẩm">
                             <Button
@@ -462,7 +474,55 @@ const CustomTable = ({ name, title, dataSource, paginationConfig, showModalUpdat
             ),
         },
     ];
-
+    const collumsSizeDetailProduct: ColumnType<DataTypeSizeProductDetail>[] = [
+        {
+            title: 'Tên size',
+            dataIndex: 'name',
+        },
+        {
+            title: 'Chiều dài',
+            dataIndex: 'height',
+        },
+        {
+            title: 'Chiều rộng',
+            dataIndex: 'width',
+        },
+        {
+            title: 'cân nặng',
+            dataIndex: 'weight',
+        },
+        {
+            title: 'Action',
+            render: (text, record, index) => (
+                <div>
+                    <Button
+                        icon={<HiOutlinePencilSquare />}
+                        type="text"
+                        onClick={async () => {
+                            await formUpdate.resetFields();
+                            setIsModalUpdateSize(true);
+                            setDetailSize(record);
+                        }}
+                    ></Button>
+                    <DeleteCustom
+                        title="Xóa size"
+                        description="Bạn chắc chắn muốn xóa?"
+                        confirm={confirmDeleteDetailSize}
+                        cancel={cancelDeleteDetailSize}
+                        placement={'topLeft'}
+                    >
+                        <Button
+                            icon={<BsTrash />}
+                            type="text"
+                            onClick={() => {
+                                // setIdDelete(record?.id);
+                            }}
+                        ></Button>
+                    </DeleteCustom>
+                </div>
+            ),
+        },
+    ];
     return (
         <React.Fragment>
             {name == 'Users' ? <Table columns={columns} dataSource={data} onChange={onChange} title={title} /> : ''}
@@ -487,6 +547,16 @@ const CustomTable = ({ name, title, dataSource, paginationConfig, showModalUpdat
                     dataSource={dataSource}
                     title={title}
                     pagination={paginationConfig}
+                />
+            ) : (
+                ''
+            )}
+            {name == 'SizeDetailProduct' ? (
+                <Table
+                    columns={collumsSizeDetailProduct}
+                    dataSource={dataSource}
+                    title={title}
+                    // pagination={paginationConfig}
                 />
             ) : (
                 ''

@@ -1,3 +1,4 @@
+import { Form } from 'antd';
 import React, { createContext, useContext, useEffect, useState } from 'react';
 interface childrenProps {
     children: React.ReactNode;
@@ -34,6 +35,15 @@ type MyContextType = {
     setIsModalAddSize: React.Dispatch<React.SetStateAction<boolean>>;
     isOpenDrawerSize: boolean;
     setIsOpenDrawerSize: React.Dispatch<React.SetStateAction<boolean>>;
+    saveSizeDp: any;
+    setSaveSizeDp: React.Dispatch<React.SetStateAction<any>>;
+    saveIDp: number | undefined;
+    setSaveIdDp: React.Dispatch<React.SetStateAction<number | undefined>>;
+    isModalUpdateSize: boolean;
+    setIsModalUpdateSize: React.Dispatch<React.SetStateAction<boolean>>;
+    detailSize: any;
+    setDetailSize: React.Dispatch<React.SetStateAction<any>>;
+    formUpdate: any;
 };
 const ChatContext = createContext<MyContextType | undefined>(undefined);
 const ChatProvide = ({ children }: childrenProps) => {
@@ -61,6 +71,16 @@ const ChatProvide = ({ children }: childrenProps) => {
     const [isOpenDrawerSize, setIsOpenDrawerSize] = useState<boolean>(false);
     // đóng mở modal add size
     const [isModalAddSize, setIsModalAddSize] = useState<boolean>(false);
+    // Lưu Id của Product Detail
+    const [saveIDp, setSaveIdDp] = useState<number | undefined>();
+    // lưu size product detail
+    const [saveSizeDp, setSaveSizeDp] = useState<any>();
+    // Quản lý đóng mở modal update size
+    const [isModalUpdateSize, setIsModalUpdateSize] = useState<any>();
+    // Quản lý Id của product detail size ( xử dụng để update + delete)
+    const [detailSize, setDetailSize] = useState<any>();
+    // Quản lý Form update size
+    const [formUpdate] = Form.useForm();
     return (
         <ChatContext.Provider
             value={{
@@ -94,6 +114,15 @@ const ChatProvide = ({ children }: childrenProps) => {
                 setIsModalAddSize,
                 isOpenDrawerSize,
                 setIsOpenDrawerSize,
+                saveSizeDp,
+                setSaveSizeDp,
+                saveIDp,
+                setSaveIdDp,
+                isModalUpdateSize,
+                setIsModalUpdateSize,
+                detailSize,
+                setDetailSize,
+                formUpdate,
             }}
         >
             {children}

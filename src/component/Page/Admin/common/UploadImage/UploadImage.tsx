@@ -18,7 +18,6 @@ const getBase64 = (file: RcFile): Promise<string> =>
     });
 export default function UploadImageCustomer({ multilple }: uploadImageProps) {
     const { imagesUploadMultiple, setImagesUploadMultiple }: any = GetContext();
-    console.log(imagesUploadMultiple);
     const [previewOpen, setPreviewOpen] = useState<boolean>(false);
     const [previewImage, setPreviewImage] = useState('');
     const [previewTitle, setPreviewTitle] = useState('');

@@ -1,3 +1,5 @@
+import React from 'react';
+
 export interface DataTypeProductDetail {
     key: React.Key;
     id: number;
@@ -9,4 +11,12 @@ export interface DataTypeProductDetail {
     brandId: string;
     color: string;
     material: string;
+}
+export interface DataTypeSizeProductDetail {
+    key: React.Key;
+    id: number;
+    name: string;
+    width: string;
+    height: string;
+    weight: string;
 }
