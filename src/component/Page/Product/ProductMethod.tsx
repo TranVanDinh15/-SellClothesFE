@@ -204,3 +204,11 @@ export const handleSubmitFailSize = () => {};
 export const cancelAddSizeDp = (setIsModalAddSize: React.Dispatch<React.SetStateAction<boolean>>) => {
     setIsModalAddSize(false);
 };
+// Handle show drawer size
+export const showDrawerSize = (setState: React.Dispatch<React.SetStateAction<boolean>>) => {
+    setState(true);
+};
+// Handle show drawer size
+export const showCloseSize = (setState: React.Dispatch<React.SetStateAction<boolean>>) => {
+    setState(false);
+};

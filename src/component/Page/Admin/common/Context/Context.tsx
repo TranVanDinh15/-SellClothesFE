@@ -32,6 +32,8 @@ type MyContextType = {
     setSaveItemDp: React.Dispatch<React.SetStateAction<any>>;
     isModalAddSize: boolean;
     setIsModalAddSize: React.Dispatch<React.SetStateAction<boolean>>;
+    isOpenDrawerSize: boolean;
+    setIsOpenDrawerSize: React.Dispatch<React.SetStateAction<boolean>>;
 };
 const ChatContext = createContext<MyContextType | undefined>(undefined);
 const ChatProvide = ({ children }: childrenProps) => {
@@ -55,6 +57,8 @@ const ChatProvide = ({ children }: childrenProps) => {
     const [idDeleteProdcut, setIdDeleteProduct] = useState();
     const [openFullDp, setOpenFullDp] = useState<boolean>(false);
     const [saveItemDp, setSaveItemDp] = useState<any>();
+    // đóng mở drawer size
+    const [isOpenDrawerSize, setIsOpenDrawerSize] = useState<boolean>(false);
     // đóng mở modal add size
     const [isModalAddSize, setIsModalAddSize] = useState<boolean>(false);
     return (
@@ -88,6 +92,8 @@ const ChatProvide = ({ children }: childrenProps) => {
                 setSaveItemDp,
                 isModalAddSize,
                 setIsModalAddSize,
+                isOpenDrawerSize,
+                setIsOpenDrawerSize,
             }}
         >
             {children}

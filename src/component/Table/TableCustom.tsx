@@ -135,6 +135,7 @@ const CustomTable = ({ name, title, dataSource, paginationConfig, showModalUpdat
         setOpenFullDp,
         setSaveItemDp,
         setIsModalAddSize,
+        setIsOpenDrawerSize,
     }: any = GetContext();
     console.log(idDelete);
     const confirmDeleteBrand = async (e: any) => {
@@ -392,10 +393,19 @@ const CustomTable = ({ name, title, dataSource, paginationConfig, showModalUpdat
             dataIndex: 'color',
             render: (value, record, index) => <span>{value}</span>,
         },
-        // {
-        //     title: 'Chất liệu',
-        //     dataIndex: 'material',
-        // },
+        {
+            title: 'Size',
+            // dataIndex: 'material',
+            render: () => (
+                <Button
+                    onClick={() => {
+                        setIsOpenDrawerSize(true);
+                    }}
+                >
+                    Xem
+                </Button>
+            ),
+        },
         {
             title: 'Tình trạng',
             dataIndex: 'statusId',

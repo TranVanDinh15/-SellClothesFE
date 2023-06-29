@@ -45,6 +45,7 @@ import {
     onSearchColorSelect,
     onViewCloseFullDp,
     showAddSizeDp,
+    showCloseSize,
     showModalAddDp,
 } from './ProductMethod';
 
@@ -61,6 +62,8 @@ export default function DetailProductCreate() {
         saveItemDp,
         isModalAddSize,
         setIsModalAddSize,
+        isOpenDrawerSize,
+        setIsOpenDrawerSize,
     }: any = GetContext();
     console.log(saveItemDp);
     const [isModalUpdate, setIsModalUpdate] = useState<boolean>(false);
@@ -72,12 +75,8 @@ export default function DetailProductCreate() {
     const [GetDetailP, setGetDetailP] = useState<[]>([]);
     const [selectColor, setSelectColor] = useState<[]>([]);
     const [isFetchDp, setIsFetchDp] = useState<boolean>(false);
-    console.log(isSaveItemsDp);
-
-    // const onViewCloseFullDp = () => {
-    //     setOpenFullDp(false);
-    // };
-
+    // console.log(isSaveItemsDp);
+    console.log(GetDetailP);
     //
     const titleDetail = () => {
         return (
@@ -534,6 +533,19 @@ export default function DetailProductCreate() {
                 ) : (
                     <Empty />
                 )}
+            </Drawer>
+            {/* Xem size của sản phẩm */}
+            <Drawer
+                title="Basic Drawer"
+                placement="right"
+                onClose={() => {
+                    showCloseSize(setIsOpenDrawerSize);
+                }}
+                open={isOpenDrawerSize}
+            >
+                <p>Some contents...</p>
+                <p>Some contents...</p>
+                <p>Some contents...</p>
             </Drawer>
         </Content>
     );
