@@ -88,6 +88,11 @@ export default function DetailProductCreate() {
         isModalUpdate,
         setIsModalUpdate,
         formUpdateSize,
+        imageDp,
+        setImageDp,
+        setImagesUploadMultiple,
+        saveIdDetailProduct,
+        setSaveIdDetailProduct,
     }: any = GetContext();
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [saveColor, setSaveColor] = useState([]);
@@ -96,7 +101,7 @@ export default function DetailProductCreate() {
     const [page, setPage] = useState<number>(1);
     const [GetDetailP, setGetDetailP] = useState<[]>([]);
     const [selectColor, setSelectColor] = useState<[]>([]);
-
+    console.log(imagesUploadMultiple);
     const titileSizeDp = () => {
         return <span></span>;
     };
@@ -151,7 +156,6 @@ export default function DetailProductCreate() {
     }, []);
     useEffect(() => {
         if (id) {
-            // handleGetProductById(id, setIsLoading, setGetDetailP);
             getProductDetail(setIsLoading, parseInt(id), setGetDetailP);
         }
     }, [isFetchDp]);
@@ -200,6 +204,8 @@ export default function DetailProductCreate() {
                 open={isModalUpdate}
                 onOk={handleOkUpdate}
                 onCancel={() => {
+                    setImageDp([]);
+
                     handleCancelUpdate(setIsModalUpdate);
                 }}
                 footer
@@ -209,9 +215,19 @@ export default function DetailProductCreate() {
                     form={formUpdate}
                     name="basic"
                     labelCol={{ span: 24 }}
-                    // style={{ width: 700 }}
-                    // initialValues={{ remember: true }}
-                    onFinish={onFinishUpdate}
+                    onFinish={(values) => {
+                        onFinishUpdate(
+                            saveIdDetailProduct,
+                            values,
+                            setIsLoading,
+                            setIsFetchDp,
+                            imagesUploadMultiple,
+                            imageDp,
+                            isFetchDp,
+                            setIsModalUpdate,
+                            setImageDp,
+                        );
+                    }}
                     onFinishFailed={onFailUpdate}
                     autoComplete="off"
                 >
@@ -235,7 +251,7 @@ export default function DetailProductCreate() {
                         </Col>
                         <Col span={12}>
                             <Form.Item label="Mô tả" name="description">
-                                <Input placeholder="Điền chữ số" width={'100%'} />
+                                <Input placeholder="Viết mô tả sản phẩm" width={'100%'} />
                             </Form.Item>
                         </Col>
                     </Row>
@@ -248,6 +264,16 @@ export default function DetailProductCreate() {
                                     onChange={onChangeColorSelect}
                                     onSearch={onSearchColorSelect}
                                 />
+                            </Form.Item>
+                        </Col>
+                        <Col
+                            span={12}
+                            style={{
+                                display: 'none',
+                            }}
+                        >
+                            <Form.Item label="Màu sắc" name="productId">
+                                <Input placeholder="Viết mô tả sản phẩm" width={'100%'} />
                             </Form.Item>
                         </Col>
                     </Row>
@@ -282,7 +308,7 @@ export default function DetailProductCreate() {
                 }}
                 handleOk={handleOkAddDp}
                 handleCancel={() => {
-                    handleCancelDp(setIsModalAddDpOpen);
+                    handleCancelDp(setIsModalAddDpOpen, setImagesUploadMultiple);
                 }}
                 title={'Thêm chi tiết sản phẩm'}
             >
@@ -299,6 +325,7 @@ export default function DetailProductCreate() {
                             setIsModalAddDpOpen,
                             isFetchDp,
                             setIsFetchDp,
+                            setImagesUploadMultiple,
                         );
                     }}
                     onFinishFailed={onFailAdd}
@@ -388,7 +415,7 @@ export default function DetailProductCreate() {
                                 width: '100px',
                             }}
                         >
-                            Tạo
+                            cập nhật
                         </Button>
                     </Form.Item>
                 </Form>
@@ -509,7 +536,7 @@ export default function DetailProductCreate() {
                 }}
                 handleOk={handleOkUpdateSizeDp}
                 handleCancel={() => {
-                    handleCancelUpdateSizeDp(setIsModalUpdateSize);
+                    handleCancelUpdateSizeDp(setIsModalUpdateSize, formUpdateSize);
                 }}
                 title={'Cập nhật Size'}
             >
@@ -517,8 +544,6 @@ export default function DetailProductCreate() {
                     form={formUpdateSize}
                     name=""
                     labelCol={{ span: 24 }}
-                    // style={{ width: 700 }}
-                    // initialValues={{ remember: true }}
                     onFinish={(values) => {
                         handleSubmitUpdateSize(
                             values,
@@ -527,6 +552,7 @@ export default function DetailProductCreate() {
                             setIsModalUpdateSize,
                             saveIDp,
                             setSaveSizeDp,
+                            formUpdateSize,
                         );
                     }}
                     onFinishFailed={handleSubmitFailUpdateSize}
@@ -577,7 +603,7 @@ export default function DetailProductCreate() {
                             }}
                             loading={isLoading ? true : false}
                         >
-                            Tạo size
+                            Cập nhật
                         </Button>
                     </Form.Item>
                 </Form>

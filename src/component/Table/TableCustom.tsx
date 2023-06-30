@@ -10,7 +10,7 @@ import DeleteCustom from '../Page/Admin/common/Delete/DeleteCustom';
 import { deleteBrand, deleteCategory, deleteProdcut } from '../utils/Api/Api';
 import { useNavigate } from 'react-router-dom';
 import { FolderAddOutlined } from '@ant-design/icons';
-import { DataTypeSizeProductDetail } from './TableInterface';
+import { DataTypeProductDetail, DataTypeSizeProductDetail } from './TableInterface';
 import { handleDeleteDetailSize, handleDeleteProductDetail, handleGetSizeDp } from '../Page/Product/ProductMethod';
 interface DataType {
     key: React.Key;
@@ -38,15 +38,7 @@ interface DataTypeProduct {
     sold: string;
     createdAt: string;
 }
-interface DataTypeProductDetail {
-    key: React.Key;
-    id: number;
-    name: string;
-    originalPrice: number;
-    discountPrice: number;
-    description: string;
-    colorId: any;
-}
+
 interface PropsTable {
     name: string;
     title: () => ReactNode;
@@ -150,6 +142,9 @@ const CustomTable = ({ name, title, dataSource, paginationConfig, showModalUpdat
         setIsFetchSizeDp,
         setIsModalUpdate,
         formUpdateSize,
+        setImageDp,
+        setSaveIdDetailProduct,
+        setImagesUploadMultiple,
     }: any = GetContext();
     console.log(idDelete);
     const confirmDeleteBrand = async (e: any) => {
@@ -450,16 +445,30 @@ const CustomTable = ({ name, title, dataSource, paginationConfig, showModalUpdat
                             icon={<HiOutlinePencilSquare />}
                             type="text"
                             onClick={() => {
-                                // showModalUpdate();
-                                // setDataUpdate(record);
+                                console.log(record);
                                 formUpdate.setFieldsValue({
                                     name: record?.name,
                                     originalPrice: record?.originalPrice,
                                     discountPrice: record?.discountPrice,
                                     description: record?.description,
                                     colorId: record?.colorId,
+                                    productId: record?.productId,
                                 });
                                 setIsModalUpdate(true);
+                                setSaveIdDetailProduct(record?.id);
+                                if (record.images) {
+                                    const resultImages = record.images.map((item: string, index: any) => {
+                                        return {
+                                            id: index,
+                                            name: item,
+                                            status: 'done',
+                                            url: `${process.env.REACT_APP_IMAGE_PRODUCT_DETAIL_URL}${item}`,
+                                            image: item,
+                                        };
+                                    });
+                                    setImageDp(resultImages);
+                                    setImagesUploadMultiple(resultImages);
+                                }
                             }}
                         ></Button>
                     </Popover>

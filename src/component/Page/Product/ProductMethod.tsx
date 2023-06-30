@@ -9,9 +9,12 @@ import {
     getProductById,
     getProductDetailById,
     getProductDetailSize,
+    updateProductDetail,
     updateProductDetailSize,
 } from '../../utils/Api/Api';
 import { detaiSizeIF } from './interfaceProduct/interfaceProduct';
+import { AnyObject } from 'antd/es/table/Table';
+import Item from 'antd/es/list/Item';
 
 // Get Color Product By Id
 export const handleGetColorById = async (id: string, setSelectColor: React.Dispatch<React.SetStateAction<any>>) => {
@@ -39,7 +42,10 @@ export const showModalAddDp = (setIsModalAddDpOpen: React.Dispatch<React.SetStat
 // Handle Submit Modal Add detail Product
 export const handleOkAddDp = () => {};
 // HandleCancel Add Detail Product
-export const handleCancelDp = (setIsModalAddDpOpen: React.Dispatch<React.SetStateAction<boolean>>) => {
+export const handleCancelDp = (
+    setIsModalAddDpOpen: React.Dispatch<React.SetStateAction<boolean>>,
+    setImagesUploadMultiple: React.Dispatch<React.SetStateAction<any>>,
+) => {
     setIsModalAddDpOpen(false);
 };
 
@@ -66,17 +72,48 @@ export const hanleGetSelectColor = async (setSaveColor: React.Dispatch<React.Set
         }
     }
 };
-export const onFinishUpdate = (values: any) => {
-    console.log(values);
-    // const reqUpdate = {
-    //     productId: 6,
-    //     name: 'APN4396-DEN',
-    //     originalPrice: 2000,
-    //     discountPrice: 1400,
-    //     description: 'hdhhdhd',
-    //     images: imagesUpload,
-    //     colorId: 'red',
-    // };
+export const onFinishUpdate = async (
+    detailId: number,
+    values: any,
+    setIsLoading: React.Dispatch<React.SetStateAction<boolean>>,
+    setIsFetchDp: React.Dispatch<React.SetStateAction<boolean>>,
+    imagesUploadMultiple: any,
+    imageDp: any,
+    IsFetchDp: boolean,
+    setIsModalUpdate: React.Dispatch<React.SetStateAction<boolean>>,
+    setImageDp: React.Dispatch<React.SetStateAction<any>>,
+) => {
+    console.log(imagesUploadMultiple, imageDp);
+    if (detailId) {
+        const reqUpdate = {
+            productId: values?.productId,
+            name: values?.name,
+            originalPrice: values?.originalPrice,
+            discountPrice: values?.discountPrice,
+            description: values?.description,
+            images: imagesUploadMultiple.map((item: any) => {
+                return item?.image;
+            }),
+            colorId: values?.colorId,
+        };
+        setIsLoading(true);
+        const response = await updateProductDetail(detailId, reqUpdate);
+        if (response && response.status == 200) {
+            setIsLoading(false);
+            message.success(response?.data?.message);
+            setIsModalUpdate(false);
+            setImageDp([]);
+            if (IsFetchDp) {
+                setIsFetchDp(false);
+            } else {
+                setIsFetchDp(true);
+            }
+        } else {
+            message.error('Đã có lỗi xảy ra');
+        }
+    } else {
+        message.error('Sản phẩm không tồn tại');
+    }
 };
 export const onFailUpdate = (errorInfo: any) => {
     console.log('Failed:', errorInfo);
@@ -90,6 +127,7 @@ export const onFinishAdd = async (
     setIsModalAddDpOpen: React.Dispatch<React.SetStateAction<boolean>>,
     isFetchDp: boolean,
     setIsFetchDp: React.Dispatch<React.SetStateAction<boolean>>,
+    setImagesUploadMultiple: React.Dispatch<React.SetStateAction<any>>,
 ) => {
     setIsLoading(true);
     if (id) {
@@ -108,7 +146,7 @@ export const onFinishAdd = async (
         const response = await createProductDetail(reqUpdate);
         if (response && response.status == 201) {
             message.success('Tạo thành công');
-            handleCancelDp(setIsModalAddDpOpen);
+            handleCancelDp(setIsModalAddDpOpen, setImagesUploadMultiple);
             if (isFetchDp) {
                 setIsFetchDp(false);
             } else {
@@ -265,8 +303,12 @@ export const handleShowUpdateSizeDp = (setState: React.Dispatch<React.SetStateAc
     setState(true);
 };
 // Hanlde cancel modal update size
-export const handleCancelUpdateSizeDp = (setState: React.Dispatch<React.SetStateAction<boolean>>) => {
+export const handleCancelUpdateSizeDp = (
+    setState: React.Dispatch<React.SetStateAction<boolean>>,
+    formUpdateSize: any,
+) => {
     setState(false);
+    formUpdateSize.resetFields();
 };
 // Hanlde ok modal update size
 export const handleOkUpdateSizeDp = () => {};
@@ -278,6 +320,7 @@ export const handleSubmitUpdateSize = async (
     setIsModalUpdateSize: React.Dispatch<React.SetStateAction<boolean>>,
     id: number,
     setSaveSizeDp: React.Dispatch<React.SetStateAction<any>>,
+    formUpdateSize: any,
 ) => {
     if (detailSize) {
         const reqUpdate = {
@@ -288,14 +331,13 @@ export const handleSubmitUpdateSize = async (
             weight: values?.weight || detailSize.weight,
             quantity: parseInt(values?.quantity) || detailSize.quantity,
         };
-        console.log(reqUpdate);
         setIsLoading(true);
         const response = await updateProductDetailSize(reqUpdate, detailSize.id);
         if (response) {
             console.log(response);
             message.success(response?.data?.message);
             setIsLoading(false);
-            handleCancelUpdateSizeDp(setIsModalUpdateSize);
+            handleCancelUpdateSizeDp(setIsModalUpdateSize, formUpdateSize);
             handleGetSizeDp(id, setSaveSizeDp);
         }
     }

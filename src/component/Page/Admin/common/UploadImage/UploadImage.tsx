@@ -17,11 +17,11 @@ const getBase64 = (file: RcFile): Promise<string> =>
         reader.onerror = (error) => reject(error);
     });
 export default function UploadImageCustomer({ multilple }: uploadImageProps) {
-    const { imagesUploadMultiple, setImagesUploadMultiple }: any = GetContext();
+    const { imagesUploadMultiple, setImagesUploadMultiple, imageDp, setImageDp }: any = GetContext();
     const [previewOpen, setPreviewOpen] = useState<boolean>(false);
     const [previewImage, setPreviewImage] = useState('');
     const [previewTitle, setPreviewTitle] = useState('');
-    const [fileList, setFileList] = useState<UploadFile[]>([]);
+    // const [fileList, setFileList] = useState<UploadFile[]>([]);
     const handleCancel = () => setPreviewOpen(false);
 
     const handlePreview = async (file: UploadFile) => {
@@ -36,6 +36,7 @@ export default function UploadImageCustomer({ multilple }: uploadImageProps) {
     const uploadImageMultiple = async (options: any) => {
         const { onSuccess, onError, file, onProgress } = options;
         try {
+            // setImagesUploadMultiple();
             const formData = new FormData();
             formData.append('images', file);
             const response = await uploadImageRequest(formData);
@@ -43,7 +44,7 @@ export default function UploadImageCustomer({ multilple }: uploadImageProps) {
                 setImagesUploadMultiple((state: any) => [
                     ...state,
                     {
-                        id: file.uid,
+                        uid: file.uid,
                         image: response.data.images[0],
                     },
                 ]);
@@ -55,16 +56,16 @@ export default function UploadImageCustomer({ multilple }: uploadImageProps) {
     };
     // Xử lý khi remove ảnh
     const hanleRemove = (file: any) => {
-        console.log(imagesUploadMultiple);
+        console.log(file);
         const filterRemove = imagesUploadMultiple.filter((item: any) => {
-            return item.id != file.uid;
+            return item.uid != file.uid;
         });
         setImagesUploadMultiple(filterRemove);
     };
     // Xử lý khi update một ảnh
     const uploadImageSingle = () => {};
 
-    const handleChange: UploadProps['onChange'] = ({ fileList: newFileList }) => setFileList(newFileList);
+    const handleChange: UploadProps['onChange'] = ({ fileList: newFileList }) => setImageDp(newFileList);
 
     const uploadButton = (
         <div>
@@ -79,7 +80,7 @@ export default function UploadImageCustomer({ multilple }: uploadImageProps) {
                 action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
                 customRequest={multilple ? uploadImageMultiple : uploadImageSingle}
                 listType="picture-card"
-                fileList={fileList}
+                fileList={imageDp}
                 onPreview={handlePreview}
                 onChange={handleChange}
                 accept="image/*"
@@ -89,7 +90,7 @@ export default function UploadImageCustomer({ multilple }: uploadImageProps) {
                     console.log('ok');
                 }}
             >
-                {fileList.length >= 8 ? null : uploadButton}
+                {imageDp.length >= 8 ? null : uploadButton}
             </Upload>
             <Modal open={previewOpen} title={previewTitle} footer={null} onCancel={handleCancel}>
                 <img alt="example" style={{ width: '100%' }} src={previewImage} />

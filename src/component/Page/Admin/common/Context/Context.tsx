@@ -51,6 +51,10 @@ type MyContextType = {
     setIsFetchSizeDp: React.Dispatch<React.SetStateAction<boolean>>;
     isModalUpdate: boolean;
     setIsModalUpdate: React.Dispatch<React.SetStateAction<boolean>>;
+    imageDp: any;
+    setImageDp: React.Dispatch<React.SetStateAction<any>>;
+    saveIdDetailProduct: number | undefined;
+    setSaveIdDetailProduct: React.Dispatch<React.SetStateAction<number | undefined>>;
 };
 const ChatContext = createContext<MyContextType | undefined>(undefined);
 const ChatProvide = ({ children }: childrenProps) => {
@@ -96,6 +100,10 @@ const ChatProvide = ({ children }: childrenProps) => {
     const [isFetchDp, setIsFetchDp] = useState<boolean>(false);
     // Quản lý reCall Api get Size Detail product
     const [isFetchSizeDp, setIsFetchSizeDp] = useState<boolean>(false);
+    // Quản lý ảnh của product detail
+    const [imageDp, setImageDp] = useState<any>();
+    // Quản lý lưu Id product Detail
+    const [saveIdDetailProduct, setSaveIdDetailProduct] = useState<number | undefined>();
     return (
         <ChatContext.Provider
             value={{
@@ -145,6 +153,10 @@ const ChatProvide = ({ children }: childrenProps) => {
                 isModalUpdate,
                 setIsModalUpdate,
                 formUpdateSize,
+                imageDp,
+                setImageDp,
+                saveIdDetailProduct,
+                setSaveIdDetailProduct,
             }}
         >
             {children}
