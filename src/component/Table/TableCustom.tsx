@@ -11,7 +11,7 @@ import { deleteBrand, deleteCategory, deleteProdcut } from '../utils/Api/Api';
 import { useNavigate } from 'react-router-dom';
 import { FolderAddOutlined } from '@ant-design/icons';
 import { DataTypeSizeProductDetail } from './TableInterface';
-import { handleGetSizeDp } from '../Page/Product/ProductMethod';
+import { handleDeleteDetailSize, handleDeleteProductDetail, handleGetSizeDp } from '../Page/Product/ProductMethod';
 interface DataType {
     key: React.Key;
     name: string;
@@ -144,6 +144,10 @@ const CustomTable = ({ name, title, dataSource, paginationConfig, showModalUpdat
         setIsModalUpdateSize,
         setDetailSize,
         formUpdate,
+        isFetchDp,
+        setIsFetchDp,
+        isFetchSizeDp,
+        setIsFetchSizeDp,
     }: any = GetContext();
     console.log(idDelete);
     const confirmDeleteBrand = async (e: any) => {
@@ -293,6 +297,10 @@ const CustomTable = ({ name, title, dataSource, paginationConfig, showModalUpdat
             },
         },
         {
+            title: 'Tình trạng',
+            dataIndex: 'statusId',
+        },
+        {
             title: 'Action',
             dataIndex: 'updatedAt',
             render: (text, record, index) => (
@@ -368,7 +376,7 @@ const CustomTable = ({ name, title, dataSource, paginationConfig, showModalUpdat
     ];
     const collumsDetailProduct: ColumnType<DataTypeProductDetail>[] = [
         {
-            title: 'tên Sp',
+            title: 'Tên Sp',
             dataIndex: 'name',
             render: (value, record, index) => (
                 <Popover content={<div>Xem chi tiết sản phẩm</div>} title="Chi tiết sản phẩm">
@@ -392,14 +400,9 @@ const CustomTable = ({ name, title, dataSource, paginationConfig, showModalUpdat
             dataIndex: 'contentHtml',
             render: (value, record, index) => <Button>Xem</Button>,
         },
-
-        {
-            title: 'Thương hiệu',
-            dataIndex: 'brandId',
-        },
         {
             title: 'Màu sắc',
-            dataIndex: 'color',
+            dataIndex: 'colorId',
             render: (value, record, index) => <span>{value}</span>,
         },
         {
@@ -417,10 +420,7 @@ const CustomTable = ({ name, title, dataSource, paginationConfig, showModalUpdat
                 </Button>
             ),
         },
-        {
-            title: 'Tình trạng',
-            dataIndex: 'statusId',
-        },
+
         {
             title: 'Action',
             // dataIndex: 'updatedAt',
@@ -454,9 +454,11 @@ const CustomTable = ({ name, title, dataSource, paginationConfig, showModalUpdat
                         ></Button>
                     </Popover>
                     <DeleteCustom
-                        title="Xóa thương hiệu"
+                        title="Xóa chi tiết sản phẩm"
                         description="Bạn chắc chắn muốn xóa?"
-                        confirm={confirmDeleteCategory}
+                        confirm={() => {
+                            handleDeleteProductDetail(record?.id, isFetchDp, setIsFetchDp);
+                        }}
                         cancel={cancelDeleteCategory}
                         placement={'topRight'}
                     >
@@ -465,7 +467,7 @@ const CustomTable = ({ name, title, dataSource, paginationConfig, showModalUpdat
                                 icon={<BsTrash />}
                                 type="text"
                                 onClick={() => {
-                                    setIdDelete(record?.id);
+                                    // setIdDelete(record?.id);
                                 }}
                             ></Button>
                         </Popover>
@@ -507,7 +509,9 @@ const CustomTable = ({ name, title, dataSource, paginationConfig, showModalUpdat
                     <DeleteCustom
                         title="Xóa size"
                         description="Bạn chắc chắn muốn xóa?"
-                        confirm={confirmDeleteDetailSize}
+                        confirm={() => {
+                            handleDeleteDetailSize(record.id, isFetchSizeDp, setIsFetchSizeDp);
+                        }}
                         cancel={cancelDeleteDetailSize}
                         placement={'topLeft'}
                     >

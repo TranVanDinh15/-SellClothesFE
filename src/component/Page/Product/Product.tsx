@@ -66,6 +66,7 @@ export default function Product() {
                     brandId: item?.brandId,
                     sold: item?.sold,
                     detail: item?.detail,
+                    statusId: item?.statusId,
                     createdAt: item?.createdAt,
                 };
             });
@@ -342,13 +343,7 @@ export default function Product() {
             </div>
         );
     };
-    // <CustomTable
-    //     name="Product"
-    //     title={TitleTable}
-    //     dataSource={dataTable}
-    //     paginationConfig={paginationConfig}
-    //     showModalUpdate={showModalUpdate}
-    // />
+
     const paginationConfig: TablePaginationConfig = {
         total: total, // Tổng số mục dữ liệu
         pageSize: pageSize, // Số mục dữ liệu trên mỗi trang

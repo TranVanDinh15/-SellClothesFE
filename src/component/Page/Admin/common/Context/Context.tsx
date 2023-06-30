@@ -44,6 +44,10 @@ type MyContextType = {
     detailSize: any;
     setDetailSize: React.Dispatch<React.SetStateAction<any>>;
     formUpdate: any;
+    isFetchDp: boolean;
+    setIsFetchDp: React.Dispatch<React.SetStateAction<boolean>>;
+    isFetchSizeDp: boolean;
+    setIsFetchSizeDp: React.Dispatch<React.SetStateAction<boolean>>;
 };
 const ChatContext = createContext<MyContextType | undefined>(undefined);
 const ChatProvide = ({ children }: childrenProps) => {
@@ -81,6 +85,10 @@ const ChatProvide = ({ children }: childrenProps) => {
     const [detailSize, setDetailSize] = useState<any>();
     // Quản lý Form update size
     const [formUpdate] = Form.useForm();
+    // Quản lý reCall Api get Detail product
+    const [isFetchDp, setIsFetchDp] = useState<boolean>(false);
+    // Quản lý reCall Api get Size Detail product
+    const [isFetchSizeDp, setIsFetchSizeDp] = useState<boolean>(false);
     return (
         <ChatContext.Provider
             value={{
@@ -123,6 +131,10 @@ const ChatProvide = ({ children }: childrenProps) => {
                 detailSize,
                 setDetailSize,
                 formUpdate,
+                isFetchDp,
+                setIsFetchDp,
+                isFetchSizeDp,
+                setIsFetchSizeDp,
             }}
         >
             {children}

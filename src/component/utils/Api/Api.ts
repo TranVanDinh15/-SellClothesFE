@@ -83,6 +83,10 @@ export const getProductDetailById = (productId: number) => {
 export const createProductDetail = (data: any) => {
     return AxiosInstance.post('/product/detail', data);
 };
+// delete product detail
+export const deleteProductDetail = (id: number) => {
+    return AxiosInstance.delete(`/product/detail/${id}`);
+};
 // create product detail size
 export const createProductDetailSize = (data: reqProductSize) => {
     return AxiosInstance.post('/product/size', data);

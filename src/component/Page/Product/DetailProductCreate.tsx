@@ -33,11 +33,11 @@ import IsLoading from '../Admin/common/IsLoading/IsLoading';
 import { convertVND } from '../Admin/common/method/method';
 import {
     cancelAddSizeDp,
+    getProductDetail,
     handleCancelDp,
     handleCancelUpdate,
     handleCancelUpdateSizeDp,
     handleGetColorById,
-    handleGetProductById,
     handleGetSizeDp,
     handleOkAddDp,
     handleOkUpdate,
@@ -82,10 +82,11 @@ export default function DetailProductCreate() {
         isModalUpdateSize,
         setIsModalUpdateSize,
         detailSize,
-        setDetailSize,
         formUpdate,
+        isFetchDp,
+        setIsFetchDp,
+        isFetchSizeDp,
     }: any = GetContext();
-    console.log(saveItemDp);
     const [isModalUpdate, setIsModalUpdate] = useState<boolean>(false);
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [saveColor, setSaveColor] = useState([]);
@@ -94,10 +95,7 @@ export default function DetailProductCreate() {
     const [page, setPage] = useState<number>(1);
     const [GetDetailP, setGetDetailP] = useState<[]>([]);
     const [selectColor, setSelectColor] = useState<[]>([]);
-    const [isFetchDp, setIsFetchDp] = useState<boolean>(false);
-    const [initialValue, setInitialValue] = useState('dasdad');
-    console.log(initialValue);
-    console.log(detailSize);
+
     const titileSizeDp = () => {
         return <span></span>;
     };
@@ -139,6 +137,12 @@ export default function DetailProductCreate() {
     };
     const paginationSizeConfig: TablePaginationConfig = {};
     useEffect(() => {
+        if (id) {
+            const productId = parseInt(id);
+            getProductDetail(setIsLoading, productId, setGetDetailP);
+        }
+    }, []);
+    useEffect(() => {
         hanleGetSelectColor(setSaveColor);
         if (id) {
             handleGetColorById(id, setSelectColor);
@@ -146,14 +150,15 @@ export default function DetailProductCreate() {
     }, []);
     useEffect(() => {
         if (id) {
-            handleGetProductById(id, setIsLoading, setGetDetailP);
+            // handleGetProductById(id, setIsLoading, setGetDetailP);
+            getProductDetail(setIsLoading, parseInt(id), setGetDetailP);
         }
     }, [isFetchDp]);
     useEffect(() => {
         if (saveIDp) {
             handleGetSizeDp(saveIDp, setSaveSizeDp);
         }
-    }, [saveIDp]);
+    }, [saveIDp, isFetchSizeDp]);
     return (
         <Content title={'Chi tiết sản phẩm'}>
             {GetDetailP.length > 0 ? (
@@ -312,7 +317,6 @@ export default function DetailProductCreate() {
                     name="basic"
                     labelCol={{ span: 24 }}
                     // style={{ width: 700 }}
-                    initialValues={{ remember: true }}
                     onFinish={(value) => {
                         onFinishAdd(
                             value,
@@ -338,7 +342,6 @@ export default function DetailProductCreate() {
                                         message: 'Vui lòng nhập chính xác và không để trống!',
                                     },
                                 ]}
-                                initialValue={isSaveItemsDp?.name}
                             >
                                 <Input placeholder="VD: Áo thun ...." width={'100%'} />
                             </Form.Item>

@@ -3,49 +3,16 @@ import {
     GetColorProductById,
     createProductDetail,
     createProductDetailSize,
+    deleteProductDetail,
+    deleteProductDetailSize,
     getColorSelect,
     getProductById,
+    getProductDetailById,
     getProductDetailSize,
     updateProductDetailSize,
 } from '../../utils/Api/Api';
 import { detaiSizeIF } from './interfaceProduct/interfaceProduct';
 
-// Get Product By Id
-export const handleGetProductById = async (
-    id: string,
-    setIsLoading: React.Dispatch<React.SetStateAction<boolean>>,
-    setGetDetailP: React.Dispatch<React.SetStateAction<any>>,
-) => {
-    if (id) {
-        setIsLoading(true);
-        const response = await getProductById(id);
-        if (response && response.status == 200) {
-            const product = response.data.product;
-            console.log(product);
-            if (product.detail.length > 0) {
-                const result = product.detail.map((item: any, index: any) => {
-                    return {
-                        key: index,
-                        id: item.id,
-                        name: item.name,
-                        contentMarkdown: product?.contentMarkdown,
-                        contentHtml: product?.contentHtml,
-                        categoryId: product?.categoryId,
-                        statusId: product?.statusId,
-                        brandId: product?.brandId,
-                        material: product?.material,
-                        images: item?.images,
-                        color: item?.color?.value,
-                        originalPrice: item?.originalPrice,
-                        discountPrice: item?.discountPrice,
-                    };
-                });
-                setGetDetailP(result);
-                setIsLoading(false);
-            }
-        }
-    }
-};
 // Get Color Product By Id
 export const handleGetColorById = async (id: string, setSelectColor: React.Dispatch<React.SetStateAction<any>>) => {
     if (id) {
@@ -156,9 +123,57 @@ export const onFinishAdd = async (
 export const onFailAdd = (errorInfo: any) => {
     console.log('Failed:', errorInfo);
 };
-// Lấy thông tin sản phẩm
-export const getProductDetail = async (setIsLoading: React.Dispatch<React.SetStateAction<boolean>>) => {
+// Lấy thông tin chi tiết sản phẩm
+export const getProductDetail = async (
+    setIsLoading: React.Dispatch<React.SetStateAction<boolean>>,
+    productId: number,
+    setGetDetailP: React.Dispatch<React.SetStateAction<any>>,
+) => {
     setIsLoading(true);
+    const response = await getProductDetailById(productId);
+    if (response && response.status == 200) {
+        console.log(response);
+        if (response.data.length > 0) {
+            const result = response.data.map((item: any, index: any) => {
+                return {
+                    key: index,
+                    id: item.id,
+                    name: item.name,
+                    colorId: item?.colorId,
+                    createdAt: item?.createdAt,
+                    description: item?.description,
+                    discountPrice: item?.discountPrice,
+                    images: item?.images,
+                    originalPrice: item?.originalPrice,
+                    productId: item?.productId,
+                    updatedAt: item?.updatedAt,
+                };
+            });
+            setGetDetailP(result);
+            setIsLoading(false);
+        }
+    }
+};
+// Delete chi tiết sản phẩm
+export const handleDeleteProductDetail = async (
+    id: number,
+    isFetchDp: boolean,
+    setIsFetchDp: React.Dispatch<React.SetStateAction<boolean>>,
+) => {
+    if (id) {
+        const response = await deleteProductDetail(id);
+        console.log(response);
+        if (response && response.status == 200) {
+            message.success(response?.data?.message);
+            if (isFetchDp) {
+                setIsFetchDp(false);
+            } else {
+                setIsFetchDp(true);
+            }
+        }
+    } else {
+        message.error('Đã có lỗi xảy ra');
+    }
 };
 export const onChangeColorSelect = (value: string) => {};
 
@@ -223,6 +238,26 @@ export const handleGetSizeDp = async (id: number, setSaveSizeDp: React.Dispatch<
         console.log(response);
         const sizes = response.data;
         setSaveSizeDp(sizes);
+    }
+};
+// handle delete product detail size
+export const handleDeleteDetailSize = async (
+    id: number,
+    isFetchSizeDp: boolean,
+    setIsFetchSizeDp: React.Dispatch<React.SetStateAction<boolean>>,
+) => {
+    if (id) {
+        const response = await deleteProductDetailSize(id);
+        if (response && response.status == 200) {
+            message.success(response?.data?.message);
+            if (isFetchSizeDp) {
+                setIsFetchSizeDp(false);
+            } else {
+                setIsFetchSizeDp(true);
+            }
+        }
+    } else {
+        message.error('Đã có lỗi xảy ra');
     }
 };
 // Hanlde show modal update size
