@@ -44,10 +44,13 @@ type MyContextType = {
     detailSize: any;
     setDetailSize: React.Dispatch<React.SetStateAction<any>>;
     formUpdate: any;
+    formUpdateSize: any;
     isFetchDp: boolean;
     setIsFetchDp: React.Dispatch<React.SetStateAction<boolean>>;
     isFetchSizeDp: boolean;
     setIsFetchSizeDp: React.Dispatch<React.SetStateAction<boolean>>;
+    isModalUpdate: boolean;
+    setIsModalUpdate: React.Dispatch<React.SetStateAction<boolean>>;
 };
 const ChatContext = createContext<MyContextType | undefined>(undefined);
 const ChatProvide = ({ children }: childrenProps) => {
@@ -79,12 +82,16 @@ const ChatProvide = ({ children }: childrenProps) => {
     const [saveIDp, setSaveIdDp] = useState<number | undefined>();
     // lưu size product detail
     const [saveSizeDp, setSaveSizeDp] = useState<any>();
+    // Quanr lý đóng mở modal update  product detail
+    const [isModalUpdate, setIsModalUpdate] = useState<boolean>(false);
     // Quản lý đóng mở modal update size
     const [isModalUpdateSize, setIsModalUpdateSize] = useState<any>();
     // Quản lý Id của product detail size ( xử dụng để update + delete)
     const [detailSize, setDetailSize] = useState<any>();
-    // Quản lý Form update size
+    // Quản lý Form update
     const [formUpdate] = Form.useForm();
+    // Quản lý Form update Size
+    const [formUpdateSize] = Form.useForm();
     // Quản lý reCall Api get Detail product
     const [isFetchDp, setIsFetchDp] = useState<boolean>(false);
     // Quản lý reCall Api get Size Detail product
@@ -135,6 +142,9 @@ const ChatProvide = ({ children }: childrenProps) => {
                 setIsFetchDp,
                 isFetchSizeDp,
                 setIsFetchSizeDp,
+                isModalUpdate,
+                setIsModalUpdate,
+                formUpdateSize,
             }}
         >
             {children}

@@ -22,3 +22,12 @@ export interface reqUpdateSize {
     weight: string;
     quantity: number;
 }
+export interface reqUpdateDetailP {
+    productId: number;
+    name: string;
+    originalPrice: number;
+    discountPrice: number;
+    description: string;
+    images: any;
+    colorId: string;
+}

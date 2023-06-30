@@ -64,7 +64,6 @@ import {
 export default function DetailProductCreate() {
     const { id } = useParams();
     const {
-        isSaveDetailProduct,
         isModalAddDPOpen,
         setIsModalAddDpOpen,
         imagesUploadMultiple,
@@ -86,8 +85,10 @@ export default function DetailProductCreate() {
         isFetchDp,
         setIsFetchDp,
         isFetchSizeDp,
+        isModalUpdate,
+        setIsModalUpdate,
+        formUpdateSize,
     }: any = GetContext();
-    const [isModalUpdate, setIsModalUpdate] = useState<boolean>(false);
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [saveColor, setSaveColor] = useState([]);
     const [total, setTotal] = useState<any>();
@@ -205,21 +206,42 @@ export default function DetailProductCreate() {
                 width={'80%'}
             >
                 <Form
+                    form={formUpdate}
                     name="basic"
                     labelCol={{ span: 24 }}
                     // style={{ width: 700 }}
-                    initialValues={{ remember: true }}
+                    // initialValues={{ remember: true }}
                     onFinish={onFinishUpdate}
                     onFinishFailed={onFailUpdate}
                     autoComplete="off"
                 >
+                    <Row gutter={16}>
+                        <Col span={12}>
+                            <Form.Item label="Tên sản phẩm " name="name">
+                                <Input placeholder="VD: Áo thun ...." width={'100%'} />
+                            </Form.Item>
+                        </Col>
+                        <Col span={12}>
+                            <Form.Item label="Giá" name="originalPrice">
+                                <Input placeholder="Điền chữ số" width={'100%'} />
+                            </Form.Item>
+                        </Col>
+                    </Row>
                     <Row gutter={16} style={{}}>
                         <Col span={12}>
-                            <Form.Item
-                                label="Danh mục sản phẩm"
-                                name="categoryId"
-                                rules={[{ required: true, message: 'Vui lòng chọn danh mục sản phẩm !!' }]}
-                            >
+                            <Form.Item label="Giá Discount" name="discountPrice">
+                                <Input placeholder="Điền chữ số" width={'100%'} />
+                            </Form.Item>
+                        </Col>
+                        <Col span={12}>
+                            <Form.Item label="Mô tả" name="description">
+                                <Input placeholder="Điền chữ số" width={'100%'} />
+                            </Form.Item>
+                        </Col>
+                    </Row>
+                    <Row gutter={16} style={{}}>
+                        <Col span={12}>
+                            <Form.Item label="Màu sắc" name="colorId">
                                 <SelectCustomer
                                     mode=""
                                     option={[...saveColor]}
@@ -229,55 +251,6 @@ export default function DetailProductCreate() {
                             </Form.Item>
                         </Col>
                     </Row>
-                    <Row gutter={16}>
-                        <Col span={12}>
-                            <Form.Item
-                                label="Tên sản phẩm "
-                                name="name"
-                                rules={[
-                                    {
-                                        required: true,
-                                        message: 'Vui lòng nhập chính xác và không để trống!',
-                                    },
-                                ]}
-                                // initialValue={initialValue}
-                            >
-                                <Input placeholder="VD: Áo thun ...." width={'100%'} />
-                            </Form.Item>
-                        </Col>
-                        <Col span={12}>
-                            <Form.Item
-                                label="Giá"
-                                name="originalPrice"
-                                rules={[
-                                    {
-                                        required: true,
-                                        message: 'Vui lòng nhập chính xác và không để trống!',
-                                    },
-                                ]}
-                                // initialValue={isSaveDetailProduct.detail.length<1 : null : isSaveDetailProduct.detail.da}
-                            >
-                                <Input placeholder="Điền chữ số" width={'100%'} />
-                            </Form.Item>
-                        </Col>
-                    </Row>
-                    <Row gutter={16} style={{}}>
-                        <Col span={12}>
-                            <Form.Item
-                                label="Giá Discount"
-                                name="discountPrice"
-                                rules={[
-                                    {
-                                        required: true,
-                                        message: 'Vui lòng nhập chính xác và không để trống!',
-                                    },
-                                ]}
-                            >
-                                <Input placeholder="Điền chữ số" width={'100%'} />
-                            </Form.Item>
-                        </Col>
-                    </Row>
-
                     <Form.Item label="Ảnh" name="images">
                         <UploadImageCustomer multilple={true} />
                     </Form.Item>
@@ -420,6 +393,7 @@ export default function DetailProductCreate() {
                     </Form.Item>
                 </Form>
             </ModalCustomer>
+
             {/* Modal Add Size for detail Product */}
             <ModalCustomer
                 footer={false}
@@ -540,7 +514,7 @@ export default function DetailProductCreate() {
                 title={'Cập nhật Size'}
             >
                 <Form
-                    form={formUpdate}
+                    form={formUpdateSize}
                     name=""
                     labelCol={{ span: 24 }}
                     // style={{ width: 700 }}

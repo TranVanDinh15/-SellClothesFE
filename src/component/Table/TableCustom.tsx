@@ -148,6 +148,8 @@ const CustomTable = ({ name, title, dataSource, paginationConfig, showModalUpdat
         setIsFetchDp,
         isFetchSizeDp,
         setIsFetchSizeDp,
+        setIsModalUpdate,
+        formUpdateSize,
     }: any = GetContext();
     console.log(idDelete);
     const confirmDeleteBrand = async (e: any) => {
@@ -450,6 +452,14 @@ const CustomTable = ({ name, title, dataSource, paginationConfig, showModalUpdat
                             onClick={() => {
                                 // showModalUpdate();
                                 // setDataUpdate(record);
+                                formUpdate.setFieldsValue({
+                                    name: record?.name,
+                                    originalPrice: record?.originalPrice,
+                                    discountPrice: record?.discountPrice,
+                                    description: record?.description,
+                                    colorId: record?.colorId,
+                                });
+                                setIsModalUpdate(true);
                             }}
                         ></Button>
                     </Popover>
@@ -504,6 +514,12 @@ const CustomTable = ({ name, title, dataSource, paginationConfig, showModalUpdat
                             await formUpdate.resetFields();
                             setIsModalUpdateSize(true);
                             setDetailSize(record);
+                            formUpdateSize.setFieldsValue({
+                                name: record?.name,
+                                width: record?.width,
+                                height: record?.height,
+                                weight: record?.weight,
+                            });
                         }}
                     ></Button>
                     <DeleteCustom

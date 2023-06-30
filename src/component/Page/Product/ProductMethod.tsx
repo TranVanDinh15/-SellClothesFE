@@ -67,7 +67,7 @@ export const hanleGetSelectColor = async (setSaveColor: React.Dispatch<React.Set
     }
 };
 export const onFinishUpdate = (values: any) => {
-    // console.log(values);
+    console.log(values);
     // const reqUpdate = {
     //     productId: 6,
     //     name: 'APN4396-DEN',

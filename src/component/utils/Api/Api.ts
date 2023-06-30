@@ -1,4 +1,4 @@
-import { reqProductSize, reqUpdateSize } from './ApiInterFace';
+import { reqProductSize, reqUpdateDetailP, reqUpdateSize } from './ApiInterFace';
 import AxiosInstance from './Axios-custom';
 // get thương hiệu
 export const getAllBrand = (page: any, pagesize: any) => {
@@ -101,6 +101,10 @@ export const updateProductDetailSize = (data: reqUpdateSize, id: number) => {
 // delete product detail size
 export const deleteProductDetailSize = (id: number) => {
     return AxiosInstance.delete(`/product/size/${id}`);
+};
+// update product detail
+export const updateProductDetail = (id: number, data: reqUpdateDetailP) => {
+    return AxiosInstance.put(`/product/detail/${id}`, data);
 };
 // Get color product by Id
 export const GetColorProductById = (id: number) => {
