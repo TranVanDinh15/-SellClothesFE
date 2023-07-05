@@ -2,7 +2,7 @@ import { Header } from 'antd/es/layout/layout';
 import React, { useEffect, useState } from 'react';
 import './HeaderClient.css';
 import { Link } from 'react-router-dom';
-import { Badge, Button, Input, Menu, Popover } from 'antd';
+import { Avatar, Badge, Button, Input, Menu, Popover } from 'antd';
 import {
     AudioOutlined,
     FilterOutlined,
@@ -13,6 +13,8 @@ import {
 } from '@ant-design/icons';
 import { getListCategoryFun, getListCategorySub } from './Header.Method';
 import { chidrenCategory, dataCategoy, headerCategory } from './HeaderInterface';
+import { useSelector } from 'react-redux';
+import { reduxIterface } from '../LoginClient/Login.Interface';
 const { Search } = Input;
 const headerStyle: React.CSSProperties = {
     // textAlign: 'center',
@@ -63,17 +65,50 @@ const itemsMenu = [
         ],
     },
 ];
+const manageUser = [
+    {
+        id: 0,
+        name: 'Profile',
+    },
+    {
+        id: 1,
+        name: 'Cập nhật người dùng',
+    },
+    {
+        id: 2,
+        name: 'Lịch sử mua hàng',
+    },
+    {
+        id: 3,
+        name: 'Đăng Xuất',
+    },
+];
 export default function HeaderClient() {
-    const [isOpenSubCategory, setIsOpenSubcategory] = useState<boolean>(false);
-    const [saveIdCategory, setSaveidCategory] = useState<number | undefined>();
+    const tokenLocal = localStorage.getItem('token');
+    const userLogin = useSelector((state: reduxIterface) => state.reduxAuth.user);
     const [headerCategory, setHeaderCategory] = useState<headerCategory[]>([]);
     const [dataCategory, setDatacategory] = useState<dataCategoy[]>([]);
-
     const [saveCodeCategory, setSaveCodeCategory] = useState<string>('');
     const onSearch = (value: string) => console.log(value);
     console.log(dataCategory);
     console.log(headerCategory);
+
     const subNavItemHeader = (itemsData: chidrenCategory[]) => {
+        return (
+            <ul>
+                {itemsData.map((item: chidrenCategory) => {
+                    return (
+                        <li className="subnavCategory">
+                            <Link to="/">
+                                <span>{item.name}</span>
+                            </Link>
+                        </li>
+                    );
+                })}
+            </ul>
+        );
+    };
+    const subNavItemUser = (itemsData: chidrenCategory[]) => {
         return (
             <ul>
                 {itemsData.map((item: chidrenCategory) => {
@@ -169,50 +204,56 @@ export default function HeaderClient() {
                             ></Button>
                         </Badge>
                     </div>
-                    <div className="headerClientAbove__LoginOut">
-                        <Button
-                            type="text"
-                            icon={
-                                <UserOutlined
-                                    style={{
-                                        border: 'none',
-                                        fontSize: '16px',
-                                        color: '#11006f',
-                                    }}
-                                />
-                            }
-                        ></Button>
-                        <Button
-                            type="text"
-                            style={{
-                                fontSize: '15px',
-                                padding: '4px ',
-                                color: '#11006f',
-                            }}
-                        >
-                            Đăng Ký
-                        </Button>
-                        <span
-                            style={{
-                                color: '#11006f',
-                                fontSize: '15px',
-                            }}
-                        >
-                            \
-                        </span>
-                        <Link to={'/signIn'}>
+                    {tokenLocal ? (
+                        <Popover content={subNavItemUser(manageUser)} placement="bottomLeft" arrow={false}>
+                            <Avatar size="large" icon={<UserOutlined />} />
+                        </Popover>
+                    ) : (
+                        <div className="headerClientAbove__LoginOut">
+                            <Button
+                                type="text"
+                                icon={
+                                    <UserOutlined
+                                        style={{
+                                            border: 'none',
+                                            fontSize: '16px',
+                                            color: '#11006f',
+                                        }}
+                                    />
+                                }
+                            ></Button>
                             <Button
                                 type="text"
                                 style={{
                                     fontSize: '15px',
-                                    padding: '4px',
+                                    padding: '4px ',
                                     color: '#11006f',
                                 }}
                             >
-                                Đăng Nhập
+                                Đăng Ký
                             </Button>
-                        </Link>
-                    </div>
+                            <span
+                                style={{
+                                    color: '#11006f',
+                                    fontSize: '15px',
+                                }}
+                            >
+                                \
+                            </span>
+                            <Link to={'/signIn'}>
+                                <Button
+                                    type="text"
+                                    style={{
+                                        fontSize: '15px',
+                                        padding: '4px',
+                                        color: '#11006f',
+                                    }}
+                                >
+                                    Đăng Nhập
+                                </Button>
+                            </Link>
+                        </div>
+                    )}
                 </div>
             </header>
             <header className="headerClientbelow">
