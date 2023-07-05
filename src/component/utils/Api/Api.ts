@@ -24,10 +24,12 @@ export const deleteBrand = (id: any) => {
 export const loginAdmin = (data: any) => {
     return AxiosInstance.post('/auth/login', data);
 };
+
 // get category paginate
 export const getAllCategory = (page: any, pagesize: any) => {
     return AxiosInstance.get(`/all-code/CATEGORY?page=${page}&size=${pagesize}`);
 };
+
 // get category
 export const getCategory = () => {
     return AxiosInstance.get(`/all-code/CATEGORY`);

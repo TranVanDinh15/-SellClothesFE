@@ -1,5 +1,6 @@
 import { message } from 'antd';
 import axios from 'axios';
+import { useSelector } from 'react-redux';
 
 const BASE__URL = process.env.REACT_APP_BASE_URL;
 const AxiosInstance = axios.create({
@@ -16,11 +17,10 @@ AxiosInstance.defaults.headers.common = {
 };
 const handleRefreshToken = async () => {
     const response = await AxiosInstance.get('/auth/refresh');
-    if (response && response.data) {
-        console.log(response);
+    if (response && response.status == 200) {
         return response?.data?.accessToken;
     } else {
-        return;
+        return null;
     }
 };
 // Add a request interceptor
@@ -44,25 +44,34 @@ AxiosInstance.interceptors.response.use(
     },
     async function (error) {
         if (error.config && error.response && error.response.status === 401 && !error.config.headers[NO_RETRY_HEADER]) {
-            const access_token = await handleRefreshToken();
-            error.config.headers[NO_RETRY_HEADER] = 'true';
-            if (access_token) {
-                error.config.headers['Authorization'] = `Bearer ${access_token}`;
-                localStorage.setItem('token', access_token);
-                return AxiosInstance.request(error.config);
+            console.log('ok');
+            const accessTokenLocal = localStorage.getItem('token');
+            if (accessTokenLocal) {
+                error.config.headers[NO_RETRY_HEADER] = 'true';
+                const access_token = await handleRefreshToken();
+                console.log(access_token);
+                if (access_token) {
+                    error.config.headers['Authorization'] = `Bearer ${access_token}`;
+                    localStorage.setItem('token', access_token);
+                    return AxiosInstance.request(error.config);
+                } else {
+                    return error.response;
+                }
             }
+            return error.response;
         }
         if (
             error?.config &&
             error?.response &&
-            error?.response?.status === 400 &&
+            error?.response?.status === 401 &&
             error.config.url === '/auth/refresh'
         ) {
             console.log(error);
             message.info('Hết thời gian chờ, Đăng nhập lại để tiếp tục !!');
             window.location.href = '/Login-Admin';
         }
-        return error?.response?.data ?? Promise.reject(error);
+
+        return error.response ?? Promise.reject(error);
         // return error;
     },
 );

@@ -38,3 +38,41 @@ export const loginActions: any = (dataLogin: any, navigate: any) => {
         }
     };
 };
+export const loginClientActions: any = (dataLogin: any, navigate: any) => {
+    return async (dispatch: Dispatch) => {
+        dispatch({
+            type: authConstant.LOGIN__REQUEST,
+        });
+        console.log(dataLogin);
+        const response = await loginAdmin(dataLogin);
+        console.log(response);
+        if (response && response.status == 200) {
+            const accessToken = response.data.accessToken;
+            const data = {
+                dob: response?.data?.user?.dob,
+                email: response?.data?.user?.email,
+                firstName: response?.data?.user?.email,
+                fullName: response?.data?.user?.fullName,
+                genderId: response?.data?.user?.genderId,
+                image: response?.data?.user?.image,
+                lastName: response?.data?.user?.lastName,
+                phone: response?.data?.user?.phoneNumber,
+            };
+            console.log(response);
+            dispatch({
+                type: authConstant.LOGIN__SUCCESS,
+                payLoad: {
+                    user: response?.data?.user,
+                },
+            });
+            if (accessToken) {
+                localStorage.setItem('token', accessToken);
+                navigate('/');
+                message.success('Đăng nhập thành công !');
+            } else {
+            }
+        } else {
+            message.error('thông tin tài khoản không chính xác!!');
+        }
+    };
+};

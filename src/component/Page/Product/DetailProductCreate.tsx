@@ -205,7 +205,6 @@ export default function DetailProductCreate() {
                 onOk={handleOkUpdate}
                 onCancel={() => {
                     setImageDp([]);
-
                     handleCancelUpdate(setIsModalUpdate);
                 }}
                 footer

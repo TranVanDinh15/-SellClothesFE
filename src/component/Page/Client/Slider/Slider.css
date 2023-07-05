@@ -1,0 +1,38 @@
+.SliderImage {
+    width: 100%;
+    /* height: 380px; */
+}
+.SliderImage img {
+    width: 98%;
+    /* height: 120vh; */
+    object-fit: contain;
+    border-radius: 10px;
+}
+.SliderWrapper {
+    margin-top: 30px;
+}
+.slick-arrow::before {
+    color: orangered !important;
+    /* display: none; */
+}
+.slick-initialized {
+    display: block !important;
+}
+.slick-slider {
+    position: revert;
+}
+.custom-prev-arrow {
+    position: absolute;
+    left: 3px;
+}
+.custom-next-arrow {
+    position: absolute;
+    right: 0;
+    transform: translate(-3px, -22px);
+}
+.SliderWrapper {
+    position: relative;
+}
+.slick-dots {
+    bottom: 24px;
+}

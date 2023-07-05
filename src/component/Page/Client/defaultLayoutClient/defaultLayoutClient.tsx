@@ -1,5 +1,30 @@
+import { Layout } from 'antd';
 import React from 'react';
+import Content from '../../Admin/common/Content/Content';
+import { Footer } from 'antd/es/layout/layout';
+import HeaderClient from '../Header/Header';
+import { Outlet } from 'react-router-dom';
 
+const contentStyle: React.CSSProperties = {
+    textAlign: 'center',
+    minHeight: 120,
+    lineHeight: '120px',
+    color: '#fff',
+    backgroundColor: '#108ee9',
+};
+const footerStyle: React.CSSProperties = {
+    textAlign: 'center',
+    color: '#fff',
+    backgroundColor: '#7dbcea',
+};
 export default function DefaultLayoutClient() {
-    return <div>defaultLayoutClient</div>;
+    return (
+        <Layout>
+            {/* <Header style={headerStyle}>Header</Header> */}
+            <HeaderClient />
+            {/* <Content style={contentStyle}>Content</Content> */}
+            <Outlet />
+            {/* <Footer style={footerStyle}>Footer</Footer> */}
+        </Layout>
+    );
 }

@@ -14,6 +14,8 @@ import TrademarkManage from './component/Page/Admin/trademark/trademark';
 import Product from './component/Page/Product/Product';
 import ProductCategory from './component/Page/Product/CategoryProduct';
 import DetailProductCreate from './component/Page/Product/DetailProductCreate';
+import LoginClient from './component/Page/Client/LoginClient/Login';
+import HomeClient from './component/Page/Client/Home/HomeClient';
 
 function App() {
     const token = localStorage.getItem('token');
@@ -78,7 +80,19 @@ function App() {
             element: <DefaultLayoutClient />,
             errorElement: <NotFound type={'notAccess'} />,
             // loader: rootLoader,
-            children: [],
+            children: [
+                {
+                    index: true,
+                    element: <HomeClient />,
+                    errorElement: <NotFound type={'notRole'} />,
+                    // loader: teamLoader,
+                },
+                {
+                    path: '/signIn',
+                    element: <LoginClient />,
+                    errorElement: <NotFound type={'notRole'} />,
+                },
+            ],
         },
     ]);
     return (
