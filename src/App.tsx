@@ -1,5 +1,4 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import DefaultLayoutAdmin from './component/Page/Admin/defaultLayoutAdmin/defaultLayoutAdmin';
@@ -16,6 +15,10 @@ import ProductCategory from './component/Page/Product/CategoryProduct';
 import DetailProductCreate from './component/Page/Product/DetailProductCreate';
 import LoginClient from './component/Page/Client/LoginClient/Login';
 import HomeClient from './component/Page/Client/Home/HomeClient';
+import DetailProductClient from './component/Page/Client/pageClient/DetailProductClient.tsx/DetailProduct.client';
+import { ChakraProvider } from '@chakra-ui/react';
+import CheckOut from './component/Page/Client/pageClient/CheckOut/CheckOut';
+import ProductCat from './component/Page/Client/pageClient/ProductCat/ProductCat';
 
 function App() {
     const token = localStorage.getItem('token');
@@ -92,13 +95,30 @@ function App() {
                     element: <LoginClient />,
                     errorElement: <NotFound type={'notRole'} />,
                 },
+                {
+                    path: '/chi-tiet-san-pham/:slug/:id',
+                    element: <DetailProductClient />,
+                    errorElement: <NotFound type={'notRole'} />,
+                },
+                {
+                    path: '/:slug',
+                    element: <ProductCat />,
+                    errorElement: <NotFound type={'notRole'} />,
+                },
             ],
+        },
+        {
+            path: '/thanh-toan/:id',
+            element: <CheckOut />,
+            errorElement: <NotFound type={'notAccess'} />,
         },
     ]);
     return (
-        <div className="App">
-            <RouterProvider router={router} />
-        </div>
+        <ChakraProvider>
+            <div className="App">
+                <RouterProvider router={router} />
+            </div>
+        </ChakraProvider>
     );
 }
 

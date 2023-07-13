@@ -1,0 +1,85 @@
+.ProductCatWrapper {
+    height: 2000px;
+    padding: 40px 50px;
+}
+.ProductCatTitle {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    .ProductCatTitle__Breadcrumb {
+        ul {
+            li {
+                span {
+                    font-size: 16px;
+                    color: black;
+                }
+            }
+        }
+    }
+}
+.ProductCatTitle__Heading {
+    h1 {
+        font-size: 22px;
+        color: orangered;
+        font-weight: 500;
+    }
+}
+.ProductCatTitle__option {
+    display: flex;
+    gap: 20px;
+    button {
+        border: 1px solid orangered;
+        color: orangered;
+        height: 40px;
+        width: 100px;
+    }
+}
+.ProductCatContent {
+    margin-top: 40px;
+}
+.ProductCatContent__title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.ProductCatContent__title__arranging {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+}
+.ProductCatContent__title__amount {
+    span {
+        font-size: 16px;
+        display: flex;
+        align-items: center;
+    }
+}
+.ProductCatContent__title__arranging__heading {
+    span {
+        font-size: 16px;
+        display: flex;
+        align-items: center;
+    }
+}
+.ProductCatContent__ListCard {
+    margin-top: 20px;
+}
+.sekeletonBox {
+    display: flex;
+    flex-direction: column;
+}
+.sekeletonBox_Price {
+    display: flex;
+    gap: 20px;
+    margin-top: 20px;
+}
+.sekeletonBox_Avatar {
+    display: flex;
+    justify-content: space-between;
+    margin: 20px;
+}
+.ProductCatSpinner {
+    display: flex;
+    justify-content: center;
+}

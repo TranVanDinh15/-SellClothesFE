@@ -1,18 +1,20 @@
 .SliderImage {
     width: 100%;
     /* height: 380px; */
+    /* padding: 0 50px; */
 }
 .SliderImage img {
-    width: 98%;
-    /* height: 120vh; */
-    object-fit: contain;
-    border-radius: 10px;
+    width: 100%;
+    object-fit: cover;
+    /* border-radius: 10px; */
+    height: 380px;
 }
 .SliderWrapper {
-    margin-top: 30px;
+    /* margin-top: 30px; */
 }
 .slick-arrow::before {
-    color: orangered !important;
+    color: #111 !important;
+    /* opacity: 0.4 !important; */
     /* display: none; */
 }
 .slick-initialized {
@@ -23,16 +25,61 @@
 }
 .custom-prev-arrow {
     position: absolute;
-    left: 3px;
+    left: 8px;
+    transform: translateY(8px);
+    font-size: 20px;
+    transition: 0.2s ease;
+    border-radius: 50%;
+    border: none;
+    outline: none;
+}
+.custom-prev-arrow:hover,
+.custom-next-arrow:hover {
+    color: #fff;
+    background-color: orangered;
 }
 .custom-next-arrow {
     position: absolute;
     right: 0;
-    transform: translate(-3px, -22px);
+    transform: translate(-10px, -23px);
+    border-radius: 50%;
+    font-size: 20px;
+    transition: 0.2s ease;
 }
 .SliderWrapper {
     position: relative;
 }
 .slick-dots {
     bottom: 24px;
+}
+.HomeClientWrapper__slider .SliderWrapper .SliderWrapper__Container .slick-slider {
+    padding: 0 50px;
+    /* border-radius: 10px; */
+}
+.HomeClientWrapper__slider .SliderWrapper .SliderWrapper__Container .slick-slider .slick-prev {
+    left: 70px;
+    z-index: 10;
+}
+.HomeClientWrapper__slider .SliderWrapper .SliderWrapper__Container .slick-slider .slick-prev::before {
+    font-size: 26px;
+}
+.HomeClientWrapper__slider .SliderWrapper .SliderWrapper__Container .slick-slider .slick-dots {
+    left: 0;
+}
+.HomeClientWrapper__slider .SliderWrapper .SliderWrapper__Container .slick-slider .slick-dots li button::before {
+    font-size: 12px;
+    color: black;
+}
+.HomeClientWrapper__slider .SliderWrapper .SliderWrapper__Container .slick-slider .slick-next {
+    right: 75px;
+}
+.HomeClientWrapper__slider .SliderWrapper .SliderWrapper__Container .slick-slider .slick-next::before {
+    font-size: 26px;
+}
+.SliderImageSmall img {
+    transition: 0.3s ease;
+    object-fit: cover;
+}
+.SliderImageSmall:hover img {
+    transform: scale(1.3);
 }

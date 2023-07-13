@@ -3,30 +3,45 @@ import Slider from '@ant-design/react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import './Slider.css';
-export default function SliderCustom() {
+import { LeftOutlined, RightOutlined } from '@ant-design/icons';
+// interface dataSlider{
+//     data: {
+//         image: string
+//     }[]
+// }
+interface dataSlider {
+    data: {
+        image: string;
+    }[];
+}
+export default function SliderCustom({ data }: dataSlider) {
     const settings = {
         dots: true,
         infinite: true,
         speed: 500,
         slidesToShow: 1,
         slidesToScroll: 1,
-        // centerMode: true,
         autoplay: true,
-        arrows: false,
+        arrows: true,
     };
     return (
         <div className="SliderWrapper">
-            <div>
+            <div className="SliderWrapper__Container">
                 <Slider {...settings}>
-                    <div className="SliderImage">
-                        <img src="https://cdn.dribbble.com/users/2972384/screenshots/6822537/sale-shopping.png" />
-                    </div>
-                    <div className="SliderImage">
-                        <img src="https://assets.materialup.com/uploads/7fe7a45a-dd07-4a7a-b6d5-7a3632ea086d/preview.jpg" />
-                    </div>
-                    <div className="SliderImage">
-                        <img src="https://img.freepik.com/free-psd/horizontal-banner-template-big-sale-with-woman-shopping-bags_23-2148786755.jpg?w=2000" />
-                    </div>
+                    {data.map(
+                        (
+                            item: {
+                                image: string;
+                            },
+                            index: number,
+                        ) => {
+                            return (
+                                <div className="SliderImage" key={index}>
+                                    <img src={`${process.env.REACT_APP_IMAGE_BANNER_URL}${item.image}`} />
+                                </div>
+                            );
+                        },
+                    )}
                 </Slider>
             </div>
         </div>

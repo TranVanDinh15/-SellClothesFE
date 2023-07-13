@@ -44,3 +44,17 @@ export const getListCategorySub = async (
         message.error('Đã có lỗi xảy ra!');
     }
 };
+export const showResultSearch = (setOpen: React.Dispatch<React.SetStateAction<boolean>>) => {
+    setOpen(true);
+};
+
+export const onCloseResultSearch = (setOpen: React.Dispatch<React.SetStateAction<boolean>>) => {
+    setOpen(false);
+};
+// export const showFilter = (setOpen: React.Dispatch<React.SetStateAction<boolean>>) => {
+//     setOpen(true);
+// };
+
+// export const onCloseFilter = (setOpen: React.Dispatch<React.SetStateAction<boolean>>) => {
+//     setOpen(false);
+// };

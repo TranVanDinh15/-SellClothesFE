@@ -116,3 +116,11 @@ export const GetColorProductById = (id: number) => {
 export const getColorSelect = () => {
     return AxiosInstance.get(`/all-code/COLOR`);
 };
+// Get banner
+export const getAllBanner = (query: string) => {
+    return AxiosInstance.get(`/banner?${query}`);
+};
+// get filter Product
+export const getProductByCat = (query: string) => {
+    return AxiosInstance.get(`/product?${query}`);
+};

@@ -462,7 +462,7 @@ const CustomTable = ({ name, title, dataSource, paginationConfig, showModalUpdat
                                             id: index,
                                             name: item,
                                             status: 'done',
-                                            url: `${process.env.REACT_APP_IMAGE_PRODUCT_DETAIL_URL}${item}`,
+                                            url: `${process.env.REACT_APP_IMAGE_PRODUCT}${item}`,
                                             image: item,
                                         };
                                     });

@@ -1,71 +1,60 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import SliderCustom from '../Slider/SliderCustom';
-import { Col, Row } from 'antd';
+import { Button, Col, Row } from 'antd';
 import './HomeClient.css';
 import TabProductCustomer from '../Common/TabProduct/TabProduct';
+import { getAllBanner } from '../../../utils/Api/Api';
 export default function HomeClient() {
+    const [allSlider, setAllSlider] = useState<
+        {
+            image: string;
+        }[]
+    >([]);
+    const handleGetAllSlider = async (): Promise<void> => {
+        const query = `statusId=ACTIVE&page=1&size=5&updatedAt=DESC`;
+        const response = await getAllBanner(query);
+        if (response && response.status == 200) {
+            console.log(response);
+            setAllSlider(response.data.data);
+        }
+    };
+    useEffect(() => {
+        handleGetAllSlider();
+    }, []);
     return (
         <div className="HomeClientWrapper">
-            <Row gutter={16}>
-                <Col span={13}>
-                    <div className="HomeClientSaleProduct">
-                        <div className="HomeClientSaleProduct__title">
-                            <span>SALE SỐC</span>
-                        </div>
-                        <div className="HomeClientSaleProduct__listItem">
-                            <TabProductCustomer />
-                            <TabProductCustomer />
-                            <TabProductCustomer />
-                            <TabProductCustomer />
-                            <TabProductCustomer />
-                            <TabProductCustomer />
-                        </div>
+            <div className="HomeClientWrapper__slider">
+                <SliderCustom data={allSlider} />
+            </div>
+            <div className="HomeClientSaleProduct">
+                <div className="HomeClientSaleProduct__title">
+                    <span>SALE SỐC</span>
+                </div>
+                <div className="HomeClientSaleProduct__listItem">
+                    {/* <TabProductCustomer width={220} />
+                    <TabProductCustomer width={220} />
+                    <TabProductCustomer width={220} />
+                    <TabProductCustomer width={220} />
+                    <TabProductCustomer width={220} /> */}
+                </div>
+            </div>
+            <div className="SuggestForyou HomeClientSaleProduct">
+                <div className="HomeClientSaleProduct__title">
+                    <div className="HomeClientSaleProduct__title__Heading">
+                        <span>GỢI Ý CHO BẠN</span>
                     </div>
-                </Col>
-                <Col
-                    span={11}
-                    style={{
-                        display: 'flex',
-                        flexDirection: 'column',
-                        justifyContent: 'space-between',
-                    }}
-                >
-                    <div>
-                        <SliderCustom />
+                    <div className="HomeClientSaleProduct__title__btn">
+                        <Button type="text">Xem thêm</Button>
                     </div>
-                    <div className="HomeClientSaleBanner__Static">
-                        <Row gutter={16}>
-                            <Col span={12}>
-                                <div className="HomeClientSaleBanner__Static__Item">
-                                    <img src="https://img.freepik.com/free-vector/online-store-quarantine-promo-banner-template_1361-2358.jpg?size=626&ext=jpg&ga=GA1.2.103136954.1681458465&semt=ais" />
-                                </div>
-                            </Col>
-                            <Col span={12}>
-                                <div className="HomeClientSaleBanner__Static__Item">
-                                    <img src="https://img.freepik.com/free-psd/horizontal-banner-template-summer-sale_23-2148723339.jpg?size=626&ext=jpg&ga=GA1.2.103136954.1681458465&semt=ais" />
-                                </div>
-                            </Col>
-                        </Row>
-                        <Row
-                            gutter={16}
-                            style={{
-                                marginTop: '16px',
-                            }}
-                        >
-                            <Col span={12}>
-                                <div className="HomeClientSaleBanner__Static__Item">
-                                    <img src="https://img.freepik.com/premium-vector/best-season-sale-banner-design-template_2239-1175.jpg?size=626&ext=jpg&ga=GA1.2.103136954.1681458465&semt=ais" />
-                                </div>
-                            </Col>
-                            <Col span={12}>
-                                <div className="HomeClientSaleBanner__Static__Item">
-                                    <img src="https://img.freepik.com/premium-vector/best-season-sale-banner-design-template_2239-1175.jpg?size=626&ext=jpg&ga=GA1.2.103136954.1681458465&semt=ais" />
-                                </div>
-                            </Col>
-                        </Row>
-                    </div>
-                </Col>
-            </Row>
+                </div>
+                <div className="HomeClientSaleProduct__listItem">
+                    {/* <TabProductCustomer width={220} />
+                    <TabProductCustomer width={220} />
+                    <TabProductCustomer width={220} />
+                    <TabProductCustomer width={220} />
+                    <TabProductCustomer width={220} /> */}
+                </div>
+            </div>
         </div>
     );
 }

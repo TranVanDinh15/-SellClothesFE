@@ -160,8 +160,8 @@ export default function Product() {
             colorCodes: values.color,
             material: values.material,
         };
-        // console.log(dataSubmit);
-        // console.log(values);
+        console.log(dataSubmit);
+        console.log(values);
         setIsLoading(true);
         const response = await createNewProduct(dataSubmit);
         if (response && response.status == 201) {

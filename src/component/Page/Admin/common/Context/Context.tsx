@@ -3,6 +3,15 @@ import React, { createContext, useContext, useEffect, useState } from 'react';
 interface childrenProps {
     children: React.ReactNode;
 }
+interface detailProductInterFace {
+    color: {
+        value: string;
+        code: string;
+    };
+    discountPrice: number;
+    images: string[];
+    originalPrice: number;
+}
 type MyContextType = {
     // Định nghĩa các thuộc tính hoặc phương thức của context
     dataUpdate: any;
@@ -51,10 +60,14 @@ type MyContextType = {
     setIsFetchSizeDp: React.Dispatch<React.SetStateAction<boolean>>;
     isModalUpdate: boolean;
     setIsModalUpdate: React.Dispatch<React.SetStateAction<boolean>>;
-    imageDp: any;
-    setImageDp: React.Dispatch<React.SetStateAction<any>>;
+    imageDp: [];
+    setImageDp: React.Dispatch<React.SetStateAction<[]>>;
     saveIdDetailProduct: number | undefined;
     setSaveIdDetailProduct: React.Dispatch<React.SetStateAction<number | undefined>>;
+    itemCategory: any;
+    setItemCategory: React.Dispatch<React.SetStateAction<any>>;
+    detailitemProduct: detailProductInterFace | undefined;
+    setDetailItemProduct: React.Dispatch<React.SetStateAction<detailProductInterFace | undefined>>;
 };
 const ChatContext = createContext<MyContextType | undefined>(undefined);
 const ChatProvide = ({ children }: childrenProps) => {
@@ -101,9 +114,13 @@ const ChatProvide = ({ children }: childrenProps) => {
     // Quản lý reCall Api get Size Detail product
     const [isFetchSizeDp, setIsFetchSizeDp] = useState<boolean>(false);
     // Quản lý ảnh của product detail
-    const [imageDp, setImageDp] = useState<any>();
+    const [imageDp, setImageDp] = useState<[]>([]);
     // Quản lý lưu Id product Detail
     const [saveIdDetailProduct, setSaveIdDetailProduct] = useState<number | undefined>();
+    // // Quản lý dữ liệu của một danh mục sản phẩm khi click vào tìm kiếm theo category
+    const [itemCategory, setItemCategory] = useState<any>();
+    // Quản  lý chi tiết sản phẩm
+    const [detailitemProduct, setDetailItemProduct] = useState<detailProductInterFace | undefined>();
     return (
         <ChatContext.Provider
             value={{
@@ -157,6 +174,10 @@ const ChatProvide = ({ children }: childrenProps) => {
                 setImageDp,
                 saveIdDetailProduct,
                 setSaveIdDetailProduct,
+                itemCategory,
+                setItemCategory,
+                detailitemProduct,
+                setDetailItemProduct,
             }}
         >
             {children}

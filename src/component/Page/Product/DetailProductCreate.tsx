@@ -101,7 +101,7 @@ export default function DetailProductCreate() {
     const [page, setPage] = useState<number>(1);
     const [GetDetailP, setGetDetailP] = useState<[]>([]);
     const [selectColor, setSelectColor] = useState<[]>([]);
-    console.log(imagesUploadMultiple);
+    console.log(GetDetailP);
     const titileSizeDp = () => {
         return <span></span>;
     };
@@ -184,13 +184,14 @@ export default function DetailProductCreate() {
                 <div className="DetailProductEmty">
                     <Empty
                         image="https://gw.alipayobjects.com/zos/antfincdn/ZHrcdLPrvN/empty.svg"
-                        // imageStyle={{ height: 60 }}
                         description={<span>Không có dữ liệu</span>}
                     >
                         <Button
                             type="primary"
                             onClick={() => {
-                                setIsModalAddDpOpen(true);
+                                // setIsModalAddDpOpen(true);
+                                // console.log('ok');
+                                showModalAddDp(setIsModalAddDpOpen);
                             }}
                         >
                             Thêm chi tiết sản phẩm
@@ -632,12 +633,7 @@ export default function DetailProductCreate() {
                         <Descriptions.Item label="Ảnh">
                             <div>
                                 {saveItemDp?.images.map((item: string) => {
-                                    return (
-                                        <Image
-                                            width={80}
-                                            src={`${process.env.REACT_APP_IMAGE_PRODUCT_DETAIL_URL}${item}`}
-                                        />
-                                    );
+                                    return <Image width={80} src={`${process.env.REACT_APP_IMAGE_PRODUCT}${item}`} />;
                                 })}
                             </div>
                         </Descriptions.Item>

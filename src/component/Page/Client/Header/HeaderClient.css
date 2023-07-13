@@ -53,7 +53,6 @@
 .headerClientbelow__listMenu a button {
     padding: 0;
     margin-right: 20px;
-    color: #11006f;
 }
 .ant-menu-overflow-item::after {
     display: none;
@@ -70,13 +69,11 @@
     padding: 20px;
     display: none;
 }
-.subNavCategory__container__min {
-}
+
 .bigChildrenTab {
     position: relative;
 }
-.subNavCategory {
-}
+
 .bigChildrenTab::after {
     content: '';
     position: absolute;
@@ -94,8 +91,9 @@
 .subNavCategory__heading {
     height: 40px;
     font-size: 16px;
-    color: #11006f;
+    color: #111;
     font-weight: 500;
+    cursor: pointer;
 }
 .subNavCategory__heading span {
     text-transform: uppercase;
@@ -104,7 +102,7 @@
     height: 40px;
 }
 .subNavCategory__listItems li a {
-    color: #11006f;
+    color: #111;
 }
 .subNavCategory__container {
     display: flex;
@@ -114,13 +112,47 @@
 .ListHeaderCat {
     font-size: 14px;
     text-transform: uppercase;
-    color: #11006f;
+    /* color: #11006f; */
 }
 .subnavCategory {
     width: 200px;
     padding: 10px 4px;
 }
 .subnavCategory a {
-    color: #11006f;
+    /* color: #11006f; */
     font-size: 15px;
+}
+.headerClientAbove__Cart {
+    display: flex;
+}
+.searchResultInputContainer input {
+    height: 40px;
+}
+.searchResultInputContainer .ant-input-group-addon button {
+    height: 40px;
+    width: 40px;
+}
+.searchResultInput {
+    display: flex;
+    justify-content: center;
+}
+.headerClientAbove__search {
+}
+.searchResultInput__Item {
+    margin-top: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    /* margin: 0 20px; */
+    padding: 0 60px;
+}
+
+.searchResultInput__Item__Infor__name span {
+    font-size: 14px;
+}
+.ResultSearch {
+    /* padding-bottom: 40px; */
+}
+.searchResultInputContainer input {
+    height: 41px;
 }
