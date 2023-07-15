@@ -83,3 +83,17 @@
     display: flex;
     justify-content: center;
 }
+.filterChatBox__Container {
+    margin: 0 20px;
+}
+.filterPrice__title {
+    button {
+        font-size: 16px;
+        margin-bottom: 10px;
+    }
+}
+.filterChatBox__Container__chatGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}

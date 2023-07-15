@@ -17,7 +17,6 @@ const filterCategory = (dataCategory: dataCategoy[], parentCode: string) => {
 };
 export const getListCategoryFun = async (setHeadercategory: React.Dispatch<React.SetStateAction<headerCategory[]>>) => {
     const response = await getAllCategory(1, 100);
-    console.log(response);
     if (response && response.status == 200) {
         const resultHeaderCat = response.data.data.filter((item: headerCategoryMapItem, index: number) => {
             return item.parentCode == null;
@@ -32,7 +31,6 @@ export const getListCategorySub = async (
     code: string,
 ) => {
     const response = await getAllCategory(1, 100);
-    console.log(response);
     if (response && response.status == 200 && response.data) {
         // const resultHeaderCat = response.data.data.filter((item: headerCategoryMapItem, index: number) => {
         //     return item.parentCode == null;

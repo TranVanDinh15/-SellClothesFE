@@ -6,6 +6,7 @@ import storage from 'redux-persist/lib/storage';
 const persistConfig = {
     key: 'root',
     storage,
+    blacklist: ['UrlReducer'],
 };
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 let store = createStore(persistedReducer, applyMiddleware(thunk));

@@ -10,6 +10,8 @@ import { useSelector } from 'react-redux';
 import { reduxIterface } from '../LoginClient/Login.Interface';
 import { Image } from 'antd';
 import { GetContext } from '../../Admin/common/Context/Context';
+import { useDispatch } from 'react-redux';
+import { UrlActions } from '../../../../Redux/Actions/Actions.url';
 const headerStyle: React.CSSProperties = {
     // textAlign: 'center',
     color: '#fff',
@@ -79,8 +81,9 @@ const manageUser = [
     },
 ];
 export default function HeaderClient() {
-    const { itemCategory, setItemCategory }: any = GetContext();
+    const dispatch = useDispatch();
     const navigate = useNavigate();
+    const { itemCategory, setItemCategory, setSortId, urlCustomer, setUrlCustomer }: any = GetContext();
     const tokenLocal = localStorage.getItem('token');
     const userLogin = useSelector((state: reduxIterface) => state.reduxAuth.user);
     const [headerCategory, setHeaderCategory] = useState<headerCategory[]>([]);
@@ -90,7 +93,6 @@ export default function HeaderClient() {
     // Đóng mở result search
     const [openSearch, setOpenSearch] = useState(false);
     const { Option } = Select;
-
     const selectBefore = (
         <Select defaultValue="Sản Phẩm" style={{ width: 120 }}>
             <Option value="product">Sản Phẩm</Option>
@@ -108,9 +110,9 @@ export default function HeaderClient() {
     const subNavItemHeader = (itemsData: chidrenCategory[]) => {
         return (
             <ul>
-                {itemsData.map((item: chidrenCategory) => {
+                {itemsData.map((item: chidrenCategory, index: number) => {
                     return (
-                        <li className="subnavCategory">
+                        <li className="subnavCategory" key={index}>
                             <Link to="/">
                                 <span>{item.name}</span>
                             </Link>
@@ -123,9 +125,9 @@ export default function HeaderClient() {
     const subNavItemUser = (itemsData: chidrenCategory[]) => {
         return (
             <ul>
-                {itemsData.map((item: chidrenCategory) => {
+                {itemsData.map((item: chidrenCategory, index: number) => {
                     return (
-                        <li className="subnavCategory">
+                        <li className="subnavCategory" key={index}>
                             <Link to="/">
                                 <span>{item.name}</span>
                             </Link>
@@ -171,14 +173,16 @@ export default function HeaderClient() {
                                         <div className="subNavCategory">
                                             {dataCategory && dataCategory.length > 0 ? (
                                                 <div className="subNavCategory__container">
-                                                    {dataCategory.map((item: dataCategoy) => {
+                                                    {dataCategory.map((item: dataCategoy, index: number) => {
                                                         return (
-                                                            <div className="subNavCategory__item">
+                                                            <div className="subNavCategory__item" key={index}>
                                                                 <div
                                                                     className="subNavCategory__heading"
                                                                     onClick={() => {
                                                                         setItemCategory(item);
-                                                                        navigate(`/${item.code}`);
+                                                                        console.log('ok');
+                                                                        setUrlCustomer(`/${item.code}&page=1&size=20`);
+                                                                        navigate(`/${item.code}&page=1&size=20`);
                                                                     }}
                                                                 >
                                                                     <span>{item?.value}</span>
@@ -192,6 +196,9 @@ export default function HeaderClient() {
                                                                                           key={index}
                                                                                           onClick={() => {
                                                                                               setItemCategory(item);
+                                                                                              setUrlCustomer(
+                                                                                                  `/${item.code}&page=1&size=20`,
+                                                                                              );
                                                                                           }}
                                                                                       >
                                                                                           <Link

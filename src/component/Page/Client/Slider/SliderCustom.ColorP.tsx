@@ -32,7 +32,6 @@ interface dataProps {
 }
 export default function SliderCustomColorP({ items, setCurrentDetail }: dataProps) {
     const [limitShow, setLimitShow] = useState<number>(4);
-    console.log(items);
     const CustomPrevArrow = (props: any) => {
         const { onClick } = props;
         return (

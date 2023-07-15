@@ -68,6 +68,10 @@ type MyContextType = {
     setItemCategory: React.Dispatch<React.SetStateAction<any>>;
     detailitemProduct: detailProductInterFace | undefined;
     setDetailItemProduct: React.Dispatch<React.SetStateAction<detailProductInterFace | undefined>>;
+    sortId: string;
+    setSortId: React.Dispatch<React.SetStateAction<string>>;
+    urlCustomer: string;
+    setUrlCustomer: React.Dispatch<React.SetStateAction<string>>;
 };
 const ChatContext = createContext<MyContextType | undefined>(undefined);
 const ChatProvide = ({ children }: childrenProps) => {
@@ -121,6 +125,10 @@ const ChatProvide = ({ children }: childrenProps) => {
     const [itemCategory, setItemCategory] = useState<any>();
     // Quản  lý chi tiết sản phẩm
     const [detailitemProduct, setDetailItemProduct] = useState<detailProductInterFace | undefined>();
+    // State manage sort
+    const [sortId, setSortId] = useState<string>('');
+    // customer Url
+    const [urlCustomer, setUrlCustomer] = useState<string>('');
     return (
         <ChatContext.Provider
             value={{
@@ -178,6 +186,10 @@ const ChatProvide = ({ children }: childrenProps) => {
                 setItemCategory,
                 detailitemProduct,
                 setDetailItemProduct,
+                sortId,
+                setSortId,
+                urlCustomer,
+                setUrlCustomer,
             }}
         >
             {children}

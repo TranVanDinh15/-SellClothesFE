@@ -3,7 +3,6 @@ import { authConstant } from '../Actions/Actions.constant';
 const initialState = { isAuthenticate: false, user: null, isLoading: false, isfail: false };
 
 const AuthReducers = (state = initialState, action: any) => {
-    console.log(action);
     switch (action.type) {
         case authConstant.LOGIN__REQUEST:
             return {

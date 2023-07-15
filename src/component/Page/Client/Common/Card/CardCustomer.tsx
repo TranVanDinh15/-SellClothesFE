@@ -25,7 +25,6 @@ interface props {
 }
 export default function CardCustomer({ item }: props) {
     const [currentDetail, setCurrentDetail] = useState<any>();
-    console.log(currentDetail);
     useEffect(() => {
         if (item) {
             setCurrentDetail(item?.detail[0]);
@@ -61,10 +60,10 @@ export default function CardCustomer({ item }: props) {
 
                 <div className="cardProduct__Infor_Price">
                     <div className="cardProduct__Infor_PriceOriginal">
-                        <span>{convertVND(currentDetail?.originalPrice)}</span>
+                        <span>{convertVND(currentDetail?.discountPrice)}</span>
                     </div>
                     <div className="cardProduct__Infor_PriceDisccount">
-                        <span>{convertVND(currentDetail?.discountPrice)}</span>
+                        <span>{convertVND(currentDetail?.originalPrice)}</span>
                     </div>
                 </div>
                 <div

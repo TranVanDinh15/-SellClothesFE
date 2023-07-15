@@ -31,12 +31,9 @@ interface cardProps {
 }
 export default function TabProductCustomer({ width, listData }: cardProps) {
     const [detailProduct, setDetailProduct] = useState<any>();
-    // console.log(detailitemProduct);
-    console.log(listData);
     return (
         <Space wrap={true}>
             {listData.map((item, index) => {
-                console.log(item);
                 return <CardCustomer item={item} key={index} />;
             })}
         </Space>

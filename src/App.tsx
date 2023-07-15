@@ -22,7 +22,6 @@ import ProductCat from './component/Page/Client/pageClient/ProductCat/ProductCat
 
 function App() {
     const token = localStorage.getItem('token');
-    console.log(token);
     const router = createBrowserRouter([
         {
             path: '/Admin',
