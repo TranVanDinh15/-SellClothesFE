@@ -4988,12 +4988,12 @@ csstype@^3.0.10, csstype@^3.0.11, csstype@^3.0.2:
 
 d3-array@^1.2.0:
   version "1.2.4"
-  resolved "https://registry.yarnpkg.com/d3-array/-/d3-array-1.2.4.tgz#635ce4d5eea759f6f605863dbcfc30edc737f71f"
+  resolved "https://registry.npmjs.org/d3-array/-/d3-array-1.2.4.tgz"
   integrity sha512-KHW6M86R+FUPYGb3R5XiYjXPq7VzwxZ22buHhAEVG5ztoEcZZMLov530mmccaqA1GghZArjQV46fuc8kUqhhHw==
 
 d3-polygon@^1.0.3:
   version "1.0.6"
-  resolved "https://registry.yarnpkg.com/d3-polygon/-/d3-polygon-1.0.6.tgz#0bf8cb8180a6dc107f518ddf7975e12abbfbd38e"
+  resolved "https://registry.npmjs.org/d3-polygon/-/d3-polygon-1.0.6.tgz"
   integrity sha512-k+RF7WvI08PC8reEoXa/w2nSg5AUMTi+peBD9cmFc+0ixHfbs4QmxxkarVal1IkVkgxVuk9JSHhJURHiyHKAuQ==
 
 damerau-levenshtein@^1.0.8:
@@ -5047,6 +5047,11 @@ decode-named-character-reference@^1.0.0:
   integrity sha512-O8x12RzrUF8xyVcY0KJowWsmaJxQbmy0/EtnNtHRpsOcT7dFk5W598coHqBVpmWo1oQQfsCqfCmkZN5DJrZVdg==
   dependencies:
     character-entities "^2.0.0"
+
+decode-uri-component@^0.4.1:
+  version "0.4.1"
+  resolved "https://registry.npmjs.org/decode-uri-component/-/decode-uri-component-0.4.1.tgz"
+  integrity sha512-+8VxcR21HhTy8nOt6jf20w0c9CADrw1O8d+VZ/YzzCt4bJ3uBjw+D1q2osAB8RnpwwaeYBxy0HyKQxD5JBMuuQ==
 
 dedent@^0.7.0:
   version "0.7.0"
@@ -5294,7 +5299,7 @@ duplexer@^0.1.2:
 
 earcut@^2.1.1:
   version "2.2.4"
-  resolved "https://registry.yarnpkg.com/earcut/-/earcut-2.2.4.tgz#6d02fd4d68160c114825d06890a92ecaae60343a"
+  resolved "https://registry.npmjs.org/earcut/-/earcut-2.2.4.tgz"
   integrity sha512-/pjZsA1b4RPHbeWZQn66SWS8nZZWLQQ23oE3Eam7aroEFGEvwKAsJfZ9ytiEMycfzXWpca4FA9QIOehf7PocBQ==
 
 ee-first@1.1.1:
@@ -5945,6 +5950,11 @@ fill-range@^7.0.1:
   dependencies:
     to-regex-range "^5.0.1"
 
+filter-obj@^5.1.0:
+  version "5.1.0"
+  resolved "https://registry.npmjs.org/filter-obj/-/filter-obj-5.1.0.tgz"
+  integrity sha512-qWeTREPoT7I0bifpPUXtxkZJ1XJzxWtfoWWkdVGqa+eCr3SHW/Ocp89o8vLvbUuQnadybJpjOKu4V+RwO6sGng==
+
 finalhandler@1.2.0:
   version "1.2.0"
   resolved "https://registry.npmjs.org/finalhandler/-/finalhandler-1.2.0.tgz"
@@ -6010,7 +6020,7 @@ flatted@^3.1.0:
 
 flubber@^0.4.2:
   version "0.4.2"
-  resolved "https://registry.yarnpkg.com/flubber/-/flubber-0.4.2.tgz#14452d4a838cc3b9f2fb6175da94e35acd55fbaa"
+  resolved "https://registry.npmjs.org/flubber/-/flubber-0.4.2.tgz"
   integrity sha512-79RkJe3rA4nvRCVc2uXjj7U/BAUq84TS3KHn6c0Hr9K64vhj83ZNLUziNx4pJoBumSPhOl5VjH+Z0uhi+eE8Uw==
   dependencies:
     d3-array "^1.2.0"
@@ -9686,6 +9696,15 @@ qs@6.11.0:
   dependencies:
     side-channel "^1.0.4"
 
+query-string@^8.1.0:
+  version "8.1.0"
+  resolved "https://registry.yarnpkg.com/query-string/-/query-string-8.1.0.tgz#e7f95367737219544cd360a11a4f4ca03836e115"
+  integrity sha512-BFQeWxJOZxZGix7y+SByG3F36dA0AbTy9o6pSmKFcFz7DAj0re9Frkty3saBn3nHo3D0oZJ/+rx3r8H8r8Jbpw==
+  dependencies:
+    decode-uri-component "^0.4.1"
+    filter-obj "^5.1.0"
+    split-on-first "^3.0.0"
+
 querystringify@^2.1.1:
   version "2.2.0"
   resolved "https://registry.npmjs.org/querystringify/-/querystringify-2.2.0.tgz"
@@ -10058,7 +10077,7 @@ rc-tree@~5.7.0, rc-tree@~5.7.4:
 
 rc-tween-one@^3.0.6:
   version "3.0.6"
-  resolved "https://registry.yarnpkg.com/rc-tween-one/-/rc-tween-one-3.0.6.tgz#74e09cdd9da00c27082c8b6f1606dc3bae67797b"
+  resolved "https://registry.npmjs.org/rc-tween-one/-/rc-tween-one-3.0.6.tgz"
   integrity sha512-5zTSXyyv7bahDBQ/kJw/kNxxoBqTouttoelw8FOVOyWqmTMndizJEpvaj1N+yES5Xjss6Y2iVw+9vSJQZE8Z6g==
   dependencies:
     "@babel/runtime" "^7.11.1"
@@ -11138,6 +11157,11 @@ spdy@^4.0.2:
     select-hose "^2.0.0"
     spdy-transport "^3.0.0"
 
+split-on-first@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.npmjs.org/split-on-first/-/split-on-first-3.0.0.tgz"
+  integrity sha512-qxQJTx2ryR0Dw0ITYyekNQWpz6f8dGd7vffGNflQQ3Iqj9NJ6qiZ7ELpZsJ/QBhIVAiDfXdag3+Gp8RvWa62AA==
+
 sprintf-js@~1.0.2:
   version "1.0.3"
   resolved "https://registry.npmjs.org/sprintf-js/-/sprintf-js-1.0.3.tgz"
@@ -11344,7 +11368,7 @@ style-to-object@^0.4.0:
 
 style-utils@^0.3.4, style-utils@^0.3.6:
   version "0.3.8"
-  resolved "https://registry.yarnpkg.com/style-utils/-/style-utils-0.3.8.tgz#6ba4271bcc766dee4730bd51b3ef2552908dc111"
+  resolved "https://registry.npmjs.org/style-utils/-/style-utils-0.3.8.tgz"
   integrity sha512-RmGftIhY4tqtD1ERwKsVEDlt/M6UyxN/rcr95UmlooWmhtL0RwVUYJkpo1kSx3ppd9/JZzbknhy742zbMAawjQ==
 
 stylehacks@^5.1.1:
@@ -11414,12 +11438,12 @@ svg-parser@^2.0.2:
 
 svg-path-properties@^0.2.1:
   version "0.2.2"
-  resolved "https://registry.yarnpkg.com/svg-path-properties/-/svg-path-properties-0.2.2.tgz#b073d81be7292eae0e233ab8a83f58dc27113296"
+  resolved "https://registry.npmjs.org/svg-path-properties/-/svg-path-properties-0.2.2.tgz"
   integrity sha512-GmrB+b6woz6CCdQe6w1GHs/1lt25l7SR5hmhF8jRdarpv/OgjLyuQygLu1makJapixeb1aQhP/Oa1iKi93o/aQ==
 
 svg-path-properties@^1.0.4:
   version "1.2.0"
-  resolved "https://registry.yarnpkg.com/svg-path-properties/-/svg-path-properties-1.2.0.tgz#4214a25a1ded558e26e783c75131e584887834a5"
+  resolved "https://registry.npmjs.org/svg-path-properties/-/svg-path-properties-1.2.0.tgz"
   integrity sha512-MWN8NqNHWwNvYlepv6ui9T9KpRCqogprBuTTDLWztvjSljvhjyNCGJ6EynyAqUwteM5iRXhMl8arGDtcE7eIwQ==
 
 svgo@^1.2.2:
@@ -11456,7 +11480,7 @@ svgo@^2.7.0:
 
 svgpath@^2.2.1:
   version "2.6.0"
-  resolved "https://registry.yarnpkg.com/svgpath/-/svgpath-2.6.0.tgz#5b160ef3d742b7dfd2d721bf90588d3450d7a90d"
+  resolved "https://registry.npmjs.org/svgpath/-/svgpath-2.6.0.tgz"
   integrity sha512-OIWR6bKzXvdXYyO4DK/UWa1VA1JeKq8E+0ug2DG98Y/vOmMpfZNj+TIG988HjfYSqtcy/hFOtZq/n/j5GSESNg==
 
 symbol-tree@^3.2.4:
@@ -11624,7 +11648,7 @@ toidentifier@1.0.1:
 
 topojson-client@^3.0.0:
   version "3.1.0"
-  resolved "https://registry.yarnpkg.com/topojson-client/-/topojson-client-3.1.0.tgz#22e8b1ed08a2b922feeb4af6f53b6ef09a467b99"
+  resolved "https://registry.npmjs.org/topojson-client/-/topojson-client-3.1.0.tgz"
   integrity sha512-605uxS6bcYxGXw9qi62XyrV6Q3xwbndjachmNxu8HWTtVPxZfEJN9fd/SZS1Q54Sn2y0TMyMxFj/cJINqGHrKw==
   dependencies:
     commander "2"
@@ -11707,12 +11731,12 @@ tsutils@^3.21.0:
 
 tween-functions@^1.2.0:
   version "1.2.0"
-  resolved "https://registry.yarnpkg.com/tween-functions/-/tween-functions-1.2.0.tgz#1ae3a50e7c60bb3def774eac707acbca73bbc3ff"
+  resolved "https://registry.npmjs.org/tween-functions/-/tween-functions-1.2.0.tgz"
   integrity sha512-PZBtLYcCLtEcjL14Fzb1gSxPBeL7nWvGhO5ZFPGqziCcr8uvHp0NDmdjBchp6KHL+tExcg0m3NISmKxhU394dA==
 
 tween-one@^1.0.50:
   version "1.2.7"
-  resolved "https://registry.yarnpkg.com/tween-one/-/tween-one-1.2.7.tgz#80051e9434f145c0e31623790378af0f23fe3d00"
+  resolved "https://registry.npmjs.org/tween-one/-/tween-one-1.2.7.tgz"
   integrity sha512-F+Z9LO9GsYqf0j5bgNhAF98RDrAZ7QjQrujJ2lVYSHl4+dBPW/atHluL2bwclZf8Vo0Yo96f6pw2uq1OGzpC/Q==
   dependencies:
     "@babel/runtime" "^7.11.1"

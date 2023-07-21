@@ -1,7 +1,6 @@
 import { Dispatch } from 'redux';
 import { urlConstant } from './Actions.constant';
 import { message } from 'antd';
-import { GetContext } from '../../component/Page/Admin/common/Context/Context';
 
 export const UrlActions: any = (pramsUrl: string) => {
     console.log(pramsUrl);
@@ -83,13 +82,21 @@ export const ClientChooseAction: any = (
             const existArray = clientChooseCustom.findIndex((item: { id: string; value: string }) => {
                 return item.value == objectItem.value;
             });
-            if (existArray == -1) {
+            console.log(existArray);
+            if (existArray === -1) {
                 dispatch({
                     type: urlConstant.URL__CLIENTCHOOSE,
                     payLoad: {
                         objectItem: objectItem,
                     },
                 });
+            } else {
+                // dispatch({
+                //     type: urlConstant.URL__CLIENTCHOOSE,
+                //     payLoad: {
+                //         objectItem: clientChooseCustom,
+                //     },
+                // });
             }
         } else {
             dispatch({
@@ -108,7 +115,6 @@ export const ClientChooseDeleteAction: any = (
     },
     clientChooseCustom: [],
     setCheckValues: React.Dispatch<React.SetStateAction<any>>,
-
     handleCheckboxChange: (param: any) => void,
     setIsBorderColor: React.Dispatch<React.SetStateAction<any>>,
 ) => {
@@ -158,6 +164,84 @@ export const ClientChooseDeleteAction: any = (
         }
         dispatch({
             type: urlConstant.URL__DELETECHOOSE,
+            payLoad: {
+                ClientChooseDelete: filterData,
+            },
+        });
+    };
+};
+export const ClientChooseCheckBoxDeleteAction: any = (
+    objectItem: {
+        value: string;
+        id: string;
+    },
+    clientChooseCustom: [],
+) => {
+    return async (dispatch: Dispatch) => {
+        const filterData = clientChooseCustom.filter(
+            (
+                item: {
+                    value: string;
+                    id: string;
+                },
+                index,
+            ) => {
+                return objectItem.value != item.value;
+            },
+        );
+        console.log(filterData);
+        dispatch({
+            type: urlConstant.URL__DELETECHOOSECHECKBOX,
+            payLoad: {
+                ClientChooseDelete: filterData,
+            },
+        });
+    };
+};
+export const ClientChooseColorDeleteAction: any = (
+    objectItem: {
+        value: string;
+        id: string;
+        valueCode: string;
+    },
+    clientChooseCustom: [],
+    setIsBorderColor: React.Dispatch<React.SetStateAction<any>>,
+) => {
+    return async (dispatch: Dispatch) => {
+        const filterData = clientChooseCustom.filter(
+            (
+                item: {
+                    value: string;
+                    id: string;
+                },
+                index,
+            ) => {
+                return objectItem.value != item.value;
+            },
+        );
+        const filterColor = filterData.filter((item: any) => {
+            if (item.id === 'color') {
+                return item?.valueCode;
+            }
+        });
+        const codeColor = filterColor.map((item: any) => {
+            return item?.valueCode;
+        });
+        console.log(filterColor);
+        console.log(codeColor);
+        if (codeColor.length > 0) {
+            setIsBorderColor([...codeColor]);
+        } else {
+            setIsBorderColor([]);
+        }
+        dispatch({
+            type: urlConstant.URL__DELETECOLOR,
+            payLoad: {
+                colorAfterDelete: codeColor,
+            },
+        });
+        dispatch({
+            type: urlConstant.URL__DELETECHOOSECOLOR,
             payLoad: {
                 ClientChooseDelete: filterData,
             },

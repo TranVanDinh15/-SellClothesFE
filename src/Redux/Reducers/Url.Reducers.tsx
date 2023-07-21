@@ -30,6 +30,11 @@ const UrlCustomerReducers = (state = initialState, action: any) => {
                 ...state,
                 color: [...state.color, action.payLoad.color],
             };
+        case urlConstant.URL__DELETECOLOR:
+            return {
+                ...state,
+                color: [...action.payLoad.colorAfterDelete],
+            };
         case urlConstant.URL__CLIENTCHOOSE:
             return {
                 ...state,
@@ -40,10 +45,15 @@ const UrlCustomerReducers = (state = initialState, action: any) => {
                 ...state,
                 ClientChoose: [...action.payLoad.ClientChooseDelete],
             };
-        case urlConstant.URL__DELETECOLOR:
+        case urlConstant.URL__DELETECHOOSECHECKBOX:
             return {
                 ...state,
-                color: [...action.payLoad.colorAfterDelete],
+                ClientChoose: [...action.payLoad.ClientChooseDelete],
+            };
+        case urlConstant.URL__DELETECHOOSECOLOR:
+            return {
+                ...state,
+                ClientChoose: [...action.payLoad.ClientChooseDelete],
             };
         default:
             return state;

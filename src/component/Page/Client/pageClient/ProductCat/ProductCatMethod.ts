@@ -1,6 +1,10 @@
 import { NavigateProps } from 'react-router-dom';
 import { Dispatch } from 'redux';
-import { SortUpdateAction, createAtUpdateAction } from '../../../../../Redux/Actions/Actions.url';
+import {
+    ClientChooseColorDeleteAction,
+    SortUpdateAction,
+    createAtUpdateAction,
+} from '../../../../../Redux/Actions/Actions.url';
 import { getCategoryColor } from '../../../../utils/Api/Api';
 
 export const handleChangeTitleSelect = (
@@ -33,4 +37,17 @@ export const handleGetColorProduct = async (setListColorProduct: React.Dispatch<
     if (response && response.status == 200) {
         setListColorProduct(response.data.data);
     }
+};
+// Handle  delete Color
+export const handleDeleteColor = (
+    objectItem: {
+        value: string;
+        id: string;
+        valueCode: string;
+    },
+    clientChooseCustom: [],
+    setIsBorderColor: React.Dispatch<React.SetStateAction<any>>,
+    disPatch: any,
+) => {
+    disPatch(ClientChooseColorDeleteAction(objectItem, clientChooseCustom, setIsBorderColor));
 };

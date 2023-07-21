@@ -18,7 +18,7 @@ import {
 import Sider from 'antd/es/layout/Sider';
 import { Content } from 'antd/es/layout/layout';
 import { CloseOutlined, FilterOutlined, LaptopOutlined, NotificationOutlined, UserOutlined } from '@ant-design/icons';
-import { handleChangeTitleSelect, handleGetColorProduct } from './ProductCatMethod';
+import { handleChangeTitleSelect, handleDeleteColor, handleGetColorProduct } from './ProductCatMethod';
 import TabProductCustomer from '../../Common/TabProduct/TabProduct';
 import { useNavigate, useParams } from 'react-router-dom';
 import { GetContext } from '../../../Admin/common/Context/Context';
@@ -33,11 +33,16 @@ import { filter } from '@chakra-ui/react';
 import { useDispatch } from 'react-redux';
 import {
     ClientChooseAction,
+    ClientChooseCheckBoxDeleteAction,
+    ClientChooseDeleteAction,
     ColorUpdateAction,
     PriceUpdateAction,
     SortUpdateAction,
+    createAtUpdateAction,
 } from '../../../../../Redux/Actions/Actions.url';
 import TagYourChoose from './TagYourChoose';
+// Biến một mảng thành string
+import queryString from 'query-string';
 export interface reduxIterface {
     UrlReducer: {
         urlCustomer: string;
@@ -53,27 +58,23 @@ export interface reduxIterface {
 }
 
 export default function ProductCat() {
+    // Lấy query từ URL
+    const urlSearchParams = new URLSearchParams(window.location.search);
+    const queryParams = Object.fromEntries(urlSearchParams.entries());
+
+    // In các query ra console
+    console.log(queryParams);
     const dispatch = useDispatch();
     // Lấy Params từ Url để call api
     const paramUrl = useParams();
+    console.log(paramUrl);
     const navigate = useNavigate();
     const sortCustom = useSelector((state: reduxIterface) => state.UrlReducer.sort);
     const PriceCustom = useSelector((state: reduxIterface) => state.UrlReducer.price);
     const createAtCustom = useSelector((state: reduxIterface) => state.UrlReducer.createAt);
     const ColorCustom = useSelector((state: reduxIterface) => state.UrlReducer.color);
     const clientChooseCustom = useSelector((state: reduxIterface) => state.UrlReducer.ClientChoose);
-    console.log(clientChooseCustom);
-    console.log(ColorCustom);
-    const {
-        itemCategory,
-        setItemCategory,
-        sortId,
-        setSortId,
-        urlCustomer,
-        setUrlCustomer,
-        isBorderColor,
-        setIsBorderColor,
-    }: any = GetContext();
+    const { itemCategory, urlCustomer, setUrlCustomer }: any = GetContext();
     const [size, setSize] = useState<number | string>('1');
     const [page, setPage] = useState<number | string>('10');
     const [listData, setListData] = useState<dataCategoryProduct[]>([]);
@@ -84,61 +85,77 @@ export default function ProductCat() {
     const [maxPriceFilter, setMaxPricefilter] = useState<any>();
     const [isChangeUrl, setIsChangeUrl] = useState<boolean>(false);
     const [listColor, setListColor] = useState<any>();
-    const [valuesCheckBox, setvaluesCheckBox] = useState([]);
-    console.log(isBorderColor);
+    const [valuesCheckBox, setvaluesCheckBox] = useState<string[]>([]);
+    const [checkedValuesPrev, setCheckedValuesPrev] = useState<string[]>([]);
+    // Quản lý filter màu sắc có boder hoăcj không
+    const [isBorderColor, setIsBorderColor] = useState<any>([]);
     const listCheckBox = [
         {
             id: 0,
             name: `Nhỏ hơn 100.000đ`,
             fromPrice: 0,
             toPrice: 100000,
-            value: `Nhỏ hơn 100.000đ`,
         },
         {
             id: 1,
             name: `Từ 100.000đ - 200.000đ`,
             fromPrice: 100000,
             toPrice: 200000,
-            value: `Từ 100.000đ - 200.000đ`,
         },
         {
             id: 2,
             name: `Từ 200.000đ - 350.000đ`,
             fromPrice: 200000,
             toPrice: 350000,
-            value: `Từ 200.000đ - 350.000đ`,
         },
         {
             id: 3,
             name: `Từ 350.000đ - 500.000đ`,
             fromPrice: 350000,
             toPrice: 500000,
-            value: `Từ 350.000đ - 500.000đ`,
         },
         {
             id: 4,
             name: `Từ 500.000đ - 700.000đ`,
             fromPrice: 500000,
             toPrice: 700000,
-            value: `Từ 500.000đ - 700.000đ`,
         },
         {
             id: 5,
             name: `Lớn hơn 700.000đ`,
             fromPrice: 700000,
             toPrice: 100000000,
-            value: `Lớn hơn 700.000đ`,
         },
     ];
-    const handleCheckboxChange = (value: any) => {
-        console.log(value);
+    const handleCheckboxChange = (value: string[]) => {
+        // Xác định checkbox vừa thay đổi bằng cách so sánh mảng trước và sau khi thay đổi
+        // Biến này dùng để tìm ra phần tử không có trong  value mà checkedValuesPrev có để thực hiện xóa mục đã chọn
+        const changedCheckbox = checkedValuesPrev.find((valueItem) => !value.includes(valueItem));
+        if (changedCheckbox) {
+            const objectItem = listCheckBox.filter((item) => {
+                return item.id.toString() == changedCheckbox;
+            });
+            if (objectItem.length > 0) {
+                const priceDataMap = objectItem.map((item) => {
+                    return {
+                        id: 'price',
+                        value: item.name,
+                        valueCheckBox: item.id,
+                    };
+                });
+                dispatch(ClientChooseCheckBoxDeleteAction(priceDataMap[0], clientChooseCustom));
+            }
+        }
+        //
+        //
         setvaluesCheckBox(value);
+        setCheckedValuesPrev(value);
         // Lưu trạng thái của checkbox
         let newArray: any = [];
         if (value.length > 0) {
             for (let i = 0; i < value.length; i++) {
                 const list = listCheckBox.forEach((item) => {
-                    if (item.id == value[i]) {
+                    if (item.id.toString() == value[i]) {
                         // dispatch action user adready choose
                         dispatch(
                             ClientChooseAction(
@@ -174,32 +191,48 @@ export default function ProductCat() {
         }
         // setCheckedItems(newArray);
     };
-    const handleCheckBoxState = () => {};
     // handle get list Product depend query
     const handleGetProduct = async (pram: any): Promise<void> => {
-        setIsLoading(true);
-        const query = `categoryId=${pram.slug}`;
-        const response = await getProductByCat(query);
-        if (response && response.status == 200) {
-            const data = response.data.data;
-            const resultData =
-                data.length > 0
-                    ? data.map((item: dataCategoryProduct, index: number) => {
-                          return {
-                              id: item.id,
-                              brandId: item.brandId,
-                              categoryId: item.categoryId,
-                              name: item.name,
-                              material: item.material,
-                              madeBy: item.madeBy,
-                              sold: item.sold,
-                              view: item.view,
-                              detail: [...item.detail],
-                          };
-                      })
-                    : [];
-            setListData(resultData);
-            setIsLoading(false);
+        if (queryParams || paramUrl.slug) {
+            setUrlCustomer(`/${queryParams.categoryId}?categoryId=${queryParams.categoryId}`);
+            // dispatch sortId, createdAt lên redux khi người dùng path url có sortid
+            if (queryParams?.sortid) {
+                dispatch(SortUpdateAction(queryParams?.sortid));
+            } else if (queryParams?.createdAt) {
+                dispatch(createAtUpdateAction(queryParams?.createdAt));
+            }
+
+            setIsLoading(true);
+            // Tạo một danh sách các thuộc tính có giá trị khác rỗng
+            const validData: any = {};
+            Object.keys(queryParams).forEach((key) => {
+                if (queryParams[key] !== '') {
+                    validData[key] = queryParams[key];
+                }
+            });
+            const query = `${queryString.stringify(validData)}`;
+            const response = await getProductByCat(query);
+            if (response && response.status == 200) {
+                const data = response.data.data;
+                const resultData =
+                    data.length > 0
+                        ? data.map((item: dataCategoryProduct, index: number) => {
+                              return {
+                                  id: item.id,
+                                  brandId: item.brandId,
+                                  categoryId: item.categoryId,
+                                  name: item.name,
+                                  material: item.material,
+                                  madeBy: item.madeBy,
+                                  sold: item.sold,
+                                  view: item.view,
+                                  detail: [...item.detail],
+                              };
+                          })
+                        : [];
+                setListData(resultData);
+                setIsLoading(false);
+            }
         }
     };
 
@@ -229,7 +262,6 @@ export default function ProductCat() {
 
     const preventDefault = (e: React.MouseEvent<HTMLElement>) => {
         e.preventDefault();
-        console.log('Clicked! But prevent default.');
     };
     useEffect(() => {
         // Call Api get Product filter
@@ -292,13 +324,7 @@ export default function ProductCat() {
                     <div className="ProductCatTitle__option">
                         {items.map((item: { id: number; name: string }, index: number) => {
                             return (
-                                <Button
-                                    type="ghost"
-                                    key={index}
-                                    // onClick={() => {
-                                    //     navigate('/dadad?q=1');
-                                    // }}
-                                >
+                                <Button type="ghost" key={index}>
                                     {item.name}
                                 </Button>
                             );
@@ -335,7 +361,7 @@ export default function ProductCat() {
                             <div className="filterChatBox__Container">
                                 <Checkbox.Group
                                     style={{ width: '100%' }}
-                                    onChange={(value) => {
+                                    onChange={(value: any) => {
                                         handleCheckboxChange(value);
                                     }}
                                     className="filterChatBox__Container__chatGroup"
@@ -343,15 +369,7 @@ export default function ProductCat() {
                                 >
                                     {listCheckBox.map((item, index: number) => {
                                         return (
-                                            <Checkbox
-                                                value={item.id}
-                                                key={index}
-                                                onChange={(e) => {
-                                                    console.log(e);
-                                                    // setChecked(false);
-                                                }}
-                                                defaultChecked={true}
-                                            >
+                                            <Checkbox value={item.id} key={index} defaultChecked={true}>
                                                 {item.name}
                                             </Checkbox>
                                         );
@@ -381,20 +399,6 @@ export default function ProductCat() {
                                                               : `none`,
                                                   }}
                                                   key={index}
-                                                  onClick={() => {
-                                                      dispatch(ColorUpdateAction(item?.code, ColorCustom));
-                                                      setIsBorderColor((state: any) => [...state, item?.code]);
-                                                      dispatch(
-                                                          ClientChooseAction(
-                                                              {
-                                                                  id: 'color',
-                                                                  value: item?.value,
-                                                                  valueCode: item?.code,
-                                                              },
-                                                              clientChooseCustom,
-                                                          ),
-                                                      );
-                                                  }}
                                               >
                                                   <div
                                                       className="ColorItem__color"
@@ -404,16 +408,39 @@ export default function ProductCat() {
                                                       }}
                                                   ></div>
                                                   <Button
-                                                      //   style={{
-                                                      //       backgroundColor: item.hexCode,
-                                                      //       color: item.hexCode ? '#fff' : '#000',
-                                                      //   }}
                                                       type="text"
                                                       key={index}
+                                                      onClick={() => {
+                                                          dispatch(ColorUpdateAction(item?.code, ColorCustom));
+                                                          setIsBorderColor((state: any) => [...state, item?.code]);
+                                                          dispatch(
+                                                              ClientChooseAction(
+                                                                  {
+                                                                      id: 'color',
+                                                                      value: item?.value,
+                                                                      valueCode: item?.code,
+                                                                  },
+                                                                  clientChooseCustom,
+                                                              ),
+                                                          );
+                                                      }}
                                                   >
                                                       {item?.value}
                                                   </Button>
-                                                  <div>
+                                                  <div
+                                                      onClick={() => {
+                                                          handleDeleteColor(
+                                                              {
+                                                                  id: 'color',
+                                                                  value: item.value,
+                                                                  valueCode: item.code,
+                                                              },
+                                                              clientChooseCustom,
+                                                              setIsBorderColor,
+                                                              dispatch,
+                                                          );
+                                                      }}
+                                                  >
                                                       <CloseOutlined
                                                           style={{
                                                               height: '10px',

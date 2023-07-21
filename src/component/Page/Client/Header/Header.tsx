@@ -13,17 +13,12 @@ import { GetContext } from '../../Admin/common/Context/Context';
 import { useDispatch } from 'react-redux';
 import { UrlActions } from '../../../../Redux/Actions/Actions.url';
 import images from '../../../../asset';
-console.log(images);
 const headerStyle: React.CSSProperties = {
-    // textAlign: 'center',
     color: '#fff',
     minHeight: '90px',
     backgroundColor: '#fff',
     display: 'flex',
     flexWrap: 'wrap',
-    // paddingTop: '20px ',
-    // paddingBottom: '20px ',
-    // borderBottom: '1px solid #ccc',
     boxShadow: '0 6px 12px 0 rgba(0,0,0,0.05)',
 };
 const itemsMenu = [
@@ -147,7 +142,6 @@ export default function HeaderClient() {
             getListCategorySub(setDatacategory, saveCodeCategory);
         }
     }, [saveCodeCategory]);
-
     return (
         <Header style={headerStyle}>
             <header className="headerClientAbove">
@@ -182,9 +176,12 @@ export default function HeaderClient() {
                                                                     className="subNavCategory__heading"
                                                                     onClick={() => {
                                                                         setItemCategory(item);
-                                                                        console.log('ok');
-                                                                        setUrlCustomer(`/${item.code}&page=1&size=20`);
-                                                                        navigate(`/${item.code}&page=1&size=20`);
+                                                                        setUrlCustomer(
+                                                                            `/${item.code}?categoryId=${item.code}&page=1&size=20`,
+                                                                        );
+                                                                        navigate(
+                                                                            `/${item.code}?categoryId=${item.code}&page=1&size=20`,
+                                                                        );
                                                                     }}
                                                                 >
                                                                     <span>{item?.value}</span>
@@ -199,12 +196,12 @@ export default function HeaderClient() {
                                                                                           onClick={() => {
                                                                                               setItemCategory(item);
                                                                                               setUrlCustomer(
-                                                                                                  `/${item.code}&page=1&size=20`,
+                                                                                                  `/${item.code}?categoryId=${item.code}&page=1&size=20`,
                                                                                               );
                                                                                           }}
                                                                                       >
                                                                                           <Link
-                                                                                              to={`/${item.code}&page=1&size=20`}
+                                                                                              to={`/${item.code}?categoryId=${item.code}&page=1&size=20`}
                                                                                           >
                                                                                               <span>{item?.value}</span>
                                                                                           </Link>
