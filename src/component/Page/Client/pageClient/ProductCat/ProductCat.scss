@@ -1,6 +1,6 @@
 .ProductCatWrapper {
     height: 2000px;
-    padding: 40px 50px;
+    padding: 40px 20px;
 }
 .ProductCatTitle {
     display: flex;
@@ -86,14 +86,34 @@
 .filterChatBox__Container {
     margin: 0 20px;
 }
-.filterPrice__title {
+.filterPrice__title,
+.filterColor__title,
+.filterPrice__Choose {
     button {
         font-size: 16px;
         margin-bottom: 10px;
+        font-weight: 600;
     }
 }
 .filterChatBox__Container__chatGroup {
     display: flex;
     flex-direction: column;
     gap: 16px;
+}
+.filterColor {
+    margin-top: 10px;
+}
+.ColorItem {
+    display: flex;
+    align-items: center;
+    padding: 0 4px;
+    border-radius: 4px;
+    background-color: #f2f2f2;
+    // border: 1px solid #000;
+    cursor: pointer;
+}
+.ColorItem__color {
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
 }

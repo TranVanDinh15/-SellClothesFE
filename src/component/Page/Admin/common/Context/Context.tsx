@@ -72,6 +72,8 @@ type MyContextType = {
     setSortId: React.Dispatch<React.SetStateAction<string>>;
     urlCustomer: string;
     setUrlCustomer: React.Dispatch<React.SetStateAction<string>>;
+    isBorderColor: any;
+    setIsBorderColor: React.Dispatch<React.SetStateAction<any>>;
 };
 const ChatContext = createContext<MyContextType | undefined>(undefined);
 const ChatProvide = ({ children }: childrenProps) => {
@@ -129,6 +131,8 @@ const ChatProvide = ({ children }: childrenProps) => {
     const [sortId, setSortId] = useState<string>('');
     // customer Url
     const [urlCustomer, setUrlCustomer] = useState<string>('');
+    // Quản lý filter màu sắc có boder hoăcj không
+    const [isBorderColor, setIsBorderColor] = useState<any>([]);
     return (
         <ChatContext.Provider
             value={{
@@ -190,6 +194,8 @@ const ChatProvide = ({ children }: childrenProps) => {
                 setSortId,
                 urlCustomer,
                 setUrlCustomer,
+                isBorderColor,
+                setIsBorderColor,
             }}
         >
             {children}

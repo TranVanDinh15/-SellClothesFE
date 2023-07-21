@@ -2,7 +2,9 @@ import React from 'react';
 import Slider from '@ant-design/react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
+import ImageGallery from 'react-image-gallery';
 import './Slider.css';
+import { AiOutlineLeft } from 'react-icons/ai';
 import { LeftOutlined, RightOutlined } from '@ant-design/icons';
 // interface dataSlider{
 //     data: {
@@ -24,25 +26,29 @@ export default function SliderCustom({ data }: dataSlider) {
         autoplay: true,
         arrows: true,
     };
+    console.log(data);
     return (
         <div className="SliderWrapper">
             <div className="SliderWrapper__Container">
-                <Slider {...settings}>
-                    {data.map(
+                <ImageGallery
+                    showFullscreenButton={false}
+                    showPlayButton={false}
+                    slideOnThumbnailOver={true}
+                    autoPlay={true}
+                    items={data.map(
                         (
                             item: {
                                 image: string;
                             },
                             index: number,
                         ) => {
-                            return (
-                                <div className="SliderImage" key={index}>
-                                    <img src={`${process.env.REACT_APP_IMAGE_BANNER_URL}${item.image}`} />
-                                </div>
-                            );
+                            return {
+                                original: `${process.env.REACT_APP_IMAGE_BANNER_URL}${item.image}`,
+                                thumbnail: `${process.env.REACT_APP_IMAGE_BANNER_URL}${item.image}`,
+                            };
                         },
                     )}
-                </Slider>
+                />
             </div>
         </div>
     );

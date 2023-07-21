@@ -124,3 +124,7 @@ export const getAllBanner = (query: string) => {
 export const getProductByCat = (query: string) => {
     return AxiosInstance.get(`/product?${query}`);
 };
+// get Color  Category
+export const getCategoryColor = () => {
+    return AxiosInstance.get('/all-code/COLOR');
+};

@@ -1,6 +1,7 @@
 import { NavigateProps } from 'react-router-dom';
 import { Dispatch } from 'redux';
 import { SortUpdateAction, createAtUpdateAction } from '../../../../../Redux/Actions/Actions.url';
+import { getCategoryColor } from '../../../../utils/Api/Api';
 
 export const handleChangeTitleSelect = (
     value: string,
@@ -24,5 +25,12 @@ export const handleChangeTitleSelect = (
     } else if (value == 'default') {
         // setvalueSelect(value);
         // navigate(urlCustom);
+    }
+};
+// handle get Color product
+export const handleGetColorProduct = async (setListColorProduct: React.Dispatch<React.SetStateAction<any>>) => {
+    const response = await getCategoryColor();
+    if (response && response.status == 200) {
+        setListColorProduct(response.data.data);
     }
 };

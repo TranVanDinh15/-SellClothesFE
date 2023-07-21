@@ -1,10 +1,24 @@
 import React, { useState, useEffect } from 'react';
 import './ProductCat.scss';
-import { Breadcrumb, Button, Checkbox, Col, Layout, Menu, MenuProps, Row, Select, Skeleton, Space, theme } from 'antd';
+import {
+    Breadcrumb,
+    Button,
+    Checkbox,
+    Col,
+    Layout,
+    Menu,
+    MenuProps,
+    Row,
+    Select,
+    Skeleton,
+    Space,
+    Tag,
+    theme,
+} from 'antd';
 import Sider from 'antd/es/layout/Sider';
 import { Content } from 'antd/es/layout/layout';
-import { FilterOutlined, LaptopOutlined, NotificationOutlined, UserOutlined } from '@ant-design/icons';
-import { handleChangeTitleSelect } from './ProductCatMethod';
+import { CloseOutlined, FilterOutlined, LaptopOutlined, NotificationOutlined, UserOutlined } from '@ant-design/icons';
+import { handleChangeTitleSelect, handleGetColorProduct } from './ProductCatMethod';
 import TabProductCustomer from '../../Common/TabProduct/TabProduct';
 import { useNavigate, useParams } from 'react-router-dom';
 import { GetContext } from '../../../Admin/common/Context/Context';
@@ -17,8 +31,13 @@ import { image } from '@uiw/react-md-editor';
 import { useSelector } from 'react-redux';
 import { filter } from '@chakra-ui/react';
 import { useDispatch } from 'react-redux';
-import { PriceUpdateAction, SortUpdateAction } from '../../../../../Redux/Actions/Actions.url';
-var slug = require('slug');
+import {
+    ClientChooseAction,
+    ColorUpdateAction,
+    PriceUpdateAction,
+    SortUpdateAction,
+} from '../../../../../Redux/Actions/Actions.url';
+import TagYourChoose from './TagYourChoose';
 export interface reduxIterface {
     UrlReducer: {
         urlCustomer: string;
@@ -28,6 +47,8 @@ export interface reduxIterface {
             toPrice: number;
         };
         sort: string;
+        color: string[];
+        ClientChoose: [];
     };
 }
 
@@ -39,8 +60,20 @@ export default function ProductCat() {
     const sortCustom = useSelector((state: reduxIterface) => state.UrlReducer.sort);
     const PriceCustom = useSelector((state: reduxIterface) => state.UrlReducer.price);
     const createAtCustom = useSelector((state: reduxIterface) => state.UrlReducer.createAt);
-    console.log(PriceCustom);
-    const { itemCategory, setItemCategory, sortId, setSortId, urlCustomer, setUrlCustomer }: any = GetContext();
+    const ColorCustom = useSelector((state: reduxIterface) => state.UrlReducer.color);
+    const clientChooseCustom = useSelector((state: reduxIterface) => state.UrlReducer.ClientChoose);
+    console.log(clientChooseCustom);
+    console.log(ColorCustom);
+    const {
+        itemCategory,
+        setItemCategory,
+        sortId,
+        setSortId,
+        urlCustomer,
+        setUrlCustomer,
+        isBorderColor,
+        setIsBorderColor,
+    }: any = GetContext();
     const [size, setSize] = useState<number | string>('1');
     const [page, setPage] = useState<number | string>('10');
     const [listData, setListData] = useState<dataCategoryProduct[]>([]);
@@ -50,21 +83,78 @@ export default function ProductCat() {
     const [minPriceFilter, setMinPricefilter] = useState<any>();
     const [maxPriceFilter, setMaxPricefilter] = useState<any>();
     const [isChangeUrl, setIsChangeUrl] = useState<boolean>(false);
-    console.log(minPriceFilter, maxPriceFilter);
+    const [listColor, setListColor] = useState<any>();
+    const [valuesCheckBox, setvaluesCheckBox] = useState([]);
+    console.log(isBorderColor);
+    const listCheckBox = [
+        {
+            id: 0,
+            name: `Nhỏ hơn 100.000đ`,
+            fromPrice: 0,
+            toPrice: 100000,
+            value: `Nhỏ hơn 100.000đ`,
+        },
+        {
+            id: 1,
+            name: `Từ 100.000đ - 200.000đ`,
+            fromPrice: 100000,
+            toPrice: 200000,
+            value: `Từ 100.000đ - 200.000đ`,
+        },
+        {
+            id: 2,
+            name: `Từ 200.000đ - 350.000đ`,
+            fromPrice: 200000,
+            toPrice: 350000,
+            value: `Từ 200.000đ - 350.000đ`,
+        },
+        {
+            id: 3,
+            name: `Từ 350.000đ - 500.000đ`,
+            fromPrice: 350000,
+            toPrice: 500000,
+            value: `Từ 350.000đ - 500.000đ`,
+        },
+        {
+            id: 4,
+            name: `Từ 500.000đ - 700.000đ`,
+            fromPrice: 500000,
+            toPrice: 700000,
+            value: `Từ 500.000đ - 700.000đ`,
+        },
+        {
+            id: 5,
+            name: `Lớn hơn 700.000đ`,
+            fromPrice: 700000,
+            toPrice: 100000000,
+            value: `Lớn hơn 700.000đ`,
+        },
+    ];
     const handleCheckboxChange = (value: any) => {
         console.log(value);
+        setvaluesCheckBox(value);
         // Lưu trạng thái của checkbox
         let newArray: any = [];
         if (value.length > 0) {
             for (let i = 0; i < value.length; i++) {
                 const list = listCheckBox.forEach((item) => {
                     if (item.id == value[i]) {
+                        // dispatch action user adready choose
+                        dispatch(
+                            ClientChooseAction(
+                                {
+                                    id: 'price',
+                                    value: item.name,
+                                    valueCheckBox: item.id,
+                                },
+                                clientChooseCustom,
+                            ),
+                        );
                         newArray.push(item);
                     }
                 });
             }
         } else {
-            console.log('ok');
             setMinPricefilter('');
             setMaxPricefilter('');
         }
@@ -84,6 +174,7 @@ export default function ProductCat() {
         }
         // setCheckedItems(newArray);
     };
+    const handleCheckBoxState = () => {};
     // handle get list Product depend query
     const handleGetProduct = async (pram: any): Promise<void> => {
         setIsLoading(true);
@@ -111,6 +202,7 @@ export default function ProductCat() {
             setIsLoading(false);
         }
     };
+
     const items = [
         {
             id: 0,
@@ -134,44 +226,11 @@ export default function ProductCat() {
         { value: 'DESC', label: 'Sắp xếp từ Z-A' },
         { value: 'createdAt', label: 'Mới nhất' },
     ];
-    const listCheckBox = [
-        {
-            id: 0,
-            name: `Nhỏ hơn 100.000đ`,
-            fromPrice: 0,
-            toPrice: 100000,
-        },
-        {
-            id: 1,
-            name: `Từ 100.000đ - 200.000đ`,
-            fromPrice: 100000,
-            toPrice: 200000,
-        },
-        {
-            id: 2,
-            name: `Từ 200.000đ - 350.000đ`,
-            fromPrice: 200000,
-            toPrice: 350000,
-        },
-        {
-            id: 3,
-            name: `Từ 350.000đ - 500.000đ`,
-            fromPrice: 350000,
-            toPrice: 500000,
-        },
-        {
-            id: 4,
-            name: `Từ 500.000đ - 700.000đ`,
-            fromPrice: 500000,
-            toPrice: 700000,
-        },
-        {
-            id: 5,
-            name: `Lớn hơn 700.000đ`,
-            fromPrice: 700000,
-            toPrice: 100000000,
-        },
-    ];
+
+    const preventDefault = (e: React.MouseEvent<HTMLElement>) => {
+        e.preventDefault();
+        console.log('Clicked! But prevent default.');
+    };
     useEffect(() => {
         // Call Api get Product filter
         if (paramUrl) {
@@ -184,10 +243,16 @@ export default function ProductCat() {
                 createAtCustom ? `&createdAt=ASC` : ''
             }${minPriceFilter || minPriceFilter === 0 ? `&fromPrice=${minPriceFilter}` : ''}${
                 maxPriceFilter ? `&toPrice=${maxPriceFilter}` : ''
+            }${
+                ColorCustom.length > 0
+                    ? ColorCustom.map((itemColor) => {
+                          return `&colorCodes=${itemColor}`;
+                      }).join('')
+                    : ''
             }
             `);
         }
-    }, [sortCustom, PriceCustom, createAtCustom, minPriceFilter, maxPriceFilter]);
+    }, [sortCustom, PriceCustom, createAtCustom, minPriceFilter, maxPriceFilter, ColorCustom]);
     // Xử lý tìm kiếm theo giá
     useEffect(() => {
         if (minPriceFilter || maxPriceFilter) {
@@ -197,7 +262,10 @@ export default function ProductCat() {
             };
             dispatch(PriceUpdateAction(priceDp));
         }
-    }, [minPriceFilter, maxPriceFilter]);
+    }, [minPriceFilter, maxPriceFilter, valuesCheckBox]);
+    useEffect(() => {
+        handleGetColorProduct(setListColor);
+    }, []);
     return (
         <div className="ProductCatWrapper">
             {!itemCategory ? (
@@ -222,11 +290,11 @@ export default function ProductCat() {
                         <h1>Áo Polo Nam</h1>
                     </div>
                     <div className="ProductCatTitle__option">
-                        {items.map((item: { id: number; name: string }) => {
+                        {items.map((item: { id: number; name: string }, index: number) => {
                             return (
                                 <Button
                                     type="ghost"
-                                    key={item.id}
+                                    key={index}
                                     // onClick={() => {
                                     //     navigate('/dadad?q=1');
                                     // }}
@@ -240,26 +308,124 @@ export default function ProductCat() {
             )}
             <div className="ProductCatContent">
                 <Layout style={{ padding: '24px 0', background: colorBgContainer }}>
-                    <Sider style={{ background: colorBgContainer, height: '100vh' }} width={250}>
+                    <Sider
+                        style={{
+                            background: colorBgContainer,
+                            height: '100vh',
+                        }}
+                        width={250}
+                    >
+                        <div className="yourChoose">
+                            <div className="filterPrice__Choose">
+                                <Button type="text">Bạn chọn</Button>
+                            </div>
+                            <div>
+                                <TagYourChoose
+                                    clientChooseCustom={clientChooseCustom}
+                                    setCheckValues={setvaluesCheckBox}
+                                    handleCheckboxChange={handleCheckboxChange}
+                                    setIsBoderColor={setIsBorderColor}
+                                />
+                            </div>
+                        </div>
                         <div className="filterPrice">
                             <div className="filterPrice__title">
-                                <Button type="text">Theo giá</Button>
+                                <Button type="text">Theo giá ( VND )</Button>
                             </div>
                             <div className="filterChatBox__Container">
                                 <Checkbox.Group
                                     style={{ width: '100%' }}
-                                    onChange={handleCheckboxChange}
+                                    onChange={(value) => {
+                                        handleCheckboxChange(value);
+                                    }}
                                     className="filterChatBox__Container__chatGroup"
+                                    value={valuesCheckBox}
                                 >
                                     {listCheckBox.map((item, index: number) => {
                                         return (
-                                            <Checkbox value={item.id} key={index}>
+                                            <Checkbox
+                                                value={item.id}
+                                                key={index}
+                                                onChange={(e) => {
+                                                    console.log(e);
+                                                    // setChecked(false);
+                                                }}
+                                                defaultChecked={true}
+                                            >
                                                 {item.name}
                                             </Checkbox>
                                         );
                                     })}
                                 </Checkbox.Group>
                             </div>
+                        </div>
+                        <div className="filterColor">
+                            <div className="filterColor__title">
+                                <Button type="text">Màu sắc</Button>
+                            </div>
+                            <Space
+                                wrap={true}
+                                style={{
+                                    marginLeft: '15px',
+                                }}
+                            >
+                                {listColor
+                                    ? listColor.map((item: any, index: number) => {
+                                          return (
+                                              <div
+                                                  className={`ColorItem `}
+                                                  style={{
+                                                      border:
+                                                          isBorderColor.includes(item?.code) == true
+                                                              ? '1px solid #111'
+                                                              : `none`,
+                                                  }}
+                                                  key={index}
+                                                  onClick={() => {
+                                                      dispatch(ColorUpdateAction(item?.code, ColorCustom));
+                                                      setIsBorderColor((state: any) => [...state, item?.code]);
+                                                      dispatch(
+                                                          ClientChooseAction(
+                                                              {
+                                                                  id: 'color',
+                                                                  value: item?.value,
+                                                                  valueCode: item?.code,
+                                                              },
+                                                              clientChooseCustom,
+                                                          ),
+                                                      );
+                                                  }}
+                                              >
+                                                  <div
+                                                      className="ColorItem__color"
+                                                      style={{
+                                                          backgroundColor: item.hexCode,
+                                                          color: item.hexCode ? '#fff' : '#000',
+                                                      }}
+                                                  ></div>
+                                                  <Button
+                                                      //   style={{
+                                                      //       backgroundColor: item.hexCode,
+                                                      //       color: item.hexCode ? '#fff' : '#000',
+                                                      //   }}
+                                                      type="text"
+                                                      key={index}
+                                                  >
+                                                      {item?.value}
+                                                  </Button>
+                                                  <div>
+                                                      <CloseOutlined
+                                                          style={{
+                                                              height: '10px',
+                                                              width: '10px',
+                                                          }}
+                                                      />
+                                                  </div>
+                                              </div>
+                                          );
+                                      })
+                                    : ''}
+                            </Space>
                         </div>
                     </Sider>
                     <Content style={{ padding: '0 24px', minHeight: 280 }}>

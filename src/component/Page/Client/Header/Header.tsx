@@ -12,15 +12,17 @@ import { Image } from 'antd';
 import { GetContext } from '../../Admin/common/Context/Context';
 import { useDispatch } from 'react-redux';
 import { UrlActions } from '../../../../Redux/Actions/Actions.url';
+import images from '../../../../asset';
+console.log(images);
 const headerStyle: React.CSSProperties = {
     // textAlign: 'center',
     color: '#fff',
-    minHeight: '100px',
+    minHeight: '90px',
     backgroundColor: '#fff',
     display: 'flex',
     flexWrap: 'wrap',
-    paddingTop: '20px ',
-    paddingBottom: '20px ',
+    // paddingTop: '20px ',
+    // paddingBottom: '20px ',
     // borderBottom: '1px solid #ccc',
     boxShadow: '0 6px 12px 0 rgba(0,0,0,0.05)',
 };
@@ -151,7 +153,7 @@ export default function HeaderClient() {
             <header className="headerClientAbove">
                 <div className="headerClientAbove__Logo">
                     <Link to={'/'}>
-                        <img src="https://bizweb.dktcdn.net/100/438/408/themes/913235/assets/logo.svg?1688174100192"></img>
+                        <img src={images.logo}></img>
                     </Link>
                 </div>
 

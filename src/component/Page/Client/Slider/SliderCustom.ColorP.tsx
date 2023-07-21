@@ -7,6 +7,7 @@ import { Avatar, Button } from 'antd';
 import { LeftOutlined, RightOutlined, UserOutlined } from '@ant-design/icons';
 import { BsArrowLeftCircle, BsArrowRightCircle } from 'react-icons/bs';
 import { GetContext } from '../../Admin/common/Context/Context';
+import ReactImageGallery from 'react-image-gallery';
 interface dataProps {
     items: {
         id: number;

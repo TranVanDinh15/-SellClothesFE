@@ -4,6 +4,11 @@
     align-items: center;
     gap: 20px;
 }
+.headerClientAbove__Logo a img {
+    width: 100px;
+    height: 100px;
+    object-fit: contain;
+}
 .headerClientAbove {
     display: flex;
     align-items: center;
