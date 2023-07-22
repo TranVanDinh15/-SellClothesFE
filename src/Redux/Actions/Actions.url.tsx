@@ -117,6 +117,7 @@ export const ClientChooseDeleteAction: any = (
     setCheckValues: React.Dispatch<React.SetStateAction<any>>,
     handleCheckboxChange: (param: any) => void,
     setIsBorderColor: React.Dispatch<React.SetStateAction<any>>,
+    setIsBorderMaterial: React.Dispatch<React.SetStateAction<any>>,
 ) => {
     return async (dispatch: Dispatch) => {
         console.log(objectItem);
@@ -159,6 +160,23 @@ export const ClientChooseDeleteAction: any = (
                 type: urlConstant.URL__DELETECOLOR,
                 payLoad: {
                     colorAfterDelete: codeColor,
+                },
+            });
+        }
+        if (objectItem.id == 'material') {
+            const filterMaterial = filterData.filter((item: any) => {
+                if (item.id == 'material') {
+                    return item?.materialCode;
+                }
+            });
+            const codeMaterial = filterMaterial.map((item: any) => {
+                return item?.materialCode;
+            });
+            setIsBorderMaterial(codeMaterial);
+            dispatch({
+                type: urlConstant.URL__DELETEMATERIAL,
+                payLoad: {
+                    materialAfterDelete: codeMaterial,
                 },
             });
         }
@@ -244,6 +262,95 @@ export const ClientChooseColorDeleteAction: any = (
             type: urlConstant.URL__DELETECHOOSECOLOR,
             payLoad: {
                 ClientChooseDelete: filterData,
+            },
+        });
+    };
+};
+export const MaterialUpdateAction: any = (materialItem: string, materialCustom: string[]) => {
+    return (dispatch: Dispatch) => {
+        if (materialCustom.length > 0) {
+            const existItem = materialCustom.includes(materialItem);
+            console.log(existItem);
+            if (existItem) {
+                message.warning('Bạn đã chọn chất liệu này rồi');
+                return;
+            } else {
+                dispatch({
+                    type: urlConstant.URL__UPDATEMATERIAL,
+                    payLoad: {
+                        material: materialItem,
+                    },
+                });
+            }
+        } else {
+            dispatch({
+                type: urlConstant.URL__UPDATEMATERIAL,
+                payLoad: {
+                    material: materialItem,
+                },
+            });
+        }
+    };
+};
+export const ClientChooseMaterialDeleteAction: any = (
+    objectItem: {
+        id: string;
+        value: string;
+        materialCode: string;
+    },
+    clientChooseCustom: [],
+    setIsBorderMaterial: React.Dispatch<React.SetStateAction<any>>,
+) => {
+    return async (dispatch: Dispatch) => {
+        const filterData = clientChooseCustom.filter(
+            (
+                item: {
+                    value: string;
+                    id: string;
+                },
+                index,
+            ) => {
+                return objectItem.value != item.value;
+            },
+        );
+        console.log(filterData);
+        // const filterMaterial= filterData.filter
+        const filterMaterial = filterData.filter((item: any) => {
+            console.log(item);
+            if (item.id == 'material') {
+                return item?.materialCode;
+            }
+        });
+        console.log(filterMaterial);
+        const codeMaterial = filterMaterial.map((item: any) => {
+            return item?.materialCode;
+        });
+        if (codeMaterial.length > 0) {
+            setIsBorderMaterial([...codeMaterial]);
+        } else {
+            setIsBorderMaterial([]);
+        }
+        dispatch({
+            type: urlConstant.URL__DELETEMATERIAL,
+            payLoad: {
+                materialAfterDelete: codeMaterial,
+            },
+        });
+        dispatch({
+            type: urlConstant.URL__DELETECHOOSEMATERIAL,
+            payLoad: {
+                ClientChooseDelete: filterData,
+            },
+        });
+    };
+};
+export const setDefaultAction: any = () => {
+    return (dispatch: Dispatch) => {
+        dispatch({
+            type: urlConstant.URL__ACTIONDEFAULT,
+            payLoad: {
+                createAt: null,
+                sort: null,
             },
         });
     };

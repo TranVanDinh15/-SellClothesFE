@@ -13,12 +13,14 @@ interface tagProps {
     setCheckValues: React.Dispatch<React.SetStateAction<any>>;
     handleCheckboxChange: (param: any) => void;
     setIsBoderColor: React.Dispatch<React.SetStateAction<any>>;
+    setIsBorderMaterial: React.Dispatch<React.SetStateAction<any>>;
 }
 export default function TagYourChoose({
     clientChooseCustom,
     setCheckValues,
     handleCheckboxChange,
     setIsBoderColor,
+    setIsBorderMaterial,
 }: tagProps) {
     const dispatch = useDispatch();
     const preventDefault = (
@@ -31,7 +33,14 @@ export default function TagYourChoose({
         e.preventDefault();
         console.log(e);
         dispatch(
-            ClientChooseDeleteAction(item, clientChooseCustom, setCheckValues, handleCheckboxChange, setIsBoderColor),
+            ClientChooseDeleteAction(
+                item,
+                clientChooseCustom,
+                setCheckValues,
+                handleCheckboxChange,
+                setIsBoderColor,
+                setIsBorderMaterial,
+            ),
         );
     };
 
@@ -52,10 +61,18 @@ export default function TagYourChoose({
                             preventDefault(e, item);
                         }}
                         key={index}
-                        closeIcon={<CloseOutlined />}
+                        closeIcon={
+                            <CloseOutlined
+                                style={{
+                                    color: '#fff',
+                                }}
+                            />
+                        }
                         closable
                         style={{
                             padding: '4px',
+                            backgroundColor: '#00BFFF',
+                            color: '#fff',
                         }}
                     >
                         {item.value}

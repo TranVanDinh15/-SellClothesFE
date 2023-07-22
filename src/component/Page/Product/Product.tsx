@@ -14,8 +14,6 @@ import CustomTable from '../../Table/TableCustom';
 import { PlusOutlined } from '@ant-design/icons';
 import { Button, Col, Form, Input, Modal, Row, TablePaginationConfig, message } from 'antd';
 import SelectCustomer from '../Admin/common/Select/Select';
-import MDEditor from '@uiw/react-md-editor';
-import rehypeSanitize from 'rehype-sanitize';
 import MdEditor from 'react-markdown-editor-lite';
 // import style manually
 import 'react-markdown-editor-lite/lib/index.css';
@@ -350,8 +348,7 @@ export default function Product() {
         current: page, // Trang hiện tại
         defaultCurrent: 1,
         onChange: (page, pageSize) => {
-            // Xử lý sự kiện thay đổi trang
-            console.log(`Page: ${page}, PageSize: ${pageSize}`);
+            // Xử lý sự kiện thay đổi trangf
             setPage(page);
             setPageSize(pageSize);
         },

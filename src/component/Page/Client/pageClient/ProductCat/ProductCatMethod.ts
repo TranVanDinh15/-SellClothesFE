@@ -2,10 +2,12 @@ import { NavigateProps } from 'react-router-dom';
 import { Dispatch } from 'redux';
 import {
     ClientChooseColorDeleteAction,
+    ClientChooseMaterialDeleteAction,
     SortUpdateAction,
     createAtUpdateAction,
+    setDefaultAction,
 } from '../../../../../Redux/Actions/Actions.url';
-import { getCategoryColor } from '../../../../utils/Api/Api';
+import { getCategoryColor, getMaterialClient } from '../../../../utils/Api/Api';
 
 export const handleChangeTitleSelect = (
     value: string,
@@ -18,17 +20,12 @@ export const handleChangeTitleSelect = (
     createAtCustom: string,
 ) => {
     if (value == 'ASC' || value == 'DESC') {
-        // navigate(`${urlCustom}&sortid=${value}`);
-        // setvalueSelect(value);
         disPatch(SortUpdateAction(value));
         setIsChangeUrl(true);
     } else if (value == 'createdAt') {
-        // setvalueSelect(value);
-        // navigate(`${urlCustom}&createdAt=ASC`);
         disPatch(createAtUpdateAction(value));
     } else if (value == 'default') {
-        // setvalueSelect(value);
-        // navigate(urlCustom);
+        disPatch(setDefaultAction());
     }
 };
 // handle get Color product
@@ -38,7 +35,7 @@ export const handleGetColorProduct = async (setListColorProduct: React.Dispatch<
         setListColorProduct(response.data.data);
     }
 };
-// Handle  delete Color
+// Handle  delete choose Color
 export const handleDeleteColor = (
     objectItem: {
         value: string;
@@ -50,4 +47,26 @@ export const handleDeleteColor = (
     disPatch: any,
 ) => {
     disPatch(ClientChooseColorDeleteAction(objectItem, clientChooseCustom, setIsBorderColor));
+};
+// Handle get Material Color
+export const handleGetMaterial = async (
+    setMaterialFilter: React.Dispatch<React.SetStateAction<any>>,
+): Promise<void> => {
+    const response = await getMaterialClient();
+    if (response.status == 200 && response.data) {
+        setMaterialFilter(response?.data?.data);
+    }
+};
+// Handle Delete choose Material
+export const handleDeleteChooseMaterial = (
+    objectItem: {
+        id: string;
+        value: string;
+        materialCode: string;
+    },
+    clientChooseCustom: [],
+    setIsBorderMaterial: React.Dispatch<React.SetStateAction<any>>,
+    disPatch: any,
+) => {
+    disPatch(ClientChooseMaterialDeleteAction(objectItem, clientChooseCustom, setIsBorderMaterial));
 };

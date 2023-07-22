@@ -21,7 +21,7 @@
 .ProductCatTitle__Heading {
     h1 {
         font-size: 22px;
-        color: orangered;
+        color: #333;
         font-weight: 500;
     }
 }
@@ -29,10 +29,11 @@
     display: flex;
     gap: 20px;
     button {
-        border: 1px solid orangered;
-        color: orangered;
+        border: 1px solid #111;
+        // color: #fff;
         height: 40px;
         width: 100px;
+        // background-color: rgb(0, 191, 255);
     }
 }
 .ProductCatContent {
@@ -50,14 +51,14 @@
 }
 .ProductCatContent__title__amount {
     span {
-        font-size: 16px;
+        font-size: 15px;
         display: flex;
         align-items: center;
     }
 }
 .ProductCatContent__title__arranging__heading {
     span {
-        font-size: 16px;
+        font-size: 15px;
         display: flex;
         align-items: center;
     }
@@ -88,13 +89,19 @@
 }
 .filterPrice__title,
 .filterColor__title,
-.filterPrice__Choose {
+.filterPrice__Choose,
+.filterMaterial__title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
     button {
         font-size: 16px;
         margin-bottom: 10px;
         font-weight: 600;
     }
 }
+
 .filterChatBox__Container__chatGroup {
     display: flex;
     flex-direction: column;
@@ -116,4 +123,19 @@
     width: 15px;
     height: 15px;
     border-radius: 50%;
+}
+.PageCustomerPC {
+    display: flex;
+    justify-content: center;
+    margin-top: 30px;
+}
+.filterMaterial {
+    margin-top: 20px;
+}
+.IconDownFilter {
+    cursor: pointer;
+}
+.ant-select-selector {
+    border-radius: inherit !important;
+    border: 1px solid #ccc !important;
 }

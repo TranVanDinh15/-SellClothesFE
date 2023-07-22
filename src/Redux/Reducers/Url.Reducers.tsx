@@ -1,9 +1,22 @@
 import { urlConstant } from '../Actions/Actions.constant';
 
-const initialState = { urlCustomer: null, price: null, sort: null, createAt: null, color: [], ClientChoose: [] };
+const initialState = {
+    urlCustomer: null,
+    price: null,
+    sort: null,
+    createAt: null,
+    color: [],
+    ClientChoose: [],
+    material: [],
+};
 
 const UrlCustomerReducers = (state = initialState, action: any) => {
     switch (action.type) {
+        case urlConstant.URL__ACTIONDEFAULT:
+            return {
+                ...state,
+                ...action.payLoad,
+            };
         case urlConstant.URL__ACTION:
             return {
                 urlCustomer: action.payLoad.url,
@@ -55,6 +68,22 @@ const UrlCustomerReducers = (state = initialState, action: any) => {
                 ...state,
                 ClientChoose: [...action.payLoad.ClientChooseDelete],
             };
+        case urlConstant.URL__UPDATEMATERIAL:
+            return {
+                ...state,
+                material: [...state.material, action.payLoad.material],
+            };
+        case urlConstant.URL__DELETEMATERIAL:
+            return {
+                ...state,
+                material: [...action.payLoad.materialAfterDelete],
+            };
+        case urlConstant.URL__DELETECHOOSEMATERIAL:
+            return {
+                ...state,
+                ClientChoose: [...action.payLoad.ClientChooseDelete],
+            };
+
         default:
             return state;
     }

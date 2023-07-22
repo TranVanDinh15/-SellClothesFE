@@ -126,5 +126,9 @@ export const getProductByCat = (query: string) => {
 };
 // get Color  Category
 export const getCategoryColor = () => {
-    return AxiosInstance.get('/all-code/COLOR');
+    return AxiosInstance.get('/all-code/COLOR?page=1&size=1000');
+};
+// get Material Category
+export const getMaterialClient = () => {
+    return AxiosInstance.get(`/all-code/MATERIAL?page=1&size=1000`);
 };

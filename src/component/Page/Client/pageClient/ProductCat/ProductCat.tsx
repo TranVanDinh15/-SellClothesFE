@@ -8,6 +8,8 @@ import {
     Layout,
     Menu,
     MenuProps,
+    Pagination,
+    PaginationProps,
     Row,
     Select,
     Skeleton,
@@ -17,8 +19,21 @@ import {
 } from 'antd';
 import Sider from 'antd/es/layout/Sider';
 import { Content } from 'antd/es/layout/layout';
-import { CloseOutlined, FilterOutlined, LaptopOutlined, NotificationOutlined, UserOutlined } from '@ant-design/icons';
-import { handleChangeTitleSelect, handleDeleteColor, handleGetColorProduct } from './ProductCatMethod';
+import {
+    CloseOutlined,
+    DownOutlined,
+    FilterOutlined,
+    LaptopOutlined,
+    NotificationOutlined,
+    UserOutlined,
+} from '@ant-design/icons';
+import {
+    handleChangeTitleSelect,
+    handleDeleteChooseMaterial,
+    handleDeleteColor,
+    handleGetColorProduct,
+    handleGetMaterial,
+} from './ProductCatMethod';
 import TabProductCustomer from '../../Common/TabProduct/TabProduct';
 import { useNavigate, useParams } from 'react-router-dom';
 import { GetContext } from '../../../Admin/common/Context/Context';
@@ -36,6 +51,7 @@ import {
     ClientChooseCheckBoxDeleteAction,
     ClientChooseDeleteAction,
     ColorUpdateAction,
+    MaterialUpdateAction,
     PriceUpdateAction,
     SortUpdateAction,
     createAtUpdateAction,
@@ -54,41 +70,35 @@ export interface reduxIterface {
         sort: string;
         color: string[];
         ClientChoose: [];
+        material: string[];
     };
 }
 
 export default function ProductCat() {
-    // Lấy query từ URL
-    const urlSearchParams = new URLSearchParams(window.location.search);
-    const queryParams = Object.fromEntries(urlSearchParams.entries());
+    const items = [
+        {
+            id: 0,
+            name: 'Nam',
+        },
+        {
+            id: 1,
+            name: 'Nữ',
+        },
+        {
+            id: 2,
+            name: 'Trẻ em',
+        },
+    ];
+    const {
+        token: { colorBgContainer },
+    } = theme.useToken();
+    const itemSelect = [
+        { value: 'default', label: 'Mặc định' },
+        { value: 'ASC', label: 'Sắp xếp từ A-Z' },
+        { value: 'DESC', label: 'Sắp xếp từ Z-A' },
+        { value: 'createdAt', label: 'Mới nhất' },
+    ];
 
-    // In các query ra console
-    console.log(queryParams);
-    const dispatch = useDispatch();
-    // Lấy Params từ Url để call api
-    const paramUrl = useParams();
-    console.log(paramUrl);
-    const navigate = useNavigate();
-    const sortCustom = useSelector((state: reduxIterface) => state.UrlReducer.sort);
-    const PriceCustom = useSelector((state: reduxIterface) => state.UrlReducer.price);
-    const createAtCustom = useSelector((state: reduxIterface) => state.UrlReducer.createAt);
-    const ColorCustom = useSelector((state: reduxIterface) => state.UrlReducer.color);
-    const clientChooseCustom = useSelector((state: reduxIterface) => state.UrlReducer.ClientChoose);
-    const { itemCategory, urlCustomer, setUrlCustomer }: any = GetContext();
-    const [size, setSize] = useState<number | string>('1');
-    const [page, setPage] = useState<number | string>('10');
-    const [listData, setListData] = useState<dataCategoryProduct[]>([]);
-    const [isLoading, setIsLoading] = useState<boolean>(false);
-    const [valueSelect, setvalueSelect] = useState<string>('default');
-    const [checkedItems, setCheckedItems] = useState([]);
-    const [minPriceFilter, setMinPricefilter] = useState<any>();
-    const [maxPriceFilter, setMaxPricefilter] = useState<any>();
-    const [isChangeUrl, setIsChangeUrl] = useState<boolean>(false);
-    const [listColor, setListColor] = useState<any>();
-    const [valuesCheckBox, setvaluesCheckBox] = useState<string[]>([]);
-    const [checkedValuesPrev, setCheckedValuesPrev] = useState<string[]>([]);
-    // Quản lý filter màu sắc có boder hoăcj không
-    const [isBorderColor, setIsBorderColor] = useState<any>([]);
     const listCheckBox = [
         {
             id: 0,
@@ -127,6 +137,48 @@ export default function ProductCat() {
             toPrice: 100000000,
         },
     ];
+    // Lấy query từ URL
+    const urlSearchParams = new URLSearchParams(window.location.search);
+    const queryParams = Object.fromEntries(urlSearchParams.entries());
+
+    console.log(queryParams);
+    const dispatch = useDispatch();
+    // Lấy Params từ Url để call api
+    const paramUrl = useParams();
+    const navigate = useNavigate();
+    const sortCustom = useSelector((state: reduxIterface) => state.UrlReducer.sort);
+    const PriceCustom = useSelector((state: reduxIterface) => state.UrlReducer.price);
+    const createAtCustom = useSelector((state: reduxIterface) => state.UrlReducer.createAt);
+    const ColorCustom = useSelector((state: reduxIterface) => state.UrlReducer.color);
+    console.log(ColorCustom);
+    const clientChooseCustom = useSelector((state: reduxIterface) => state.UrlReducer.ClientChoose);
+    const materialCustom = useSelector((state: reduxIterface) => state.UrlReducer.material);
+    console.log(sortCustom, createAtCustom);
+    const { itemCategory, urlCustomer, setUrlCustomer }: any = GetContext();
+    const [listData, setListData] = useState<dataCategoryProduct[]>([]);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [valueSelect, setvalueSelect] = useState<string>('default');
+    const [checkedItems, setCheckedItems] = useState([]);
+    const [minPriceFilter, setMinPricefilter] = useState<any>();
+    const [maxPriceFilter, setMaxPricefilter] = useState<any>();
+    const [isChangeUrl, setIsChangeUrl] = useState<boolean>(false);
+    const [listColor, setListColor] = useState<any>();
+    const [valuesCheckBox, setvaluesCheckBox] = useState<string[]>([]);
+    const [checkedValuesPrev, setCheckedValuesPrev] = useState<string[]>([]);
+    const [currentPage, setCurrentPage] = useState<number>(1);
+    const [pageSize, setPageSize] = useState<number>(10);
+    const [totalPage, setTotalPage] = useState<number>(100);
+    const [materialFilter, setMaterialFilter] = useState<any>();
+    // Quản lý filter màu sắc có boder hoặc không
+    const [isBorderColor, setIsBorderColor] = useState<any>([]);
+    // Quản lý filter chất liệu có border hoặc không
+    const [isBorderMaterial, setIsBorderMaterial] = useState<any>([]);
+    // Quản lý đóng mở filter checkBox
+    const [isCheckBox, setIsCheckBox] = useState<boolean>(true);
+    // Quản lý đóng mở filter color
+    const [isColor, setIsColor] = useState<boolean>(true);
+    // Quản lý đóng mở filter material
+    const [isMaterial, setIsMaterial] = useState<boolean>(true);
     const handleCheckboxChange = (value: string[]) => {
         // Xác định checkbox vừa thay đổi bằng cách so sánh mảng trước và sau khi thay đổi
         // Biến này dùng để tìm ra phần tử không có trong  value mà checkedValuesPrev có để thực hiện xóa mục đã chọn
@@ -193,13 +245,15 @@ export default function ProductCat() {
     };
     // handle get list Product depend query
     const handleGetProduct = async (pram: any): Promise<void> => {
-        if (queryParams || paramUrl.slug) {
+        if (queryParams) {
             setUrlCustomer(`/${queryParams.categoryId}?categoryId=${queryParams.categoryId}`);
             // dispatch sortId, createdAt lên redux khi người dùng path url có sortid
             if (queryParams?.sortid) {
                 dispatch(SortUpdateAction(queryParams?.sortid));
             } else if (queryParams?.createdAt) {
                 dispatch(createAtUpdateAction(queryParams?.createdAt));
+            } else if (queryParams?.colorCodes) {
+                // dispatch((queryParams?.createdAt));
             }
 
             setIsLoading(true);
@@ -213,7 +267,8 @@ export default function ProductCat() {
             const query = `${queryString.stringify(validData)}`;
             const response = await getProductByCat(query);
             if (response && response.status == 200) {
-                const data = response.data.data;
+                console.log(response);
+                const data = response?.data?.data;
                 const resultData =
                     data.length > 0
                         ? data.map((item: dataCategoryProduct, index: number) => {
@@ -232,37 +287,20 @@ export default function ProductCat() {
                         : [];
                 setListData(resultData);
                 setIsLoading(false);
+                setCurrentPage(response?.data?.meta?.current as number);
+                setPageSize(response?.data?.meta?.size as number);
+                setTotalPage(response?.data?.meta?.totalItems as number);
             }
         }
     };
-
-    const items = [
-        {
-            id: 0,
-            name: 'Nam',
-        },
-        {
-            id: 1,
-            name: 'Nữ',
-        },
-        {
-            id: 2,
-            name: 'Trẻ em',
-        },
-    ];
-    const {
-        token: { colorBgContainer },
-    } = theme.useToken();
-    const itemSelect = [
-        { value: 'default', label: 'Mặc định' },
-        { value: 'ASC', label: 'Sắp xếp từ A-Z' },
-        { value: 'DESC', label: 'Sắp xếp từ Z-A' },
-        { value: 'createdAt', label: 'Mới nhất' },
-    ];
-
-    const preventDefault = (e: React.MouseEvent<HTMLElement>) => {
-        e.preventDefault();
+    // Xử lý thay đổi page
+    const onChangePage: PaginationProps['onChange'] = (pageNumber, pageSize) => {
+        setCurrentPage(pageNumber);
+        setPageSize(pageSize);
     };
+    // const preventDefault = (e: React.MouseEvent<HTMLElement>) => {
+    //     e.preventDefault();
+    // };
     useEffect(() => {
         // Call Api get Product filter
         if (paramUrl) {
@@ -277,14 +315,32 @@ export default function ProductCat() {
                 maxPriceFilter ? `&toPrice=${maxPriceFilter}` : ''
             }${
                 ColorCustom.length > 0
-                    ? ColorCustom.map((itemColor) => {
-                          return `&colorCodes=${itemColor}`;
-                      }).join('')
+                    ? `&colorCodes=${ColorCustom.map((itemColor: any) => {
+                          return itemColor;
+                      }).join(',')}`
                     : ''
-            }
+            }${
+                materialCustom.length > 0
+                    ? materialCustom
+                          .map((itemMaterial) => {
+                              return `&material=${itemMaterial}`;
+                          })
+                          .join('')
+                    : ''
+            }${currentPage && pageSize ? `&page=${currentPage}&size=${pageSize}` : ''}
             `);
         }
-    }, [sortCustom, PriceCustom, createAtCustom, minPriceFilter, maxPriceFilter, ColorCustom]);
+    }, [
+        sortCustom,
+        PriceCustom,
+        createAtCustom,
+        minPriceFilter,
+        maxPriceFilter,
+        ColorCustom,
+        materialCustom,
+        currentPage,
+        pageSize,
+    ]);
     // Xử lý tìm kiếm theo giá
     useEffect(() => {
         if (minPriceFilter || maxPriceFilter) {
@@ -297,6 +353,7 @@ export default function ProductCat() {
     }, [minPriceFilter, maxPriceFilter, valuesCheckBox]);
     useEffect(() => {
         handleGetColorProduct(setListColor);
+        handleGetMaterial(setMaterialFilter);
     }, []);
     return (
         <div className="ProductCatWrapper">
@@ -337,7 +394,7 @@ export default function ProductCat() {
                     <Sider
                         style={{
                             background: colorBgContainer,
-                            height: '100vh',
+                            height: 'auto',
                         }}
                         width={250}
                     >
@@ -351,111 +408,240 @@ export default function ProductCat() {
                                     setCheckValues={setvaluesCheckBox}
                                     handleCheckboxChange={handleCheckboxChange}
                                     setIsBoderColor={setIsBorderColor}
+                                    setIsBorderMaterial={setIsBorderMaterial}
                                 />
                             </div>
                         </div>
                         <div className="filterPrice">
                             <div className="filterPrice__title">
                                 <Button type="text">Theo giá ( VND )</Button>
-                            </div>
-                            <div className="filterChatBox__Container">
-                                <Checkbox.Group
-                                    style={{ width: '100%' }}
-                                    onChange={(value: any) => {
-                                        handleCheckboxChange(value);
+                                <Button
+                                    type="text"
+                                    icon={<DownOutlined className="IconDownFilter" />}
+                                    onClick={() => {
+                                        if (isCheckBox) {
+                                            setIsCheckBox(false);
+                                        } else {
+                                            setIsCheckBox(true);
+                                        }
                                     }}
-                                    className="filterChatBox__Container__chatGroup"
-                                    value={valuesCheckBox}
-                                >
-                                    {listCheckBox.map((item, index: number) => {
-                                        return (
-                                            <Checkbox value={item.id} key={index} defaultChecked={true}>
-                                                {item.name}
-                                            </Checkbox>
-                                        );
-                                    })}
-                                </Checkbox.Group>
+                                ></Button>
                             </div>
+                            {isCheckBox ? (
+                                <div className="filterChatBox__Container">
+                                    <Checkbox.Group
+                                        style={{ width: '100%' }}
+                                        onChange={(value: any) => {
+                                            handleCheckboxChange(value);
+                                        }}
+                                        className="filterChatBox__Container__chatGroup"
+                                        value={valuesCheckBox}
+                                    >
+                                        {listCheckBox.map((item, index: number) => {
+                                            return (
+                                                <Checkbox value={item.id} key={index} defaultChecked={true}>
+                                                    {item.name}
+                                                </Checkbox>
+                                            );
+                                        })}
+                                    </Checkbox.Group>
+                                </div>
+                            ) : (
+                                ''
+                            )}
                         </div>
                         <div className="filterColor">
                             <div className="filterColor__title">
                                 <Button type="text">Màu sắc</Button>
+                                <Button
+                                    type="text"
+                                    icon={<DownOutlined className="IconDownFilter" />}
+                                    onClick={() => {
+                                        if (isColor) {
+                                            setIsColor(false);
+                                        } else {
+                                            setIsColor(true);
+                                        }
+                                    }}
+                                ></Button>
                             </div>
-                            <Space
-                                wrap={true}
-                                style={{
-                                    marginLeft: '15px',
-                                }}
-                            >
-                                {listColor
-                                    ? listColor.map((item: any, index: number) => {
-                                          return (
-                                              <div
-                                                  className={`ColorItem `}
-                                                  style={{
-                                                      border:
-                                                          isBorderColor.includes(item?.code) == true
-                                                              ? '1px solid #111'
-                                                              : `none`,
-                                                  }}
-                                                  key={index}
-                                              >
+                            {isColor ? (
+                                <Space
+                                    wrap={true}
+                                    style={{
+                                        marginLeft: '15px',
+                                    }}
+                                >
+                                    {listColor
+                                        ? listColor.map((item: any, index: number) => {
+                                              return (
                                                   <div
-                                                      className="ColorItem__color"
+                                                      className={`ColorItem `}
                                                       style={{
-                                                          backgroundColor: item.hexCode,
-                                                          color: item.hexCode ? '#fff' : '#000',
+                                                          border:
+                                                              isBorderColor.includes(item?.code) == true
+                                                                  ? '1px solid #111'
+                                                                  : `none`,
                                                       }}
-                                                  ></div>
-                                                  <Button
-                                                      type="text"
                                                       key={index}
-                                                      onClick={() => {
-                                                          dispatch(ColorUpdateAction(item?.code, ColorCustom));
-                                                          setIsBorderColor((state: any) => [...state, item?.code]);
-                                                          dispatch(
-                                                              ClientChooseAction(
-                                                                  {
-                                                                      id: 'color',
-                                                                      value: item?.value,
-                                                                      valueCode: item?.code,
-                                                                  },
-                                                                  clientChooseCustom,
-                                                              ),
-                                                          );
-                                                      }}
                                                   >
-                                                      {item?.value}
-                                                  </Button>
-                                                  <div
-                                                      onClick={() => {
-                                                          handleDeleteColor(
-                                                              {
-                                                                  id: 'color',
-                                                                  value: item.value,
-                                                                  valueCode: item.code,
-                                                              },
-                                                              clientChooseCustom,
-                                                              setIsBorderColor,
-                                                              dispatch,
-                                                          );
-                                                      }}
-                                                  >
-                                                      <CloseOutlined
+                                                      <div
+                                                          className="ColorItem__color"
                                                           style={{
-                                                              height: '10px',
-                                                              width: '10px',
+                                                              backgroundColor: item.hexCode,
+                                                              color: item.hexCode ? '#fff' : '#000',
                                                           }}
-                                                      />
+                                                      ></div>
+                                                      <Button
+                                                          type="text"
+                                                          key={index}
+                                                          onClick={() => {
+                                                              dispatch(ColorUpdateAction(item?.code, ColorCustom));
+                                                              setIsBorderColor((state: any) => [...state, item?.code]);
+                                                              dispatch(
+                                                                  ClientChooseAction(
+                                                                      {
+                                                                          id: 'color',
+                                                                          value: item?.value,
+                                                                          valueCode: item?.code,
+                                                                      },
+                                                                      clientChooseCustom,
+                                                                  ),
+                                                              );
+                                                          }}
+                                                      >
+                                                          {item?.value}
+                                                      </Button>
+                                                      {isBorderColor.includes(item?.code) == true ? (
+                                                          <div
+                                                              onClick={() => {
+                                                                  handleDeleteColor(
+                                                                      {
+                                                                          id: 'color',
+                                                                          value: item.value,
+                                                                          valueCode: item.code,
+                                                                      },
+                                                                      clientChooseCustom,
+                                                                      setIsBorderColor,
+                                                                      dispatch,
+                                                                  );
+                                                              }}
+                                                          >
+                                                              <CloseOutlined
+                                                                  style={{
+                                                                      height: '10px',
+                                                                      width: '10px',
+                                                                  }}
+                                                              />
+                                                          </div>
+                                                      ) : (
+                                                          ''
+                                                      )}
                                                   </div>
-                                              </div>
-                                          );
-                                      })
-                                    : ''}
-                            </Space>
+                                              );
+                                          })
+                                        : ''}
+                                </Space>
+                            ) : (
+                                ''
+                            )}
+                        </div>
+                        <div className="filterMaterial">
+                            <div className="filterMaterial__title">
+                                <Button type="text">Chất liệu</Button>
+                                <Button
+                                    type="text"
+                                    icon={<DownOutlined className="IconDownFilter" />}
+                                    onClick={() => {
+                                        if (isMaterial) {
+                                            setIsMaterial(false);
+                                        } else {
+                                            setIsMaterial(true);
+                                        }
+                                    }}
+                                ></Button>
+                            </div>
+                            {isMaterial ? (
+                                <Space
+                                    wrap={true}
+                                    style={{
+                                        marginLeft: '15px',
+                                    }}
+                                >
+                                    {materialFilter
+                                        ? materialFilter.map((item: any, index: number) => {
+                                              return (
+                                                  <div
+                                                      className={`ColorItem `}
+                                                      style={{
+                                                          border:
+                                                              isBorderMaterial.includes(item?.code) == true
+                                                                  ? '1px solid #111'
+                                                                  : `none`,
+                                                      }}
+                                                      key={index}
+                                                  >
+                                                      <Button
+                                                          type="text"
+                                                          key={index}
+                                                          onClick={() => {
+                                                              dispatch(
+                                                                  MaterialUpdateAction(item?.code, materialCustom),
+                                                              );
+                                                              setIsBorderMaterial((state: any) => [
+                                                                  ...state,
+                                                                  item?.code,
+                                                              ]);
+                                                              dispatch(
+                                                                  ClientChooseAction(
+                                                                      {
+                                                                          id: 'material',
+                                                                          value: item?.value,
+                                                                          materialCode: item?.code,
+                                                                      },
+                                                                      clientChooseCustom,
+                                                                  ),
+                                                              );
+                                                          }}
+                                                      >
+                                                          {item?.value}
+                                                      </Button>
+                                                      {isBorderMaterial.includes(item?.code) == true ? (
+                                                          <div
+                                                              onClick={() => {
+                                                                  handleDeleteChooseMaterial(
+                                                                      {
+                                                                          id: 'material',
+                                                                          value: item.value,
+                                                                          materialCode: item.code,
+                                                                      },
+                                                                      clientChooseCustom,
+                                                                      setIsBorderMaterial,
+                                                                      dispatch,
+                                                                  );
+                                                              }}
+                                                          >
+                                                              <CloseOutlined
+                                                                  style={{
+                                                                      height: '10px',
+                                                                      width: '10px',
+                                                                  }}
+                                                              />
+                                                          </div>
+                                                      ) : (
+                                                          ''
+                                                      )}
+                                                  </div>
+                                              );
+                                          })
+                                        : ''}
+                                </Space>
+                            ) : (
+                                ''
+                            )}
                         </div>
                     </Sider>
-                    <Content style={{ padding: '0 24px', minHeight: 280 }}>
+                    <Content style={{ padding: '0 24px', minHeight: '100vh' }}>
                         <div className="ProductCatContent__title">
                             <div className="ProductCatContent__title__amount">
                                 <span>{listData.length} sản phẩm</span>
@@ -465,9 +651,19 @@ export default function ProductCat() {
                                     <span>Sắp xếp theo</span>
                                 </div>
                                 <Select
-                                    // value={valueSelect}
-                                    defaultValue="default"
-                                    style={{ width: 220 }}
+                                    defaultValue={
+                                        queryParams && (queryParams.sortid || queryParams.createdAt)
+                                            ? queryParams.sortid
+                                                ? queryParams.sortid
+                                                : queryParams.createdAt == 'ASC'
+                                                ? 'createdAt'
+                                                : ''
+                                            : 'default'
+                                    }
+                                    style={{
+                                        width: 220,
+                                        borderRadius: 'inherit',
+                                    }}
                                     onChange={(value) => {
                                         handleChangeTitleSelect(
                                             value,
@@ -500,6 +696,17 @@ export default function ProductCat() {
                                 <SekeletonCardCustomer />
                             </Space>
                         )}
+                        <div className="PageCustomerPC">
+                            <Pagination
+                                defaultCurrent={queryParams?.page ? Number(queryParams?.page) : Number(currentPage)}
+                                current={queryParams?.page ? Number(queryParams?.page) : Number(currentPage)}
+                                pageSize={queryParams?.size ? Number(queryParams?.size) : Number(pageSize)}
+                                total={Number(totalPage)}
+                                onChange={onChangePage}
+                                showSizeChanger
+                                pageSizeOptions={[10, 20, 30, 50]}
+                            />
+                        </div>
                     </Content>
                 </Layout>
             </div>

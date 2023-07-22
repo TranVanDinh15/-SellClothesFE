@@ -260,7 +260,7 @@ export default function HeaderClient() {
                                 style={{
                                     fontSize: '15px',
                                     padding: '4px ',
-                                    backgroundColor: 'orangered',
+                                    backgroundColor: '#00BFFF',
                                     marginLeft: '10px',
                                     borderRadius: '10px',
                                     color: '#fff',
