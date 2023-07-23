@@ -31,6 +31,8 @@ export default function SliderCustom({ data }: dataSlider) {
         <div className="SliderWrapper">
             <div className="SliderWrapper__Container">
                 <ImageGallery
+                    showBullets={true}
+                    showThumbnails={false}
                     showFullscreenButton={false}
                     showPlayButton={false}
                     slideOnThumbnailOver={true}

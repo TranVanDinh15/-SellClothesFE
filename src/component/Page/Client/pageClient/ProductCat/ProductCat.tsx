@@ -51,7 +51,9 @@ import {
     ClientChooseCheckBoxDeleteAction,
     ClientChooseDeleteAction,
     ColorUpdateAction,
+    ColorUpdateWhenPathAction,
     MaterialUpdateAction,
+    MaterialUpdateWhenPathAction,
     PriceUpdateAction,
     SortUpdateAction,
     createAtUpdateAction,
@@ -140,8 +142,38 @@ export default function ProductCat() {
     // Lấy query từ URL
     const urlSearchParams = new URLSearchParams(window.location.search);
     const queryParams = Object.fromEntries(urlSearchParams.entries());
+    const getQueryObject = (queryString: any) => {
+        const urlParams = new URLSearchParams(queryString);
+        const queryObject: any = {};
 
-    console.log(queryParams);
+        urlParams.forEach((value, key) => {
+            // Phân tách chuỗi giá trị để tạo mảng (sử dụng phương thức split)
+            const splitValue = value.split(',');
+
+            // Nếu splitValue chỉ có một phần tử, gán giá trị đơn, không phải mảng
+            if (splitValue.length === 1) {
+                queryObject[key] = splitValue[0];
+            } else {
+                queryObject[key] = splitValue;
+            }
+        });
+
+        return queryObject;
+    };
+    // Custom query passed vào api
+    const customQuery = (queryObject: any) => {
+        let params = new URLSearchParams();
+        for (let key in queryObject) {
+            if (Array.isArray(queryObject[key])) {
+                queryObject[key].forEach((value: any) => {
+                    params.append(key, value);
+                });
+            } else {
+                params.append(key, queryObject[key]);
+            }
+        }
+        return params;
+    };
     const dispatch = useDispatch();
     // Lấy Params từ Url để call api
     const paramUrl = useParams();
@@ -150,10 +182,9 @@ export default function ProductCat() {
     const PriceCustom = useSelector((state: reduxIterface) => state.UrlReducer.price);
     const createAtCustom = useSelector((state: reduxIterface) => state.UrlReducer.createAt);
     const ColorCustom = useSelector((state: reduxIterface) => state.UrlReducer.color);
-    console.log(ColorCustom);
     const clientChooseCustom = useSelector((state: reduxIterface) => state.UrlReducer.ClientChoose);
+    console.log(clientChooseCustom);
     const materialCustom = useSelector((state: reduxIterface) => state.UrlReducer.material);
-    console.log(sortCustom, createAtCustom);
     const { itemCategory, urlCustomer, setUrlCustomer }: any = GetContext();
     const [listData, setListData] = useState<dataCategoryProduct[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -179,6 +210,78 @@ export default function ProductCat() {
     const [isColor, setIsColor] = useState<boolean>(true);
     // Quản lý đóng mở filter material
     const [isMaterial, setIsMaterial] = useState<boolean>(true);
+    // Xử lý Redux khi client path Url
+    const handleReduxClientpath = () => {
+        const validData: any = {};
+        Object.keys(queryParams).forEach((key) => {
+            if (queryParams[key] !== '') {
+                validData[key] = queryParams[key];
+            }
+        });
+        // Custom lại  query khi một query có 2 thuộc tính trở lên
+        const queryAfterCustom = getQueryObject(queryString.stringify(validData));
+        //
+        // dispatch sortId, createdAt lên redux khi người dùng path url có sortid
+        if (queryAfterCustom?.sortid) {
+            dispatch(SortUpdateAction(queryParams?.sortid));
+        } else if (queryAfterCustom?.createdAt) {
+            dispatch(createAtUpdateAction(queryParams?.createdAt));
+        }
+        if (queryAfterCustom?.colorCodes) {
+            // dispatch((queryParams?.createdAt));
+            if (Array.isArray(queryAfterCustom?.colorCodes)) {
+                console.log(queryAfterCustom?.colorCodes);
+                queryAfterCustom?.colorCodes?.forEach((item: string) => {
+                    dispatch(
+                        ClientChooseAction(
+                            {
+                                value: item,
+                                id: 'color',
+                                valueCode: item,
+                            },
+                            clientChooseCustom,
+                        ),
+                    );
+                });
+                dispatch(ColorUpdateWhenPathAction(queryAfterCustom?.colorCodes));
+                setIsBorderColor(queryAfterCustom?.colorCodes);
+            } else {
+                dispatch(ColorUpdateWhenPathAction([queryAfterCustom?.colorCodes]));
+                setIsBorderColor([queryAfterCustom?.colorCodes]);
+                dispatch(
+                    ClientChooseAction(
+                        {
+                            value: queryAfterCustom?.colorCodes,
+                            id: 'color',
+                            valueCode: queryAfterCustom?.colorCodes,
+                        },
+                        clientChooseCustom,
+                    ),
+                );
+            }
+        }
+        if (queryAfterCustom?.material) {
+            if (Array.isArray(queryAfterCustom?.material)) {
+                queryAfterCustom?.material?.forEach((item: string) => {
+                    dispatch(
+                        ClientChooseAction(
+                            {
+                                value: item,
+                                id: 'material',
+                                materialCode: item,
+                            },
+                            clientChooseCustom,
+                        ),
+                    );
+                });
+                dispatch(MaterialUpdateWhenPathAction(queryAfterCustom?.material));
+                setIsBorderMaterial(queryAfterCustom?.material);
+            } else {
+                dispatch(MaterialUpdateWhenPathAction([queryAfterCustom?.material]));
+                setIsBorderMaterial([queryAfterCustom?.material]);
+            }
+        }
+    };
     const handleCheckboxChange = (value: string[]) => {
         // Xác định checkbox vừa thay đổi bằng cách so sánh mảng trước và sau khi thay đổi
         // Biến này dùng để tìm ra phần tử không có trong  value mà checkedValuesPrev có để thực hiện xóa mục đã chọn
@@ -246,17 +349,8 @@ export default function ProductCat() {
     // handle get list Product depend query
     const handleGetProduct = async (pram: any): Promise<void> => {
         if (queryParams) {
-            setUrlCustomer(`/${queryParams.categoryId}?categoryId=${queryParams.categoryId}`);
-            // dispatch sortId, createdAt lên redux khi người dùng path url có sortid
-            if (queryParams?.sortid) {
-                dispatch(SortUpdateAction(queryParams?.sortid));
-            } else if (queryParams?.createdAt) {
-                dispatch(createAtUpdateAction(queryParams?.createdAt));
-            } else if (queryParams?.colorCodes) {
-                // dispatch((queryParams?.createdAt));
-            }
-
             setIsLoading(true);
+            setUrlCustomer(`/${queryParams.categoryId}?categoryId=${queryParams.categoryId}`);
             // Tạo một danh sách các thuộc tính có giá trị khác rỗng
             const validData: any = {};
             Object.keys(queryParams).forEach((key) => {
@@ -264,10 +358,13 @@ export default function ProductCat() {
                     validData[key] = queryParams[key];
                 }
             });
-            const query = `${queryString.stringify(validData)}`;
-            const response = await getProductByCat(query);
+            // Custom lại  query khi một query có 2 thuộc tính trở lên
+            const queryAfterCustom = getQueryObject(queryString.stringify(validData));
+            // custom query để passed vào api
+            const queryCustom = customQuery(queryAfterCustom);
+            //
+            const response = await getProductByCat(`${queryCustom.toString()}`);
             if (response && response.status == 200) {
-                console.log(response);
                 const data = response?.data?.data;
                 const resultData =
                     data.length > 0
@@ -321,11 +418,11 @@ export default function ProductCat() {
                     : ''
             }${
                 materialCustom.length > 0
-                    ? materialCustom
+                    ? `&material=${materialCustom
                           .map((itemMaterial) => {
-                              return `&material=${itemMaterial}`;
+                              return itemMaterial;
                           })
-                          .join('')
+                          .join(',')}`
                     : ''
             }${currentPage && pageSize ? `&page=${currentPage}&size=${pageSize}` : ''}
             `);
@@ -354,6 +451,9 @@ export default function ProductCat() {
     useEffect(() => {
         handleGetColorProduct(setListColor);
         handleGetMaterial(setMaterialFilter);
+    }, []);
+    useEffect(() => {
+        handleReduxClientpath();
     }, []);
     return (
         <div className="ProductCatWrapper">
@@ -502,7 +602,7 @@ export default function ProductCat() {
                                                                   ClientChooseAction(
                                                                       {
                                                                           id: 'color',
-                                                                          value: item?.value,
+                                                                          value: item?.code,
                                                                           valueCode: item?.code,
                                                                       },
                                                                       clientChooseCustom,
@@ -515,10 +615,11 @@ export default function ProductCat() {
                                                       {isBorderColor.includes(item?.code) == true ? (
                                                           <div
                                                               onClick={() => {
+                                                                  console.log(item);
                                                                   handleDeleteColor(
                                                                       {
                                                                           id: 'color',
-                                                                          value: item.value,
+                                                                          value: item.code,
                                                                           valueCode: item.code,
                                                                       },
                                                                       clientChooseCustom,
@@ -596,7 +697,7 @@ export default function ProductCat() {
                                                                   ClientChooseAction(
                                                                       {
                                                                           id: 'material',
-                                                                          value: item?.value,
+                                                                          value: item?.code,
                                                                           materialCode: item?.code,
                                                                       },
                                                                       clientChooseCustom,
@@ -612,7 +713,7 @@ export default function ProductCat() {
                                                                   handleDeleteChooseMaterial(
                                                                       {
                                                                           id: 'material',
-                                                                          value: item.value,
+                                                                          value: item.code,
                                                                           materialCode: item.code,
                                                                       },
                                                                       clientChooseCustom,

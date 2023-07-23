@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import './HeaderClient.css';
 import { Link, useNavigate } from 'react-router-dom';
 import { Avatar, Badge, Button, Drawer, Input, Menu, Popover, Select } from 'antd';
-import { PhoneOutlined, SearchOutlined, ShoppingCartOutlined, UserOutlined } from '@ant-design/icons';
+import { PhoneOutlined, SearchOutlined, ShoppingCartOutlined, ShoppingOutlined, UserOutlined } from '@ant-design/icons';
 import { getListCategoryFun, getListCategorySub, onCloseResultSearch, showResultSearch } from './Header.Method';
 import { chidrenCategory, dataCategoy, headerCategory } from './HeaderInterface';
 import { useSelector } from 'react-redux';
@@ -16,10 +16,10 @@ import images from '../../../../asset';
 const headerStyle: React.CSSProperties = {
     color: '#fff',
     minHeight: '90px',
-    backgroundColor: '#fff',
     display: 'flex',
     flexWrap: 'wrap',
     boxShadow: '0 6px 12px 0 rgba(0,0,0,0.05)',
+    backgroundColor: '#fff',
 };
 const itemsMenu = [
     {
@@ -236,7 +236,7 @@ export default function HeaderClient() {
                     })}
                 </ul>
                 <div className="headerClientAbove__LoginOutCart">
-                    <div>
+                    {/* <div>
                         <Button
                             type="text"
                             style={{
@@ -269,7 +269,7 @@ export default function HeaderClient() {
                                 Free
                             </Button>
                         </Button>
-                    </div>
+                    </div> */}
                     <div className="headerClientAbove__search">
                         <Button
                             type="text"
@@ -279,8 +279,8 @@ export default function HeaderClient() {
                             icon={
                                 <SearchOutlined
                                     style={{
-                                        fontSize: '20px',
-                                        fontWeight: '600',
+                                        fontSize: '24px',
+                                        // fontWeight: '600',
                                     }}
                                 />
                             }
@@ -388,7 +388,7 @@ export default function HeaderClient() {
                             <Button
                                 type="text"
                                 icon={
-                                    <ShoppingCartOutlined
+                                    <ShoppingOutlined
                                         style={{
                                             fontSize: '25px',
                                             // color: '#11006f',
@@ -399,12 +399,23 @@ export default function HeaderClient() {
                         </Badge>
                     </div>
                     {tokenLocal ? (
-                        <Popover content={subNavItemUser(manageUser)} placement="bottomLeft" arrow={false}>
-                            <Avatar size="large" icon={<UserOutlined />} />
-                        </Popover>
+                        <div
+                            style={{
+                                verticalAlign: 'middle',
+                            }}
+                        >
+                            <Popover content={subNavItemUser(manageUser)} placement="bottomLeft" arrow={false}>
+                                <Avatar size="default" icon={<UserOutlined />} />
+                            </Popover>
+                        </div>
                     ) : (
-                        <div className="headerClientAbove__LoginOut">
-                            <Button
+                        <div
+                            className="headerClientAbove__LoginOut"
+                            style={{
+                                verticalAlign: 'middle',
+                            }}
+                        >
+                            {/* <Button
                                 type="text"
                                 icon={
                                     <UserOutlined
@@ -415,7 +426,7 @@ export default function HeaderClient() {
                                         }}
                                     />
                                 }
-                            ></Button>
+                            ></Button> */}
                             <Button
                                 type="text"
                                 style={{

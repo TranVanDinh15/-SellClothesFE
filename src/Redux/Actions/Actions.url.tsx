@@ -69,6 +69,16 @@ export const ColorUpdateAction: any = (colorItem: string, colorCustom: string[])
         }
     };
 };
+export const ColorUpdateWhenPathAction: any = (updatePathColor: string[]) => {
+    return (dispatch: Dispatch) => {
+        dispatch({
+            type: urlConstant.URL__UPDATEPATHCOLOR,
+            payLoad: {
+                updatePathColor,
+            },
+        });
+    };
+};
 export const ClientChooseAction: any = (
     objectItem: {
         value: string;
@@ -340,6 +350,16 @@ export const ClientChooseMaterialDeleteAction: any = (
             type: urlConstant.URL__DELETECHOOSEMATERIAL,
             payLoad: {
                 ClientChooseDelete: filterData,
+            },
+        });
+    };
+};
+export const MaterialUpdateWhenPathAction: any = (updatePathmaterial: string[]) => {
+    return (dispatch: Dispatch) => {
+        dispatch({
+            type: urlConstant.URL__UPDATEPATHMATERIAL,
+            payLoad: {
+                updatePathmaterial,
             },
         });
     };

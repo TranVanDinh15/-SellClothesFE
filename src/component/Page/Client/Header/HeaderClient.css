@@ -48,6 +48,7 @@
     display: flex;
     align-items: center;
     gap: 20px;
+    height: 100px;
 }
 .headerClientbelow {
     width: 100%;
@@ -55,6 +56,7 @@
 .headerClientbelow__listMenu {
     display: flex;
 }
+
 .headerClientbelow__listMenu a button {
     padding: 0;
     margin-right: 20px;
@@ -115,9 +117,10 @@
     flex-wrap: wrap;
 }
 .ListHeaderCat {
-    font-size: 14px;
+    font-size: 16px;
     text-transform: uppercase;
-    /* color: #11006f; */
+    color: #333;
+    font-weight: 500;
 }
 .subnavCategory {
     width: 200px;
@@ -142,6 +145,7 @@
     justify-content: center;
 }
 .headerClientAbove__search {
+    transform: translateY(6px);
 }
 .searchResultInput__Item {
     margin-top: 20px;
@@ -155,9 +159,7 @@
 .searchResultInput__Item__Infor__name span {
     font-size: 14px;
 }
-.ResultSearch {
-    /* padding-bottom: 40px; */
-}
+
 .searchResultInputContainer input {
     height: 41px;
 }

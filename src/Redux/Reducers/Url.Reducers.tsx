@@ -43,6 +43,11 @@ const UrlCustomerReducers = (state = initialState, action: any) => {
                 ...state,
                 color: [...state.color, action.payLoad.color],
             };
+        case urlConstant.URL__UPDATEPATHCOLOR:
+            return {
+                ...state,
+                color: [...action.payLoad.updatePathColor],
+            };
         case urlConstant.URL__DELETECOLOR:
             return {
                 ...state,
@@ -83,7 +88,11 @@ const UrlCustomerReducers = (state = initialState, action: any) => {
                 ...state,
                 ClientChoose: [...action.payLoad.ClientChooseDelete],
             };
-
+        case urlConstant.URL__UPDATEPATHMATERIAL:
+            return {
+                ...state,
+                material: [...action.payLoad.updatePathmaterial],
+            };
         default:
             return state;
     }

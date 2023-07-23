@@ -46,6 +46,7 @@ export const handleDeleteColor = (
     setIsBorderColor: React.Dispatch<React.SetStateAction<any>>,
     disPatch: any,
 ) => {
+    console.log(objectItem);
     disPatch(ClientChooseColorDeleteAction(objectItem, clientChooseCustom, setIsBorderColor));
 };
 // Handle get Material Color
