@@ -19,14 +19,7 @@ import {
 } from 'antd';
 import Sider from 'antd/es/layout/Sider';
 import { Content } from 'antd/es/layout/layout';
-import {
-    CloseOutlined,
-    DownOutlined,
-    FilterOutlined,
-    LaptopOutlined,
-    NotificationOutlined,
-    UserOutlined,
-} from '@ant-design/icons';
+import { CloseOutlined, DownOutlined } from '@ant-design/icons';
 import {
     handleChangeTitleSelect,
     handleDeleteChooseMaterial,
@@ -40,11 +33,8 @@ import { GetContext } from '../../../Admin/common/Context/Context';
 import { getProductByCat } from '../../../../utils/Api/Api';
 import { dataCategoryProduct } from './ProductCatInterface';
 import SekeletonCardCustomer from '../../Common/SekeletonCard/SekeletonCardCustomer';
-import IsLoading from '../../../Admin/common/IsLoading/IsLoading';
 import { ScaleLoader } from 'react-spinners';
-import { image } from '@uiw/react-md-editor';
 import { useSelector } from 'react-redux';
-import { filter } from '@chakra-ui/react';
 import { useDispatch } from 'react-redux';
 import {
     ClientChooseAction,
@@ -183,7 +173,6 @@ export default function ProductCat() {
     const createAtCustom = useSelector((state: reduxIterface) => state.UrlReducer.createAt);
     const ColorCustom = useSelector((state: reduxIterface) => state.UrlReducer.color);
     const clientChooseCustom = useSelector((state: reduxIterface) => state.UrlReducer.ClientChoose);
-    console.log(clientChooseCustom);
     const materialCustom = useSelector((state: reduxIterface) => state.UrlReducer.material);
     const { itemCategory, urlCustomer, setUrlCustomer }: any = GetContext();
     const [listData, setListData] = useState<dataCategoryProduct[]>([]);
@@ -230,7 +219,6 @@ export default function ProductCat() {
         if (queryAfterCustom?.colorCodes) {
             // dispatch((queryParams?.createdAt));
             if (Array.isArray(queryAfterCustom?.colorCodes)) {
-                console.log(queryAfterCustom?.colorCodes);
                 queryAfterCustom?.colorCodes?.forEach((item: string) => {
                     dispatch(
                         ClientChooseAction(
@@ -615,7 +603,6 @@ export default function ProductCat() {
                                                       {isBorderColor.includes(item?.code) == true ? (
                                                           <div
                                                               onClick={() => {
-                                                                  console.log(item);
                                                                   handleDeleteColor(
                                                                       {
                                                                           id: 'color',

@@ -132,3 +132,23 @@ export const getCategoryColor = () => {
 export const getMaterialClient = () => {
     return AxiosInstance.get(`/all-code/MATERIAL?page=1&size=1000`);
 };
+// Get Api Comment
+export const getCommentByIdProduct = (id: number) => {
+    return AxiosInstance.get(`/comment?productId=${id}&sortcreatedAt=DESC`);
+};
+// Add  Comment
+export const createCommentProduct = (data: { content: string; productId: number; star: number; images: string[] }) => {
+    return AxiosInstance.post('/comment', data);
+};
+// add rep comment
+export const createRepCommentProduct = (data: { content: string; productId: number }) => {
+    return AxiosInstance.post('/comment', data);
+};
+// Like vs unLike
+export const likeVsunLike = (cmtId: number) => {
+    return AxiosInstance.patch(`/user/comment/like/${cmtId}`);
+};
+// disLike vs undisLike
+export const disLikeVsUndislike = (cmtId: number) => {
+    return AxiosInstance.patch(`/user/comment/dislike/${cmtId}`);
+};

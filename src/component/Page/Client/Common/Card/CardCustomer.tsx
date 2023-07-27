@@ -22,8 +22,9 @@ interface props {
             originalPrice: number;
         }[];
     };
+    clickCard: () => void;
 }
-export default function CardCustomer({ item }: props) {
+export default function CardCustomer({ item, clickCard }: props) {
     const [currentDetail, setCurrentDetail] = useState<any>();
     useEffect(() => {
         if (item) {
@@ -32,6 +33,9 @@ export default function CardCustomer({ item }: props) {
     }, [item]);
     return (
         <Card
+            onClick={() => {
+                clickCard();
+            }}
             hoverable
             style={{ width: '220px' }}
             cover={

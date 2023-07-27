@@ -82,15 +82,16 @@ export const onFinishUpdate = async (
     IsFetchDp: boolean,
     setIsModalUpdate: React.Dispatch<React.SetStateAction<boolean>>,
     setImageDp: React.Dispatch<React.SetStateAction<any>>,
+    value: any,
 ) => {
-    console.log(imagesUploadMultiple, imageDp);
+    console.log(value);
     if (detailId) {
         const reqUpdate = {
             productId: values?.productId,
             name: values?.name,
             originalPrice: values?.originalPrice,
             discountPrice: values?.discountPrice,
-            description: values?.description,
+            description: value,
             images: imagesUploadMultiple.map((item: any) => {
                 return item?.image;
             }),

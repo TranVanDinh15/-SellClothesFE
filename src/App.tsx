@@ -19,7 +19,6 @@ import DetailProductClient from './component/Page/Client/pageClient/DetailProduc
 import { ChakraProvider } from '@chakra-ui/react';
 import CheckOut from './component/Page/Client/pageClient/CheckOut/CheckOut';
 import ProductCat from './component/Page/Client/pageClient/ProductCat/ProductCat';
-
 function App() {
     const token = localStorage.getItem('token');
     const router = createBrowserRouter([
@@ -95,7 +94,7 @@ function App() {
                     errorElement: <NotFound type={'notRole'} />,
                 },
                 {
-                    path: '/chi-tiet-san-pham/:slug/:id',
+                    path: '/chi-tiet-san-pham/:slug',
                     element: <DetailProductClient />,
                     errorElement: <NotFound type={'notRole'} />,
                 },

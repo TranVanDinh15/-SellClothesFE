@@ -3,6 +3,8 @@ import { DesktopOutlined, FileOutlined, PieChartOutlined, TeamOutlined, UserOutl
 import { FaUserAlt, FaBloggerB } from 'react-icons/fa';
 import { AiFillTrademarkCircle } from 'react-icons/ai';
 import { RiProductHuntLine } from 'react-icons/ri';
+import { BiImport } from 'react-icons/bi';
+
 import type { MenuProps } from 'antd';
 import { Breadcrumb, Image, Layout, Menu, theme } from 'antd';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
@@ -32,6 +34,10 @@ const items: MenuItem[] = [
         getItem('Loại quần áo', '/Admin/Product/Category'),
         getItem('Màu sắc', '/Admin/Product/Color'),
     ]),
+    getItem('Nhập hàng', '/Admin/Blog', <BiImport className="iconSidebarCss" />, [
+        getItem('Danh sách bài đăng', '/Admin/Blog/listBlog'),
+        getItem('Thêm bài đăng', '/Admin/Blog/addBlog'),
+    ]),
     getItem('Quản lý người dùng', '/Admin/User', <FaUserAlt className="iconSidebarCss" />, [
         getItem('Danh sách Users', '/Admin/User/listUser'),
         getItem('Thêm User', '/Admin/Blog/addBlog'),
@@ -40,6 +46,7 @@ const items: MenuItem[] = [
         getItem('Danh sách bài đăng', '/Admin/Blog/listBlog'),
         getItem('Thêm bài đăng', '/Admin/Blog/addBlog'),
     ]),
+
     // getItem('User', 'sub1', <UserOutlined />, [getItem('Tom', '3'), getItem('Bill', '4'), getItem('Alex', '5')]),
     // getItem('Team', 'sub2', <TeamOutlined />, [getItem('Team 1', '6'), getItem('Team 2', '8')]),
 ];

@@ -60,7 +60,13 @@ import {
     showCloseSize,
     showModalAddDp,
 } from './ProductMethod';
-
+import MdEditor from 'react-markdown-editor-lite';
+var MarkdownIt = require('markdown-it');
+const mdParser = new MarkdownIt(/* Markdown-it options */);
+interface markdownProps {
+    html: any;
+    text: any;
+}
 export default function DetailProductCreate() {
     const { id } = useParams();
     const {
@@ -94,6 +100,9 @@ export default function DetailProductCreate() {
         saveIdDetailProduct,
         setSaveIdDetailProduct,
     }: any = GetContext();
+    // Quản lý giá trị của Markdown editor
+    const [value, setValue] = useState<any>('**Hello world!!!**');
+    const [text, setText] = useState<any>('**Hello world!!!**');
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [saveColor, setSaveColor] = useState([]);
     const [total, setTotal] = useState<any>();
@@ -101,7 +110,6 @@ export default function DetailProductCreate() {
     const [page, setPage] = useState<number>(1);
     const [GetDetailP, setGetDetailP] = useState<[]>([]);
     const [selectColor, setSelectColor] = useState<[]>([]);
-    console.log(GetDetailP);
     const titileSizeDp = () => {
         return <span></span>;
     };
@@ -142,6 +150,11 @@ export default function DetailProductCreate() {
         position: ['bottomCenter'],
     };
     const paginationSizeConfig: TablePaginationConfig = {};
+    // Finish!
+    function handleEditorChange({ html, text }: markdownProps) {
+        setText(text);
+        setValue(html);
+    }
     useEffect(() => {
         if (id) {
             const productId = parseInt(id);
@@ -226,6 +239,7 @@ export default function DetailProductCreate() {
                             isFetchDp,
                             setIsModalUpdate,
                             setImageDp,
+                            value,
                         );
                     }}
                     onFinishFailed={onFailUpdate}
@@ -250,13 +264,6 @@ export default function DetailProductCreate() {
                             </Form.Item>
                         </Col>
                         <Col span={12}>
-                            <Form.Item label="Mô tả" name="description">
-                                <Input placeholder="Viết mô tả sản phẩm" width={'100%'} />
-                            </Form.Item>
-                        </Col>
-                    </Row>
-                    <Row gutter={16} style={{}}>
-                        <Col span={12}>
                             <Form.Item label="Màu sắc" name="colorId">
                                 <SelectCustomer
                                     mode=""
@@ -265,6 +272,15 @@ export default function DetailProductCreate() {
                                     onSearch={onSearchColorSelect}
                                 />
                             </Form.Item>
+                        </Col>
+                    </Row>
+                    <Row gutter={16} style={{}}>
+                        <Col span={12}>
+                            <MdEditor
+                                style={{ height: '200px' }}
+                                renderHTML={(text) => mdParser.render(text)}
+                                onChange={handleEditorChange}
+                            />
                         </Col>
                         <Col
                             span={12}
@@ -294,7 +310,7 @@ export default function DetailProductCreate() {
                                 width: '100px',
                             }}
                         >
-                            Tạo
+                            Cập nhật
                         </Button>
                     </Form.Item>
                 </Form>

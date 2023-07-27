@@ -20,6 +20,11 @@ const headerStyle: React.CSSProperties = {
     flexWrap: 'wrap',
     boxShadow: '0 6px 12px 0 rgba(0,0,0,0.05)',
     backgroundColor: '#fff',
+    position: 'fixed',
+    top: 0,
+    right: 0,
+    left: 0,
+    zIndex: '10000',
 };
 const itemsMenu = [
     {

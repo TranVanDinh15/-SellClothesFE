@@ -1,5 +1,6 @@
 .DetailProductClient {
     height: 100vh;
+    margin-top: 100px;
 }
 .DetailProductClient__container {
     padding: 20px 50px;
@@ -11,9 +12,18 @@
     margin-top: 20px;
     padding: 30px 0px;
     .DetailProductClient__content__listImage {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 10px;
+        .image-gallery-slide {
+            img {
+                width: 100%;
+                height: 400px;
+            }
+        }
+    }
+    .image-gallery-svg {
+        width: 35px;
+    }
+    .image-gallery-thumbnail {
+        width: 70px;
     }
 }
 
@@ -118,4 +128,200 @@
     span {
         font-size: 20px;
     }
+}
+.colorProduct {
+    border: 2px solid #000;
+}
+.image-gallery-thumbnail.active,
+.image-gallery-thumbnail:focus {
+    border: 3px solid rgb(0, 191, 255);
+}
+.image-gallery-thumbnail {
+    transition: 0.2s;
+}
+.image-gallery-thumbnail:hover {
+    border: 3px solid rgb(0, 191, 255);
+}
+.sliderChooseSize__ResultHelpSize {
+    span {
+        font-size: 15px;
+    }
+}
+.ant-slider-track {
+    background-color: rgb(0, 191, 255) !important;
+}
+:where(.css-dev-only-do-not-override-12jzuas).ant-slider .ant-slider-handle::after {
+    box-shadow: 0 0 0 2px rgb(0, 191, 255) !important;
+}
+.descriptionDetailProduct__content {
+    p {
+        text-align: justify;
+    }
+}
+.detailProductPart {
+    margin-top: 24px;
+    .ant-collapse-header-text {
+        font-size: 20px !important;
+    }
+    .anticon-right {
+        font-size: 20px !important;
+        transform: translateY(5px);
+    }
+}
+.RattingVsComment__Box {
+    border: 1px solid #ccc;
+    padding: 20px;
+    display: flex;
+}
+.RattingVsComment__Box__Star__Text {
+    display: flex;
+    justify-content: center;
+    span {
+        font-size: 22px;
+        font-weight: 600;
+    }
+}
+.RattingVsComment__Box__Star {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.amountComment {
+    margin: 10px 0;
+    span {
+        font-size: 16px;
+    }
+}
+.sendComment {
+    button {
+        background-color: rgb(0, 191, 255);
+        border-radius: initial;
+        color: #fff;
+    }
+}
+.ListComment,
+.comment__user {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+.ListComment__Name {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    // align-items: center;
+    .ListComment__Name__Text {
+        span {
+            font-weight: 600;
+        }
+    }
+}
+.ListComment__Text {
+    margin-top: 10px;
+    color: #000000a6;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.ListComment__Interact {
+    margin-top: 10px;
+    display: flex;
+    gap: 20px;
+    // color: rgb(0, 191, 255);
+    span {
+        cursor: pointer;
+    }
+}
+.ListComment__Name__Child {
+    margin-top: 10px;
+    margin-left: 20px;
+    // border-left: 4px solid rgb(0, 191, 255);
+    background-color: #f5f5f5;
+    padding: 4px 20px;
+}
+.ListComment__Name__icon {
+    transform: translateY(1px);
+    margin-left: 40px;
+    cursor: pointer;
+}
+.addComment__TextArea {
+    width: 100%;
+    textarea {
+        width: 100%;
+        height: 100px;
+        border: 1px solid #ccc;
+        border-radius: 10px;
+        padding: 10px;
+    }
+}
+.addComment__title {
+    span {
+        font-size: 18px;
+        display: flex;
+        justify-content: center;
+        font-weight: 500;
+    }
+}
+.addComment__Rate {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin: 20px 0;
+    .addComment__Rate {
+        span {
+            font-size: 16px;
+            transform: translateY(2px);
+        }
+    }
+}
+.addComment__UploadImage {
+    margin: 20px 0;
+}
+.addComment__UploadImageBTN__title {
+    margin: 10px 0;
+}
+.commentSubmit {
+    display: flex;
+    justify-content: center;
+    button {
+        width: 200px;
+        height: 40px;
+        background-color: rgb(0, 191, 255);
+        color: #fff;
+    }
+}
+.likeUser:hover {
+    color: rgb(0, 191, 255);
+}
+.disLikeUser:hover {
+    color: red;
+}
+.repComment {
+    display: flex;
+    gap: 20px;
+    margin-top: 20px;
+}
+.repComment__Input {
+    flex-basis: 80%;
+    input {
+        font-size: 14px;
+    }
+}
+.closeRepComment:hover {
+    color: rgb(0, 191, 255);
+}
+.ListComment__Name__Text {
+    span {
+        font-weight: 600;
+    }
+}
+.ListComment__createAt {
+    span {
+        color: rgba(0, 0, 0, 0.54);
+        font-size: 12px;
+    }
+}
+.customDislike {
+    color: red;
 }
