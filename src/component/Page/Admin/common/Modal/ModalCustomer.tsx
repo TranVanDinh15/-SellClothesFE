@@ -18,6 +18,7 @@ const ModalCustomer = ({ isModalOpen, handleOk, handleCancel, children, title, f
                 onOk={handleOk}
                 onCancel={handleCancel}
                 footer={footer ? footer : <></>}
+                width={600}
             >
                 {children}
             </Modal>

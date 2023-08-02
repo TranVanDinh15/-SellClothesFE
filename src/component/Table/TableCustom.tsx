@@ -1,16 +1,32 @@
 import React, { ReactNode } from 'react';
-import { Button, Popover, Table, message } from 'antd';
+import { Button, Image, Popover, Table, message } from 'antd';
 import type { ColumnsType, TableProps, ColumnType, TablePaginationConfig } from 'antd/es/table';
 import { HiOutlinePencilSquare } from 'react-icons/hi2';
 import { BsTrash } from 'react-icons/bs';
 import { GiClothes } from 'react-icons/gi';
-import { covertCreateAt } from '../../component/Page/Admin/common/method/method';
+import { CiImport } from 'react-icons/ci';
+import { convertVND, covertCreateAt } from '../../component/Page/Admin/common/method/method';
 import { GetContext } from '../Page/Admin/common/Context/Context';
 import DeleteCustom from '../Page/Admin/common/Delete/DeleteCustom';
-import { deleteBrand, deleteCategory, deleteProdcut } from '../utils/Api/Api';
+import {
+    DeleteBanner,
+    DeleteDetailReceipt,
+    DeleteSupplier,
+    deleteBrand,
+    deleteCategory,
+    deleteProdcut,
+} from '../utils/Api/Api';
 import { useNavigate } from 'react-router-dom';
 import { FolderAddOutlined } from '@ant-design/icons';
-import { DataTypeProductDetail, DataTypeSizeProductDetail } from './TableInterface';
+import {
+    DataTypeProductDetail,
+    DataTypeSizeProductDetail,
+    DatatypeBanner,
+    DatatypeBlog,
+    DatatypeDetailReceipt,
+    DatatypeReceipt,
+    DatatypeSupplier,
+} from './TableInterface';
 import { handleDeleteDetailSize, handleDeleteProductDetail, handleGetSizeDp } from '../Page/Product/ProductMethod';
 interface DataType {
     key: React.Key;
@@ -45,6 +61,8 @@ interface PropsTable {
     dataSource: [];
     paginationConfig: TablePaginationConfig;
     showModalUpdate: () => void;
+    isDelete: boolean;
+    setIsDelete: React.Dispatch<React.SetStateAction<boolean>>;
 }
 const columns: ColumnsType<DataType> = [
     {
@@ -112,13 +130,19 @@ const onChange: TableProps<DataType>['onChange'] = (pagination, filters, sorter,
     console.log('params', pagination, filters, sorter, extra);
 };
 
-const CustomTable = ({ name, title, dataSource, paginationConfig, showModalUpdate }: PropsTable) => {
+const CustomTable = ({
+    name,
+    title,
+    dataSource,
+    paginationConfig,
+    showModalUpdate,
+    isDelete,
+    setIsDelete,
+}: PropsTable) => {
     const navigate = useNavigate();
     const {
         setModalViewDes,
         setDataUpdate,
-        isDelete,
-        setIsDelete,
         idDelete,
         setIdDelete,
         setIsSaveDesProduct,
@@ -145,18 +169,21 @@ const CustomTable = ({ name, title, dataSource, paginationConfig, showModalUpdat
         setImageDp,
         setSaveIdDetailProduct,
         setImagesUploadMultiple,
+        setDataSupplierUpdate,
+        setDataReceiptUpdate,
+        setDataDetailReceipt,
+        setDataBannerUpdate,
     }: any = GetContext();
-    console.log(idDelete);
+    const cancelDeleteBrand = (e: any) => {
+        console.log(e);
+        message.error('Click on No');
+    };
+    // Xử lý delete
     const confirmDeleteBrand = async (e: any) => {
         const response = await deleteBrand(idDelete);
         if (response && response.status == 200) {
-            console.log(response);
             message.success('Xóa thành công !');
-            if (isDelete) {
-                setIsDelete(false);
-            } else {
-                setIsDelete(true);
-            }
+            setIsDelete((prevIsDelete) => !prevIsDelete);
         }
     };
     const confirmDeleteProduct = async (e: any) => {
@@ -164,29 +191,45 @@ const CustomTable = ({ name, title, dataSource, paginationConfig, showModalUpdat
         if (response && response.status == 200) {
             console.log(response);
             message.success('Xóa thành công !');
-            if (isDelete) {
-                setIsDelete(false);
-            } else {
-                setIsDelete(true);
-            }
+            setIsDelete((prevIsDelete) => !prevIsDelete);
         }
-    };
-    const cancelDeleteBrand = (e: any) => {
-        console.log(e);
-        message.error('Click on No');
     };
     const confirmDeleteCategory = async (e: any) => {
         const response = await deleteCategory(idDelete);
+        console.log(response);
         if (response && response.status == 200) {
-            console.log(response);
             message.success('Xóa thành công !');
-            if (isDelete) {
-                setIsDelete(false);
-            } else {
-                setIsDelete(true);
-            }
+            setIsDelete((prevIsDelete) => !prevIsDelete);
         }
     };
+    const confirmDeleteSupplier = async (id: number): Promise<void> => {
+        console.log('delete', id);
+        const response = await DeleteSupplier(id);
+        if (response && response.status == 200) {
+            message.success('Xóa thành công !');
+            setIsDelete((prevIsDelete) => !prevIsDelete);
+        }
+    };
+    const confirmDeleteDetailReceipt = async (id: number): Promise<void> => {
+        console.log('delete', id);
+        const response = await DeleteDetailReceipt(id);
+        if (response && response.status == 200) {
+            console.log(response);
+            setIsDelete((prevIsDelete) => !prevIsDelete);
+            message.success('Xóa thành công !');
+        }
+    };
+    //
+    const conFirmDeleteBanner = async (id: number): Promise<void> => {
+        const response = await DeleteBanner(id);
+        console.log(response);
+        if (response && response.status == 200) {
+            message.success('Xóa thành công !');
+            setIsDelete((prevIsDelete) => !prevIsDelete);
+            console.log(isDelete);
+        }
+    };
+    //
     const cancelDeleteCategory = () => {};
     const columnsBrand: ColumnsType<DataTypeBrand> = [
         {
@@ -255,6 +298,7 @@ const CustomTable = ({ name, title, dataSource, paginationConfig, showModalUpdat
                             setIsSaveDesProduct(value);
                             console.log(value);
                         }}
+                        type="link"
                     >
                         Xem
                     </Button>
@@ -287,6 +331,7 @@ const CustomTable = ({ name, title, dataSource, paginationConfig, showModalUpdat
                             setIsSaveDetailProduct(value);
                             navigate(`/Admin/Product/DetailProduct/${value.id}`);
                         }}
+                        type="link"
                     >
                         Xem
                     </Button>
@@ -306,7 +351,7 @@ const CustomTable = ({ name, title, dataSource, paginationConfig, showModalUpdat
                         icon={<HiOutlinePencilSquare />}
                         type="text"
                         onClick={() => {
-                            // showModalUpdate();
+                            showModalUpdate();
                             // setDataUpdate(record);
                         }}
                     ></Button>
@@ -395,7 +440,7 @@ const CustomTable = ({ name, title, dataSource, paginationConfig, showModalUpdat
         {
             title: 'Mô tả Sp',
             dataIndex: 'contentHtml',
-            render: (value, record, index) => <Button>Xem</Button>,
+            render: (value, record, index) => <Button type="link">Xem</Button>,
         },
         {
             title: 'Màu sắc',
@@ -412,6 +457,7 @@ const CustomTable = ({ name, title, dataSource, paginationConfig, showModalUpdat
                         setSaveIdDp(record?.id);
                         handleGetSizeDp(saveIDp, setSaveSizeDp);
                     }}
+                    type="link"
                 >
                     Xem
                 </Button>
@@ -552,6 +598,316 @@ const CustomTable = ({ name, title, dataSource, paginationConfig, showModalUpdat
             ),
         },
     ];
+    // Collums Supplier
+    const collumsSupplier: ColumnType<DatatypeSupplier>[] = [
+        {
+            title: 'ID',
+            dataIndex: 'id',
+        },
+        {
+            title: 'Nhà cung cấp',
+            dataIndex: 'name',
+        },
+        {
+            title: 'Địa chỉ',
+            dataIndex: 'address',
+        },
+        {
+            title: 'Email',
+            dataIndex: 'email',
+        },
+        {
+            title: 'Ngày Nhập',
+            dataIndex: 'createdAt',
+            render: (value, record) => <span>{covertCreateAt(record.createdAt)}</span>,
+        },
+        {
+            title: 'Actions',
+            render: (value, record) => (
+                <div>
+                    <Button
+                        icon={<HiOutlinePencilSquare />}
+                        type="text"
+                        onClick={() => {
+                            showModalUpdate();
+                            setDataSupplierUpdate({
+                                name: record.name,
+                                email: record.email,
+                                address: record.address,
+                                id: record.id,
+                            });
+                        }}
+                    ></Button>
+                    <DeleteCustom
+                        title="Xóa size"
+                        description="Bạn chắc chắn muốn xóa?"
+                        confirm={() => {
+                            // handleDeleteDetailSize(record.id, isFetchSizeDp, setIsFetchSizeDp);
+                            confirmDeleteSupplier(record.id);
+                        }}
+                        cancel={() => {}}
+                        placement={'topLeft'}
+                    >
+                        <Button
+                            icon={<BsTrash />}
+                            type="text"
+                            onClick={() => {
+                                // setIdDelete(record?.id);
+                            }}
+                        ></Button>
+                    </DeleteCustom>
+                </div>
+            ),
+        },
+    ];
+    // Collums Receipt
+    const CollumsReceipt: ColumnType<DatatypeReceipt>[] = [
+        {
+            title: 'ID',
+            dataIndex: 'id',
+        },
+        {
+            title: 'Nhân viên',
+            render: (value, record) => <span>{`${record.user.lastName}${record.user.firstName}`}</span>,
+        },
+        {
+            title: 'Nhà cung cấp',
+            render: (value, record) => <span>{`${record.supplier.name}`}</span>,
+        },
+        {
+            title: 'Chi tiết nhập hàng',
+            // dataIndex: 'supplier',
+            render: (value, record) => (
+                <Button
+                    type="link"
+                    onClick={() => {
+                        navigate(`/Admin/ImportFoods/${record.id}`);
+                    }}
+                >
+                    Xem
+                </Button>
+            ),
+        },
+        {
+            title: 'Thời gian',
+            dataIndex: 'createdAt',
+            render: (value) => <span>{covertCreateAt(value)}</span>,
+        },
+        {
+            title: 'Actions',
+            render: (value, record) => (
+                <div>
+                    <Button
+                        icon={<HiOutlinePencilSquare />}
+                        type="text"
+                        onClick={() => {
+                            showModalUpdate();
+                            // setDataSupplierUpdate({
+                            //     name: record.name,
+                            //     email: record.email,
+                            //     address: record.address,
+                            //     id: record.id,
+                            // });
+                            setDataReceiptUpdate({
+                                id: record.id,
+                                supplierId: record.supplier,
+                            });
+                        }}
+                    ></Button>
+                    <DeleteCustom
+                        title="Xóa size"
+                        description="Bạn chắc chắn muốn xóa?"
+                        confirm={() => {
+                            // handleDeleteDetailSize(record.id, isFetchSizeDp, setIsFetchSizeDp);
+                            confirmDeleteSupplier(record.id);
+                        }}
+                        cancel={() => {}}
+                        placement={'topLeft'}
+                    >
+                        <Button
+                            icon={<BsTrash />}
+                            type="text"
+                            onClick={() => {
+                                // setIdDelete(record?.id);
+                            }}
+                        ></Button>
+                    </DeleteCustom>
+                </div>
+            ),
+        },
+    ];
+    // Collums  Detail Receipt
+    const CollumsDetailReceipt: ColumnType<DatatypeDetailReceipt>[] = [
+        {
+            title: 'ID',
+            dataIndex: 'id',
+        },
+        {
+            title: 'Tên hàng',
+            render: (value, record) => <span>{record.productDetailSize.productDetail.name}</span>,
+        },
+        {
+            title: 'Số lượng',
+            dataIndex: 'quantity',
+        },
+        {
+            title: 'Đơn giá',
+            dataIndex: 'price',
+            render: (value, record) => (
+                <span
+                    style={{
+                        color: 'red',
+                    }}
+                >
+                    {convertVND(Number(record.price))}
+                </span>
+            ),
+        },
+        {
+            title: 'Thời gian',
+            dataIndex: 'createdAt',
+        },
+        {
+            title: 'Actions',
+            render: (value, record) => (
+                <div>
+                    <Button
+                        icon={<HiOutlinePencilSquare />}
+                        type="text"
+                        onClick={() => {
+                            showModalUpdate();
+                            setDataDetailReceipt(record);
+                        }}
+                    ></Button>
+                    <DeleteCustom
+                        title="Xóa size"
+                        description="Bạn chắc chắn muốn xóa?"
+                        confirm={() => {
+                            confirmDeleteDetailReceipt(record.id);
+                        }}
+                        cancel={() => {}}
+                        placement={'topLeft'}
+                    >
+                        <Button
+                            icon={<BsTrash />}
+                            type="text"
+                            onClick={() => {
+                                // setIdDelete(record?.id);
+                            }}
+                        ></Button>
+                    </DeleteCustom>
+                </div>
+            ),
+        },
+    ];
+    // Collums Blog
+    const CollumsBlog: ColumnType<DatatypeBlog>[] = [
+        {
+            title: 'Tên bài đăng',
+            dataIndex: 'title',
+        },
+        {
+            title: 'Mô tả',
+            dataIndex: 'shortDescription',
+        },
+        {
+            title: 'Ngày tạo',
+            dataIndex: 'createdAt',
+        },
+        {
+            title: 'Actions',
+            render: (value, record) => (
+                <div>
+                    <Button
+                        icon={<HiOutlinePencilSquare />}
+                        type="text"
+                        onClick={() => {
+                            showModalUpdate();
+                            // setDataSupplierUpdate({
+                            //     name: record.name,
+                            //     email: record.email,
+                            //     address: record.address,
+                            //     id: record.id,
+                            // });
+                        }}
+                    ></Button>
+                    <DeleteCustom
+                        title="Xóa size"
+                        description="Bạn chắc chắn muốn xóa?"
+                        confirm={() => {
+                            // confirmDeleteSupplier(record.id);
+                        }}
+                        cancel={() => {}}
+                        placement={'topLeft'}
+                    >
+                        <Button icon={<BsTrash />} type="text"></Button>
+                    </DeleteCustom>
+                </div>
+            ),
+        },
+    ];
+    const CollumsBanner: ColumnType<DatatypeBanner>[] = [
+        {
+            title: 'ID',
+            dataIndex: 'id',
+        },
+        {
+            title: 'Tên ',
+            dataIndex: 'name',
+        },
+        {
+            title: 'Ảnh',
+            dataIndex: 'image',
+            render: (value, record) => (
+                <Image width={200} src={`${process.env.REACT_APP_IMAGE_BANNER_URL}${record.image}`} />
+            ),
+        },
+        {
+            title: 'Trạng thái',
+            render: (value, record) => <span>{record.status.value}</span>,
+        },
+        {
+            title: 'Ngày tạo',
+            render: (value, record) => <span>{covertCreateAt(record.createdAt)}</span>,
+        },
+        {
+            title: 'Actions',
+            render: (value, record) => (
+                <div>
+                    <Button
+                        icon={<HiOutlinePencilSquare />}
+                        type="text"
+                        onClick={() => {
+                            showModalUpdate();
+                            setDataBannerUpdate(record);
+                        }}
+                    ></Button>
+                    <DeleteCustom
+                        title="Xóa size"
+                        description="Bạn chắc chắn muốn xóa?"
+                        confirm={(e: any) => {
+                            // setIsDelete(!isDelete);
+                            console.log(e);
+                            e.isDefaultPrevented();
+                            // setIdDelete(!isDelete);
+                            conFirmDeleteBanner(record.id);
+                        }}
+                        cancel={() => {}}
+                        placement={'topLeft'}
+                    >
+                        <Button
+                            icon={<BsTrash />}
+                            type="text"
+                            onClick={() => {
+                                // setIsDelete(!isDelete);
+                                // conFirmDeleteBanner(record.id);
+                            }}
+                        ></Button>
+                    </DeleteCustom>
+                </div>
+            ),
+        },
+    ];
     return (
         <React.Fragment>
             {name == 'Users' ? <Table columns={columns} dataSource={data} onChange={onChange} title={title} /> : ''}
@@ -587,6 +943,36 @@ const CustomTable = ({ name, title, dataSource, paginationConfig, showModalUpdat
                     title={title}
                     // pagination={paginationConfig}
                 />
+            ) : (
+                ''
+            )}
+            {name == 'Supplier' ? (
+                <Table columns={collumsSupplier} dataSource={dataSource} title={title} pagination={paginationConfig} />
+            ) : (
+                ''
+            )}
+            {name == 'Receipt' ? (
+                <Table columns={CollumsReceipt} dataSource={dataSource} title={title} pagination={paginationConfig} />
+            ) : (
+                ''
+            )}
+            {name == 'DetailReceipt' ? (
+                <Table
+                    columns={CollumsDetailReceipt}
+                    dataSource={dataSource}
+                    title={title}
+                    pagination={paginationConfig}
+                />
+            ) : (
+                ''
+            )}
+            {name == 'Blog' ? (
+                <Table columns={CollumsBlog} dataSource={dataSource} title={title} pagination={paginationConfig} />
+            ) : (
+                ''
+            )}
+            {name == 'Banner' ? (
+                <Table columns={CollumsBanner} dataSource={dataSource} title={title} pagination={paginationConfig} />
             ) : (
                 ''
             )}

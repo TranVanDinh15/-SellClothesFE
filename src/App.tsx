@@ -5,7 +5,6 @@ import DefaultLayoutAdmin from './component/Page/Admin/defaultLayoutAdmin/defaul
 import NotFound from './component/Page/Admin/common/NotFound/NotFound';
 import DashBoad from './component/Page/Admin/Dashboard/DashBoad';
 import Blog from './component/Page/Admin/Blog/Blog';
-import AddBlog from './component/Page/Admin/Blog/addBlog';
 import ListUser from './component/Page/Admin/User/listUser';
 import DefaultLayoutClient from './component/Page/Client/defaultLayoutClient/defaultLayoutClient';
 import LoginAdmin from './component/Page/Admin/LoginAdmin/LoginAdmin';
@@ -19,6 +18,11 @@ import DetailProductClient from './component/Page/Client/pageClient/DetailProduc
 import { ChakraProvider } from '@chakra-ui/react';
 import CheckOut from './component/Page/Client/pageClient/CheckOut/CheckOut';
 import ProductCat from './component/Page/Client/pageClient/ProductCat/ProductCat';
+import CartPage from './component/Page/Client/Cart/CartPage';
+import Supplier from './component/Page/Admin/Supplier/Supplier';
+import Receipt from './component/Page/Admin/Receipt/Receipt';
+import ReceiptDetail from './component/Page/Admin/Receipt/ReceiptDetail';
+import Banner from './component/Page/Admin/Banner/Banner';
 function App() {
     const token = localStorage.getItem('token');
     const router = createBrowserRouter([
@@ -39,11 +43,7 @@ function App() {
                     element: <Blog />,
                     errorElement: <NotFound type={'notRole'} />,
                 },
-                {
-                    path: 'Blog/addBlog',
-                    element: <AddBlog />,
-                    errorElement: <NotFound type={'notRole'} />,
-                },
+
                 {
                     path: 'User/listUser',
                     element: <ListUser />,
@@ -69,6 +69,26 @@ function App() {
                     element: <ProductCategory />,
                     errorElement: <NotFound type={'notRole'} />,
                 },
+                {
+                    path: 'Supplier',
+                    element: <Supplier />,
+                    errorElement: <NotFound type={'notRole'} />,
+                },
+                {
+                    path: 'ImportFoods',
+                    element: <Receipt />,
+                    errorElement: <NotFound type={'notRole'} />,
+                },
+                {
+                    path: 'ImportFoods/:id',
+                    element: <ReceiptDetail />,
+                    errorElement: <NotFound type={'notRole'} />,
+                },
+                {
+                    path: 'Banner',
+                    element: <Banner />,
+                    errorElement: <NotFound type={'notRole'} />,
+                },
             ],
         },
         {
@@ -88,11 +108,7 @@ function App() {
                     errorElement: <NotFound type={'notRole'} />,
                     // loader: teamLoader,
                 },
-                {
-                    path: '/signIn',
-                    element: <LoginClient />,
-                    errorElement: <NotFound type={'notRole'} />,
-                },
+
                 {
                     path: '/chi-tiet-san-pham/:slug',
                     element: <DetailProductClient />,
@@ -103,12 +119,22 @@ function App() {
                     element: <ProductCat />,
                     errorElement: <NotFound type={'notRole'} />,
                 },
+                {
+                    path: '/Cart',
+                    element: <CartPage />,
+                    errorElement: <NotFound type={'notRole'} />,
+                },
             ],
         },
         {
             path: '/thanh-toan/:id',
             element: <CheckOut />,
             errorElement: <NotFound type={'notAccess'} />,
+        },
+        {
+            path: '/signIn',
+            element: <LoginClient />,
+            errorElement: <NotFound type={'notRole'} />,
         },
     ]);
     return (

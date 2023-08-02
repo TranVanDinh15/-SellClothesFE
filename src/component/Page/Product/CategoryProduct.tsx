@@ -7,7 +7,6 @@ import { PlusOutlined } from '@ant-design/icons';
 import { Button, Col, Form, Input, Modal, Row, TablePaginationConfig, message } from 'antd';
 import { GetContext } from '../Admin/common/Context/Context';
 export default function ProductCategory() {
-    const { isDelete }: any = GetContext();
     const [page, setPage] = useState<number>(1);
     const [pageSize, setPageSize] = useState<number>(5);
     const [isLoading, setIsLoading] = useState(false);
@@ -16,6 +15,7 @@ export default function ProductCategory() {
     const [dataTable, setDataTable] = useState<[]>([]);
     const [total, setTotal] = useState<any>();
     const [isFetchBrand, setIsFetchBrand] = useState(false);
+    const [isDelete, setIsDelete] = useState<boolean>(false);
     const getListCategoryFun = async () => {
         setIsLoading(true);
         const response = await getAllCategory(page, pageSize);
@@ -161,6 +161,8 @@ export default function ProductCategory() {
                         dataSource={dataTable}
                         paginationConfig={paginationConfig}
                         showModalUpdate={showModalUpdate}
+                        isDelete={isDelete}
+                        setIsDelete={setIsDelete}
                     />
                 )}
             </div>

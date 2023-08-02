@@ -13,6 +13,9 @@ import { GetContext } from '../../Admin/common/Context/Context';
 import { useDispatch } from 'react-redux';
 import { UrlActions } from '../../../../Redux/Actions/Actions.url';
 import images from '../../../../asset';
+import Cart, { useRedux } from '../Cart/Cart';
+import { handleGetCart } from '../Cart/CartMethod';
+import { dataCart } from '../Cart/CartInterFace';
 const headerStyle: React.CSSProperties = {
     color: '#fff',
     minHeight: '90px',
@@ -85,6 +88,12 @@ const manageUser = [
 export default function HeaderClient() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    // Get User Hiện tại
+    const curentUser = useSelector((state: useRedux) => state.reduxAuth.user);
+    // Chứa dữ liệu Cart
+    const [cartData, setCartData] = useState<dataCart>();
+    console.log(curentUser);
+    console.log(cartData);
     const { itemCategory, setItemCategory, setSortId, urlCustomer, setUrlCustomer }: any = GetContext();
     const tokenLocal = localStorage.getItem('token');
     const userLogin = useSelector((state: reduxIterface) => state.reduxAuth.user);
@@ -94,6 +103,8 @@ export default function HeaderClient() {
     const [openFilter, setOpenFilter] = useState<boolean>(false);
     // Đóng mở result search
     const [openSearch, setOpenSearch] = useState(false);
+    // Quản lý hiển thị số lượng sản phẩm trong giỏ hàng
+    const [amountCart, setAmountCart] = useState<number>(0);
     const { Option } = Select;
     const selectBefore = (
         <Select defaultValue="Sản Phẩm" style={{ width: 120 }}>
@@ -147,6 +158,16 @@ export default function HeaderClient() {
             getListCategorySub(setDatacategory, saveCodeCategory);
         }
     }, [saveCodeCategory]);
+    useEffect(() => {
+        if (curentUser) {
+            handleGetCart(setCartData, dispatch);
+        }
+    }, [curentUser]);
+    useEffect(() => {
+        if (cartData?.cart.detail && cartData.cart.detail.length > 0) {
+            setAmountCart(cartData.cart.detail.length);
+        }
+    }, [cartData]);
     return (
         <Header style={headerStyle}>
             <header className="headerClientAbove">
@@ -389,19 +410,30 @@ export default function HeaderClient() {
                         </Drawer>
                     </div>
                     <div className="headerClientAbove__Cart">
-                        <Badge count={5}>
-                            <Button
-                                type="text"
-                                icon={
-                                    <ShoppingOutlined
-                                        style={{
-                                            fontSize: '25px',
-                                            // color: '#11006f',
-                                        }}
-                                    />
-                                }
-                            ></Button>
-                        </Badge>
+                        <Popover
+                            content={<Cart cartData={cartData} />}
+                            arrow={true}
+                            style={{
+                                borderRadius: 'initial',
+                                marginTop: '20px ',
+                            }}
+                            title={'Sản phẩm mới thêm'}
+                            placement="bottomLeft"
+                        >
+                            <Badge count={amountCart}>
+                                <Button
+                                    type="text"
+                                    icon={
+                                        <ShoppingOutlined
+                                            style={{
+                                                fontSize: '25px',
+                                                // color: '#11006f',
+                                            }}
+                                        />
+                                    }
+                                ></Button>
+                            </Badge>
+                        </Popover>
                     </div>
                     {tokenLocal ? (
                         <div

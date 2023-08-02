@@ -163,3 +163,6 @@
 .searchResultInputContainer input {
     height: 41px;
 }
+.ant-popover-content {
+    margin-top: 20px;
+}

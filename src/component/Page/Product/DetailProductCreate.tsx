@@ -110,6 +110,7 @@ export default function DetailProductCreate() {
     const [page, setPage] = useState<number>(1);
     const [GetDetailP, setGetDetailP] = useState<[]>([]);
     const [selectColor, setSelectColor] = useState<[]>([]);
+    const [isDelete, setIsDelete] = useState<boolean>(false);
     const titileSizeDp = () => {
         return <span></span>;
     };
@@ -189,6 +190,8 @@ export default function DetailProductCreate() {
                         showModalUpdate={() => {
                             handleShowUpdate(setIsModalUpdate);
                         }}
+                        isDelete={isDelete}
+                        setIsDelete={setIsDelete}
                     />
                 ) : (
                     <IsLoading />
@@ -677,6 +680,8 @@ export default function DetailProductCreate() {
                         showModalUpdate={() => {
                             // handleShowUpdate(setIsModalUpdate);
                         }}
+                        isDelete={isDelete}
+                        setIsDelete={setIsDelete}
                     />
                 ) : (
                     <Empty />

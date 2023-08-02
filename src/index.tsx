@@ -14,6 +14,7 @@ root.render(
             <App />
             {/* </React.Str?ictMode> */}
         </Provider>
+        ,
     </ChatProvide>,
 );
 

@@ -172,6 +172,7 @@
     border: 1px solid #ccc;
     padding: 20px;
     display: flex;
+    justify-content: space-between;
 }
 .RattingVsComment__Box__Star__Text {
     display: flex;
@@ -324,4 +325,14 @@
 }
 .customDislike {
     color: red;
+}
+.pageginationCmt {
+    margin-top: 40px;
+    display: flex;
+    justify-content: center;
+}
+.filterCmtChoose {
+    background-color: rgb(0, 191, 255);
+    color: #fff;
+    border-radius: initial;
 }

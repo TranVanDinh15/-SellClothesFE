@@ -9,6 +9,7 @@ import { PlusOutlined } from '@ant-design/icons';
 import { createBrand, getAllBrand, updateBrand } from '../../../utils/Api/Api';
 import IsLoading from '../common/IsLoading/IsLoading';
 import { GetContext } from '../common/Context/Context';
+import { useForm } from 'antd/es/form/Form';
 
 interface itemsData {
     code: string;
@@ -17,9 +18,13 @@ interface itemsData {
     id: string;
     type: string;
 }
-
+interface formUpdate {
+    value: string;
+}
 export default function TrademarkManage() {
-    const { dataUpdate, isDelete, setDataUpdate }: any = GetContext();
+    const [formUpdate] = useForm<formUpdate>();
+    const { dataUpdate, setDataUpdate }: any = GetContext();
+    console.log(dataUpdate);
     const [dataTable, setDataTable] = useState<[]>([]);
     const [isModalOpenAdd, setIsModalOpenAdd] = useState(false);
     const [isModalUpdate, setIsModalUpdate] = useState(false);
@@ -28,6 +33,7 @@ export default function TrademarkManage() {
     const [pageSize, setPageSize] = useState<any>(5);
     const [total, setTotal] = useState<any>();
     const [isLoading, setIsLoading] = useState(false);
+    const [isDelete, setIsDelete] = useState<boolean>(false);
     const getAllBrandFun = async () => {
         setIsLoading(true);
         const response = await getAllBrand(page, pageSize);
@@ -130,6 +136,7 @@ export default function TrademarkManage() {
                         footer
                     >
                         <Form
+                            // form={formAdd}
                             name="basic"
                             labelCol={{ span: 24 }}
                             wrapperCol={{ span: 24 }}
@@ -188,6 +195,13 @@ export default function TrademarkManage() {
     useEffect(() => {
         getAllBrandFun();
     }, [isFetchBrand, pageSize, page, isDelete]);
+    useEffect(() => {
+        if (dataUpdate) {
+            formUpdate.setFieldsValue({
+                value: dataUpdate?.value,
+            });
+        }
+    }, [dataUpdate]);
     return (
         <Content title={'Quản lý thương hiệu'}>
             <div className="brandWrapper">
@@ -200,10 +214,13 @@ export default function TrademarkManage() {
                         dataSource={dataTable}
                         paginationConfig={paginationConfig}
                         showModalUpdate={showModalUpdate}
+                        isDelete={isDelete}
+                        setIsDelete={setIsDelete}
                     />
                 )}
                 <Modal title="Cập Nhật" open={isModalUpdate} onOk={handleOkUpdate} onCancel={handleCancelUpdate} footer>
                     <Form
+                        form={formUpdate}
                         name="basic"
                         labelCol={{ span: 24 }}
                         wrapperCol={{ span: 24 }}

@@ -22,3 +22,6 @@ export const urlConstant = {
     URL__UPDATEPATHMATERIAL: 'URL__UPDATEPATHMATERIAL',
     URL__ACTIONDEFAULT: 'URL__ACTIONDEFAULT',
 };
+export const CartConstant = {
+    UPDATE__CART: ' UPDATE__CART',
+};

@@ -27,13 +27,13 @@ interface markdownProps {
     text: any;
 }
 export default function Product() {
-    const { isModalViewDes, setModalViewDes, isSaveDesProduct, isDelete, isOpenDetailP, setIsOpenDetailP }: any =
-        GetContext();
+    const { isModalViewDes, setModalViewDes, isSaveDesProduct, isOpenDetailP, setIsOpenDetailP }: any = GetContext();
     const [page, setPage] = useState<number>(1);
     const [pageSize, setPageSize] = useState<number>(5);
     const [isLoading, setIsLoading] = useState(false);
     const [isModalOpenAdd, setIsModalOpenAdd] = useState(false);
     const [isModalUpdate, setIsModalUpdate] = useState(false);
+    console.log(isModalUpdate);
     const [dataTable, setDataTable] = useState<[]>([]);
     const [total, setTotal] = useState<any>();
     const [listCategory, setListCategory] = useState<any>([]);
@@ -43,6 +43,7 @@ export default function Product() {
     const [categorySave, setCategorySave] = useState<any>();
     const [statusSave, setStatusSave] = useState<any>();
     const [saveColorSelect, setSaveColorSelect] = useState([]);
+    const [isDelete, setIsDelete] = useState<boolean>(false);
     // const [isModalViewDes, setModalViewDes] = useState(false);
     // Quản lý giá trị của Markdown editor
     const [value, setValue] = useState<any>('**Hello world!!!**');
@@ -396,9 +397,145 @@ export default function Product() {
                         dataSource={dataTable}
                         paginationConfig={paginationConfig}
                         showModalUpdate={showModalUpdate}
+                        isDelete={isDelete}
+                        setIsDelete={setIsDelete}
                     />
                 )}
             </div>
+            {/* Modal Update Product */}
+            <Modal
+                title="Cập nhật sản phẩm"
+                open={isModalUpdate}
+                onOk={() => {}}
+                onCancel={() => {
+                    setIsModalUpdate(false);
+                }}
+                footer
+                width={'80%'}
+            >
+                <Form
+                    name="basic"
+                    labelCol={{ span: 24 }}
+                    // style={{ width: 700 }}
+                    initialValues={{ remember: true }}
+                    onFinish={onFinishAdd}
+                    onFinishFailed={onFinishFailedAdd}
+                    autoComplete="off"
+                >
+                    <Row gutter={16}>
+                        <Col span={12}>
+                            <Form.Item
+                                label="Tên sản phẩm "
+                                name="name"
+                                rules={[{ required: true, message: 'Vui lòng nhập tên sản phẩm!' }]}
+                            >
+                                <Input placeholder="VD: Áo thun ...." width={'100%'} />
+                            </Form.Item>
+                        </Col>
+                        <Col span={12}>
+                            <Form.Item
+                                label="Thương hiệu"
+                                name="brandId"
+                                rules={[{ required: true, message: 'Vui lòng nhập tên thương hiệu!' }]}
+                            >
+                                <SelectCustomer
+                                    mode=""
+                                    option={[...brandProduct]}
+                                    onChange={onChangeColorSelect}
+                                    onSearch={onSearchColorSelect}
+                                />
+                            </Form.Item>
+                        </Col>
+                    </Row>
+                    <Row gutter={16}>
+                        <Col span={12}>
+                            <Form.Item
+                                label="Chất liệu"
+                                name="material"
+                                rules={[{ required: true, message: 'Vui lòng nhập chất liệu sản phẩm!' }]}
+                            >
+                                <Input placeholder="VD: cotton, thun, ... " width={'100%'} />
+                            </Form.Item>
+                        </Col>
+                        <Col span={12}>
+                            <Form.Item
+                                label="Danh mục sản phẩm"
+                                name="categoryId"
+                                rules={[{ required: true, message: 'Vui lòng chọn danh mục sản phẩm !!' }]}
+                            >
+                                <SelectCustomer
+                                    mode=""
+                                    option={[...listCategory]}
+                                    onChange={onChangeCategorySelect}
+                                    onSearch={onSearchCategorySelect}
+                                />
+                            </Form.Item>
+                        </Col>
+                    </Row>
+                    <Row gutter={16} style={{}}>
+                        <Col span={12}>
+                            <Form.Item
+                                label="Trạng thái"
+                                name="statusId"
+                                rules={[{ required: true, message: 'Vui lòng nhập tên thương hiệu!' }]}
+                            >
+                                <SelectCustomer
+                                    mode=""
+                                    option={[...statusProduct]}
+                                    onChange={onChangeStatusSelect}
+                                    onSearch={onSearchStatusSelect}
+                                />
+                            </Form.Item>
+                        </Col>
+                        <Col span={12}>
+                            <Form.Item
+                                // wrapperCol={{ span: 24 }}
+                                label="Màu sắc"
+                                name="color"
+                                rules={[{ required: true, message: 'Vui lòng nhập tên thương hiệu!' }]}
+                            >
+                                <SelectCustomer
+                                    mode="multiple"
+                                    option={[...saveColorSelect]}
+                                    onChange={onChangeColorSelect}
+                                    onSearch={onSearchColorSelect}
+                                />
+                            </Form.Item>
+                        </Col>
+                    </Row>
+
+                    <Form.Item
+                        wrapperCol={{ span: 24 }}
+                        style={{
+                            display: 'flex',
+                            justifyContent: 'center',
+                        }}
+                    >
+                        <MdEditor
+                            style={{ height: '500px' }}
+                            renderHTML={(text) => mdParser.render(text)}
+                            onChange={handleEditorChange}
+                        />
+                    </Form.Item>
+                    <Form.Item
+                        wrapperCol={{ span: 24 }}
+                        style={{
+                            display: 'flex',
+                            justifyContent: 'center',
+                        }}
+                    >
+                        <Button
+                            type="primary"
+                            htmlType="submit"
+                            style={{
+                                width: '100px',
+                            }}
+                        >
+                            Tạo
+                        </Button>
+                    </Form.Item>
+                </Form>
+            </Modal>
             {/* Modal xem description của sản phẩm  */}
             <div className="modalDescription">
                 <ModalCustomer

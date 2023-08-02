@@ -1,5 +1,6 @@
 import { Form } from 'antd';
 import React, { createContext, useContext, useEffect, useState } from 'react';
+import { FormValues } from '../../Supplier/Supplier';
 interface childrenProps {
     children: React.ReactNode;
 }
@@ -12,12 +13,17 @@ interface detailProductInterFace {
     images: string[];
     originalPrice: number;
 }
+interface dataUpdateReceipt {
+    supplierId: number;
+    id: number;
+}
+
 type MyContextType = {
     // Định nghĩa các thuộc tính hoặc phương thức của context
     dataUpdate: any;
     setDataUpdate: React.Dispatch<React.SetStateAction<any>>;
-    isDelete: any;
-    setIsDelete: React.Dispatch<React.SetStateAction<any>>;
+    isDelete: boolean;
+    setIsDelete: React.Dispatch<React.SetStateAction<boolean>>;
     idDelete: any;
     setIdDelete: React.Dispatch<React.SetStateAction<any>>;
     idDeleteProdcut: any;
@@ -74,11 +80,19 @@ type MyContextType = {
     setUrlCustomer: React.Dispatch<React.SetStateAction<string>>;
     isBorderColor: any;
     setIsBorderColor: React.Dispatch<React.SetStateAction<any>>;
+    dataSupplierUpdate: any;
+    setDataSupplierUpdate: React.Dispatch<React.SetStateAction<any>>;
+    dataReceiptUpdate: dataUpdateReceipt | null;
+    setDataReceiptUpdate: React.Dispatch<React.SetStateAction<dataUpdateReceipt | null>>;
+    dataDetailReceipt: any;
+    setDataDetailReceipt: React.Dispatch<React.SetStateAction<any>>;
+    dataBannerUpdate: any;
+    setDataBannerUpdate: React.Dispatch<React.SetStateAction<any>>;
 };
 const ChatContext = createContext<MyContextType | undefined>(undefined);
 const ChatProvide = ({ children }: childrenProps) => {
     const [dataUpdate, setDataUpdate] = useState();
-    const [isDelete, setIsDelete] = useState(false);
+    const [isDelete, setIsDelete] = useState<boolean>(false);
     // quản lý đóng mở của modal xem mô tả sản phẩm
     const [isModalViewDes, setModalViewDes] = useState(false);
     // Quản lý thông tin của một sản phẩm (dùng để lấy ra Description để hiển thị) khi click xem mô tả
@@ -133,6 +147,14 @@ const ChatProvide = ({ children }: childrenProps) => {
     const [urlCustomer, setUrlCustomer] = useState<string>('');
     // Quản lý filter màu sắc có boder hoăcj không
     const [isBorderColor, setIsBorderColor] = useState<any>([]);
+    // Quản lý  dữ liệu nhà cung cấp khi nhấn vào update
+    const [dataSupplierUpdate, setDataSupplierUpdate] = useState<any>();
+    // Quản lý  dữ liệu Biên lai Nhập hàng khi nhấn vào update
+    const [dataReceiptUpdate, setDataReceiptUpdate] = useState<dataUpdateReceipt | null>(null);
+    // Quản lý dữ liệu Nhập hàng khi nhấn vào update
+    const [dataDetailReceipt, setDataDetailReceipt] = useState<any>();
+    // Quản lý dữ liệu Banner khi nhấn vào update
+    const [dataBannerUpdate, setDataBannerUpdate] = useState<any>();
     return (
         <ChatContext.Provider
             value={{
@@ -196,6 +218,14 @@ const ChatProvide = ({ children }: childrenProps) => {
                 setUrlCustomer,
                 isBorderColor,
                 setIsBorderColor,
+                dataSupplierUpdate,
+                setDataSupplierUpdate,
+                dataReceiptUpdate,
+                setDataReceiptUpdate,
+                dataDetailReceipt,
+                setDataDetailReceipt,
+                dataBannerUpdate,
+                setDataBannerUpdate,
             }}
         >
             {children}

@@ -58,14 +58,13 @@ export const loginClientActions: any = (dataLogin: any, navigate: any) => {
                 lastName: response?.data?.user?.lastName,
                 phone: response?.data?.user?.phoneNumber,
             };
-            console.log(response);
-            dispatch({
-                type: authConstant.LOGIN__SUCCESS,
-                payLoad: {
-                    user: response?.data?.user,
-                },
-            });
             if (accessToken) {
+                dispatch({
+                    type: authConstant.LOGIN__SUCCESS,
+                    payLoad: {
+                        user: response?.data?.user,
+                    },
+                });
                 localStorage.setItem('token', accessToken);
                 navigate('/');
                 message.success('Đăng nhập thành công !');

@@ -1,7 +1,7 @@
 import { message } from 'antd';
 import axios from 'axios';
 import { useSelector } from 'react-redux';
-
+import { useNavigate } from 'react-router-dom';
 const BASE__URL = process.env.REACT_APP_BASE_URL;
 const AxiosInstance = axios.create({
     baseURL: BASE__URL,
@@ -43,10 +43,27 @@ AxiosInstance.interceptors.response.use(
         return response;
     },
     async function (error) {
-        if (error.config && error.response && error.response.status === 401 && !error.config.headers[NO_RETRY_HEADER]) {
-            console.log('ok');
+        if (
+            error?.config &&
+            error?.response &&
+            error?.response?.status === 401 &&
+            error.config.url === '/auth/refresh' &&
+            !error.config.headers[NO_RETRY_HEADER]
+        ) {
+            console.log(error);
+            message.info('Hết thời gian chờ, Đăng nhập lại để tiếp tục !!');
+            window.location.href = '/signIn';
+        }
+        if (
+            error.config &&
+            error.response &&
+            error.response.status === 401 &&
+            !error.config.headers[NO_RETRY_HEADER] &&
+            error.config.url != '/auth/refresh'
+        ) {
             const accessTokenLocal = localStorage.getItem('token');
             if (accessTokenLocal) {
+                console.log(error.config.url);
                 error.config.headers[NO_RETRY_HEADER] = 'true';
                 const access_token = await handleRefreshToken();
                 console.log(access_token);
@@ -59,16 +76,6 @@ AxiosInstance.interceptors.response.use(
                 }
             }
             return error.response;
-        }
-        if (
-            error?.config &&
-            error?.response &&
-            error?.response?.status === 401 &&
-            error.config.url === '/auth/refresh'
-        ) {
-            console.log(error);
-            message.info('Hết thời gian chờ, Đăng nhập lại để tiếp tục !!');
-            window.location.href = '/Login-Admin';
         }
 
         return error.response ?? Promise.reject(error);

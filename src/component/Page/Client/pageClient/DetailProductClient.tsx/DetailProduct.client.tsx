@@ -9,6 +9,8 @@ import {
     CollapseProps,
     Form,
     Image,
+    Pagination,
+    Progress,
     Rate,
     Row,
     Slider,
@@ -36,6 +38,7 @@ import {
     handleLikeAndUnlike,
     handleOkAddComment,
     handleRepComment,
+    onChangePageCmt,
     onChangeSliderHeightSize,
     onChangeSliderWeightSize,
 } from './method.DPClient';
@@ -102,14 +105,32 @@ const filterComent = [
     {
         id: 0,
         name: 'Tất cả',
+        value: 0,
     },
     {
         id: 1,
-        name: '5 Điểm (8)',
+        name: '5 Sao ',
+        value: 5,
     },
     {
-        id: 1,
-        name: '4 Điểm (8)',
+        id: 2,
+        name: '4 Sao',
+        value: 4,
+    },
+    {
+        id: 3,
+        name: '3 Sao',
+        value: 3,
+    },
+    {
+        id: 4,
+        name: '2 Sao',
+        value: 2,
+    },
+    {
+        id: 5,
+        name: '1 Sao',
+        value: 1,
     },
 ];
 // data Interact
@@ -156,8 +177,18 @@ export default function DetailProductClient() {
     const [isEmtyRepCmt, setIsEmtyRepCmt] = useState<boolean>(true);
     // Sau khi  Rep Cmt
     const [afterRepCmt, setAfterRepCmt] = useState<boolean>(false);
-    //
-    // const
+    // Israting
+    const [isRaiting, setIsRaiting] = useState<any>();
+    //    page size
+    const [pageSizeCmt, setPageSizeCmt] = useState<number>(3);
+    // current Page
+    const [currentPage, setCurrentpage] = useState<number>(1);
+    // total Item page
+    const [totalItemPage, setTotalItemPage] = useState<number>(0);
+    // hold get star cmt
+    const [star, setStar] = useState<number>(0);
+    // is filter cmt isChoose
+    const [isChooseCmt, setIsChooseCmt] = useState<any>();
     const chooseSliderSize = (
         <div className="sliderChooseSize">
             <div className="sliderChooseSize__Item">
@@ -268,8 +299,18 @@ export default function DetailProductClient() {
         }
     }, [isGetCommentLoad]);
     useEffect(() => {
-        handleGetCommentProduct(Number(queryParams?.id), setListComment, curentUser, setCmtUser);
-    }, [isGetCommentLoad, afterRepCmt]);
+        handleGetCommentProduct(
+            Number(queryParams?.id),
+            currentPage,
+            pageSizeCmt,
+            setTotalItemPage,
+            setListComment,
+            curentUser,
+            setCmtUser,
+            setIsRaiting,
+            star,
+        );
+    }, [isGetCommentLoad, afterRepCmt, currentPage, star]);
     useEffect(() => {
         setContentRepCmt('');
     }, [isRepComment]);
@@ -355,14 +396,14 @@ export default function DetailProductClient() {
                                             <div className="RattingVsComment__Box__Star__Rate">
                                                 <Rate
                                                     disabled
-                                                    defaultValue={productData?.rating}
+                                                    value={productData?.rating}
                                                     style={{
                                                         fontSize: '26px',
                                                     }}
                                                 />
                                             </div>
                                             <div className="amountComment">
-                                                <span>( {listComment ? listComment.length : '0'} đánh giá )</span>
+                                                <span>( {isRaiting ? isRaiting.length : '0'} đánh giá )</span>
                                             </div>
                                             <div className="sendComment">
                                                 <Button
@@ -374,6 +415,42 @@ export default function DetailProductClient() {
                                                     Gửi đánh giá
                                                 </Button>
                                             </div>
+                                        </div>
+                                        <div
+                                            style={{
+                                                display: 'flex',
+                                                // flexDirection: 'column',
+                                                // justifyContent: 'right',
+                                                flexBasis: '50%',
+                                                gap: '20px',
+                                                flexWrap: 'wrap',
+                                                alignItems: 'center',
+                                            }}
+                                        >
+                                            {filterComent.map((item, index) => {
+                                                return (
+                                                    <Button
+                                                        key={index}
+                                                        style={{
+                                                            width: '80px',
+                                                            borderRadius: 'initial',
+                                                            border: '1px solid rgb(0, 191, 255)',
+                                                        }}
+                                                        className={
+                                                            isChooseCmt && isChooseCmt === item?.id
+                                                                ? 'filterCmtChoose'
+                                                                : ''
+                                                        }
+                                                        onClick={() => {
+                                                            setStar(item.value);
+                                                            setIsChooseCmt(item?.id);
+                                                        }}
+                                                        type="ghost"
+                                                    >
+                                                        {item.name}
+                                                    </Button>
+                                                );
+                                            })}
                                         </div>
                                     </div>
                                     {/* Cmt user sẽ hiện lên đầu khi người dùng có đăng nhập */}
@@ -480,7 +557,13 @@ export default function DetailProductClient() {
                                                                         }
                                                                     }}
                                                                 >
-                                                                    {itemInterract?.icon} {itemInterract.name}
+                                                                    {itemInterract?.icon} {itemInterract.name}{' '}
+                                                                    {itemInterract.id == 2
+                                                                        ? `(${cmtUser?.likeList.length})`
+                                                                        : ''}
+                                                                    {itemInterract.id == 3
+                                                                        ? `(${cmtUser?.dislikeList.length})`
+                                                                        : ''}
                                                                 </span>
                                                             );
                                                         })}
@@ -623,6 +706,12 @@ export default function DetailProductClient() {
                                                                             >
                                                                                 {iteminterRact?.icon}{' '}
                                                                                 {iteminterRact.name}
+                                                                                {iteminterRact.id == 1
+                                                                                    ? `(${item?.likeList.length})`
+                                                                                    : ''}
+                                                                                {iteminterRact.id == 2
+                                                                                    ? `(${item?.dislikeList.length})`
+                                                                                    : ''}
                                                                             </span>
                                                                         );
                                                                     })}
@@ -736,7 +825,13 @@ export default function DetailProductClient() {
                                                                               }
                                                                           }}
                                                                       >
-                                                                          {itemInterract?.icon} {itemInterract.name}
+                                                                          {itemInterract?.icon} {itemInterract.name}{' '}
+                                                                          {itemInterract.id == 2
+                                                                              ? `(${item?.likeList.length})`
+                                                                              : ''}
+                                                                          {itemInterract.id == 3
+                                                                              ? `(${item?.dislikeList.length})`
+                                                                              : ''}
                                                                       </span>
                                                                   );
                                                               })}
@@ -889,7 +984,13 @@ export default function DetailProductClient() {
                                                                                           }}
                                                                                       >
                                                                                           {iteminterRact?.icon}{' '}
-                                                                                          {iteminterRact.name}
+                                                                                          {iteminterRact.name}{' '}
+                                                                                          {iteminterRact.id == 1
+                                                                                              ? `(${item?.likeList.length})`
+                                                                                              : ''}
+                                                                                          {iteminterRact.id == 2
+                                                                                              ? `(${item?.dislikeList.length})`
+                                                                                              : ''}
                                                                                       </span>
                                                                                   );
                                                                               },
@@ -904,6 +1005,16 @@ export default function DetailProductClient() {
                                             : ''}
                                     </div>
                                 </div>
+                                <Pagination
+                                    className="pageginationCmt"
+                                    defaultCurrent={currentPage}
+                                    pageSize={pageSizeCmt}
+                                    total={totalItemPage}
+                                    onChange={(value) => {
+                                        onChangePageCmt(value, setCurrentpage);
+                                    }}
+                                    showSizeChanger={false}
+                                />
                             </Col>
                             <Col span={9}>
                                 <div className="DetailProductClient__content__Infor">
@@ -1071,6 +1182,8 @@ export default function DetailProductClient() {
                             <Button
                                 type="ghost"
                                 onClick={() => {
+                                    if (curentUser) {
+                                    }
                                     handleEvaluateProduct(
                                         evaluateStar,
                                         evaluateText,

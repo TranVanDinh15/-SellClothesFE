@@ -18,6 +18,7 @@ const getBase64 = (file: RcFile): Promise<string> =>
     });
 export default function UploadImageCustomer({ multilple }: uploadImageProps) {
     const { imagesUploadMultiple, setImagesUploadMultiple, imageDp, setImageDp }: any = GetContext();
+    console.log(imageDp);
     const [previewOpen, setPreviewOpen] = useState<boolean>(false);
     const [previewImage, setPreviewImage] = useState('');
     const [previewTitle, setPreviewTitle] = useState('');
@@ -65,7 +66,10 @@ export default function UploadImageCustomer({ multilple }: uploadImageProps) {
     // Xử lý khi update một ảnh
     const uploadImageSingle = () => {};
 
-    const handleChange: UploadProps['onChange'] = ({ fileList: newFileList }) => setImageDp(newFileList);
+    const handleChange: UploadProps['onChange'] = ({ fileList: newFileList }) => {
+        console.log(newFileList);
+        setImageDp(newFileList);
+    };
 
     const uploadButton = (
         <div>

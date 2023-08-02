@@ -124,29 +124,40 @@ export const filterComment = (arr: DataType[]): TransformedDataType[] => {
 // Handle Get  Comment
 export const handleGetCommentProduct = async (
     id: number,
+    page: number,
+    size: number,
+    setTotalItemSize: React.Dispatch<React.SetStateAction<number>>,
     setComment: React.Dispatch<React.SetStateAction<any>>,
     curentUser: any,
     setCmtUser: React.Dispatch<React.SetStateAction<any>>,
+    setIsRating: React.Dispatch<React.SetStateAction<any>>,
+    star: number,
 ): Promise<void> => {
-    console.log(curentUser);
-    const response = await getCommentByIdProduct(id);
+    const response = await getCommentByIdProduct(id, page, size, star);
     if (response && response.status == 200) {
         console.log(response);
         const listComment = response?.data?.data;
+        const meta = response?.data?.meta;
         if (listComment) {
-            const result = filterComment(listComment);
-            if (curentUser && result) {
-                const findCmtUser = result.find((item) => {
+            if (curentUser) {
+                const findCmtUser = listComment.find((item: any) => {
                     return curentUser?.id == item?.userId;
                 });
-                const filterCmtUser = result.filter((item) => {
+                const filterCmtUser = listComment.filter((item: any) => {
                     return item?.userId != curentUser?.id;
                 });
+                console.log(findCmtUser);
                 setCmtUser(findCmtUser);
                 setComment(filterCmtUser);
+                // Dùng để custom mục Raiting
+                setIsRating(listComment);
+                setTotalItemSize(meta?.totalItems);
             }
-            if (!curentUser && result) {
-                setComment(result);
+            if (!curentUser) {
+                // Dùng để Custom mục raiting
+                setIsRating(listComment);
+                setComment(listComment);
+                setTotalItemSize(meta?.totalItems);
             }
         }
     }
@@ -255,4 +266,7 @@ export const handleDislikevsUndislike = async (
     } catch (error) {
         console.log(error);
     }
+};
+export const onChangePageCmt = (value: any, setCurrentpage: React.Dispatch<React.SetStateAction<number>>) => {
+    setCurrentpage(value);
 };
