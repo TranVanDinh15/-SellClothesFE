@@ -31,3 +31,12 @@ export interface reqUpdateDetailP {
     images: any;
     colorId: string;
 }
+export interface dataUpdateBlog {
+    title: string;
+    shortDescription: string;
+    subjectId: string;
+    statusId: string;
+    contentMarkdown: string;
+    contentHtml: string;
+    images: string[];
+}

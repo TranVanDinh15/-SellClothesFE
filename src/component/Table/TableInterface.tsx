@@ -18,6 +18,7 @@ export interface DataTypeSizeProductDetail {
     width: string;
     height: string;
     weight: string;
+    quantity: string;
 }
 export interface DatatypeSupplier {
     id: number;
@@ -37,9 +38,12 @@ export interface DatatypeReceipt {
     createdAt: string;
 }
 export interface DatatypeBlog {
+    id: number;
     title: string;
     shortDescription: string;
     createdAt: string;
+    statusId: string;
+    images: string[];
 }
 // -------- Interface Detail Receipt---------//
 interface product {

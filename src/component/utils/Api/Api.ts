@@ -1,4 +1,4 @@
-import { reqProductSize, reqUpdateDetailP, reqUpdateSize } from './ApiInterFace';
+import { dataUpdateBlog, reqProductSize, reqUpdateDetailP, reqUpdateSize } from './ApiInterFace';
 import AxiosInstance from './Axios-custom';
 // get thương hiệu
 export const getAllBrand = (page: any, pagesize: any) => {
@@ -27,7 +27,7 @@ export const loginAdmin = (data: any) => {
 
 // get category paginate
 export const getAllCategory = (page: any, pagesize: any) => {
-    return AxiosInstance.get(`/all-code/CATEGORY?page=${page}&size=${pagesize}`);
+    return AxiosInstance.get(`/all-code/CATEGORY?page=${page}&size=${pagesize}&sortcreatedAt=DESC`);
 };
 
 // get category
@@ -60,6 +60,22 @@ export const getProductById = (id: string) => {
 // create new Prodcut
 export const createNewProduct = (data: any) => {
     return AxiosInstance.post('/product', data);
+};
+// Update Product
+export const updateProduct = (
+    id: number,
+    data: {
+        categoryId: string;
+        statusId: string;
+        brandId: string;
+        colorCodes: string[];
+        material: string;
+        contentMarkdown: string;
+        contentHtml: string;
+        name: string;
+    },
+) => {
+    return AxiosInstance.put(`/product/${id}`, data);
 };
 // get status product
 export const getStatus = () => {
@@ -194,6 +210,10 @@ export const CreateReceipt = (data: { supplierId: number }) => {
 export const UpdateReceipt = (id: number, data: { supplierId: number }) => {
     return AxiosInstance.put(`/receipt/${id}`, data);
 };
+// Delete Receipt
+export const deleteReceipt = (id: number) => {
+    return AxiosInstance.delete(`/receipt/${id}`);
+};
 // Get Blog
 export const GetBlog = (currentPage: number, pageSize: number) => {
     return AxiosInstance.get(`/blog?page=${currentPage}&size=${pageSize}&sortupdatedAt=DESC`);
@@ -201,6 +221,14 @@ export const GetBlog = (currentPage: number, pageSize: number) => {
 // Add Blog
 export const AddBlog = (data: { title: string; shortDescription: string }) => {
     return AxiosInstance.post(`/blog`, data);
+};
+// Update Blog
+export const updateBlog = (id: number, data: dataUpdateBlog) => {
+    return AxiosInstance.put(`/blog/${id}`, data);
+};
+// Get SubjectId
+export const getSubjectId = () => {
+    return AxiosInstance.get('/all-code/SUBJECT?page=1&size=1000');
 };
 // Get Detail Receipt
 export const GetDetailReceipt = (id: number, currentPage: number, pageSize: number) => {
@@ -253,4 +281,24 @@ export const UpdateBanner = (
 // Delete banner
 export const DeleteBanner = (id: number) => {
     return AxiosInstance.delete(`/banner/${id}`);
+};
+// get amount Total User
+export const getAmountTotalUser = () => {
+    return AxiosInstance.get(`/dashboard/total-user`);
+};
+// get amount  User online
+export const getAmountUserOnline = () => {
+    return AxiosInstance.get(`/dashboard/user-online`);
+};
+// get Total user by time
+export const getTotalUserTime = (startDate: any, endDate: any) => {
+    return AxiosInstance.get(`/dashboard/new-user?startDate=${startDate}&endDate=${endDate}`);
+};
+// get amount Order
+export const getAmountOrder = (startDate: any, endDate: any) => {
+    return AxiosInstance.get(`/dashboard/count-order?startDate=${startDate}&endDate=${endDate}`);
+};
+// get product Sold
+export const getProductSold = (startDate: any, endDate: any) => {
+    return AxiosInstance.get(`/dashboard/product-sold?startDate=${startDate}&endDate=${endDate}`);
 };

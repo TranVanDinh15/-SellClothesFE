@@ -36,8 +36,8 @@ const items: MenuItem[] = [
     getItem('Quản lý thương hiệu', '/Admin/TradeMark', <TbBrandCake className="iconSidebarCss" />),
     getItem('Quản lý sản phẩm', '/Admin/Product', <RiProductHuntLine className="iconSidebarCss" />, [
         getItem('Danh sách sản phẩm', '/Admin/Product'),
-        getItem('Loại quần áo', '/Admin/Product/Category'),
-        getItem('Màu sắc', '/Admin/Product/Color'),
+        getItem('Danh mục sản phẩm', '/Admin/Product/Category'),
+        // getItem('Màu sắc', '/Admin/Product/Color'),
     ]),
     getItem('Quản lý NCC', '/Admin/Supplier', <BiUser className="iconSidebarCss" />),
     getItem('Quản lý nhập hàng', '/Admin/ImportFoods', <BiImport className="iconSidebarCss" />),

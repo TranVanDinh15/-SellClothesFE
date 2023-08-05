@@ -3,7 +3,6 @@ import './App.css';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import DefaultLayoutAdmin from './component/Page/Admin/defaultLayoutAdmin/defaultLayoutAdmin';
 import NotFound from './component/Page/Admin/common/NotFound/NotFound';
-import DashBoad from './component/Page/Admin/Dashboard/DashBoad';
 import Blog from './component/Page/Admin/Blog/Blog';
 import ListUser from './component/Page/Admin/User/listUser';
 import DefaultLayoutClient from './component/Page/Client/defaultLayoutClient/defaultLayoutClient';
@@ -23,6 +22,7 @@ import Supplier from './component/Page/Admin/Supplier/Supplier';
 import Receipt from './component/Page/Admin/Receipt/Receipt';
 import ReceiptDetail from './component/Page/Admin/Receipt/ReceiptDetail';
 import Banner from './component/Page/Admin/Banner/Banner';
+import DashBoadCustom from './component/Page/Admin/Dashboard/DashBoad';
 function App() {
     const token = localStorage.getItem('token');
     const router = createBrowserRouter([
@@ -34,7 +34,7 @@ function App() {
             children: [
                 {
                     index: true,
-                    element: <DashBoad />,
+                    element: <DashBoadCustom />,
                     errorElement: <NotFound type={'notRole'} />,
                     // loader: teamLoader,
                 },
@@ -124,13 +124,14 @@ function App() {
                     element: <CartPage />,
                     errorElement: <NotFound type={'notRole'} />,
                 },
+                {
+                    path: '/thanh-toan/:id',
+                    element: <CheckOut />,
+                    errorElement: <NotFound type={'notAccess'} />,
+                },
             ],
         },
-        {
-            path: '/thanh-toan/:id',
-            element: <CheckOut />,
-            errorElement: <NotFound type={'notAccess'} />,
-        },
+
         {
             path: '/signIn',
             element: <LoginClient />,

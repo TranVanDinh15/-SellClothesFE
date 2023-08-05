@@ -27,11 +27,12 @@ export interface formAddDetailReceipt {
 export interface formUpdateDetailReceipt {
     quantity: number;
     price: number;
+    categoryId: string;
 }
 export default function ReceiptDetail() {
     const param = useParams();
     const { dataDetailReceipt, idDelete }: any = GetContext();
-    console.log(param);
+    console.log(dataDetailReceipt);
     // Form cua add Receipt
     const [formAdd] = useForm<formAddDetailReceipt>();
     // Form Cua Update Receipt
@@ -301,6 +302,7 @@ export default function ReceiptDetail() {
             formUpdate.setFieldsValue({
                 quantity: dataDetailReceipt?.quantity,
                 price: dataDetailReceipt?.price,
+                categoryId: dataDetailReceipt?.productDetailSize?.productDetail?.product?.categoryId,
             });
         }
     }, [dataDetailReceipt]);

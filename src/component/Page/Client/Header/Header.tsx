@@ -27,7 +27,7 @@ const headerStyle: React.CSSProperties = {
     top: 0,
     right: 0,
     left: 0,
-    zIndex: '10000',
+    zIndex: '1000',
 };
 const itemsMenu = [
     {
@@ -94,7 +94,7 @@ export default function HeaderClient() {
     const [cartData, setCartData] = useState<dataCart>();
     console.log(curentUser);
     console.log(cartData);
-    const { itemCategory, setItemCategory, setSortId, urlCustomer, setUrlCustomer }: any = GetContext();
+    const { itemCategory, setItemCategory, setSortId, urlCustomer, setUrlCustomer, isLoadCart }: any = GetContext();
     const tokenLocal = localStorage.getItem('token');
     const userLogin = useSelector((state: reduxIterface) => state.reduxAuth.user);
     const [headerCategory, setHeaderCategory] = useState<headerCategory[]>([]);
@@ -162,7 +162,7 @@ export default function HeaderClient() {
         if (curentUser) {
             handleGetCart(setCartData, dispatch);
         }
-    }, [curentUser]);
+    }, [curentUser, isLoadCart]);
     useEffect(() => {
         if (cartData?.cart.detail && cartData.cart.detail.length > 0) {
             setAmountCart(cartData.cart.detail.length);

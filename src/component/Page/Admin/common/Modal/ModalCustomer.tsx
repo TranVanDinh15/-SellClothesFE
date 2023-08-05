@@ -8,8 +8,9 @@ interface ModalProps {
     children: React.ReactNode;
     title: string;
     footer: boolean;
+    width?: number;
 }
-const ModalCustomer = ({ isModalOpen, handleOk, handleCancel, children, title, footer }: ModalProps) => {
+const ModalCustomer = ({ isModalOpen, handleOk, handleCancel, children, title, footer, width }: ModalProps) => {
     return (
         <>
             <Modal
@@ -18,7 +19,7 @@ const ModalCustomer = ({ isModalOpen, handleOk, handleCancel, children, title, f
                 onOk={handleOk}
                 onCancel={handleCancel}
                 footer={footer ? footer : <></>}
-                width={600}
+                width={width}
             >
                 {children}
             </Modal>

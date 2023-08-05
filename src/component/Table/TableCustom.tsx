@@ -15,6 +15,7 @@ import {
     deleteBrand,
     deleteCategory,
     deleteProdcut,
+    deleteReceipt,
 } from '../utils/Api/Api';
 import { useNavigate } from 'react-router-dom';
 import { FolderAddOutlined } from '@ant-design/icons';
@@ -53,16 +54,28 @@ interface DataTypeProduct {
     brandId: string;
     sold: string;
     createdAt: string;
+    status: {
+        value: string;
+        code: string;
+    };
+    category: {
+        value: string;
+        code: string;
+    };
 }
 
 interface PropsTable {
     name: string;
     title: () => ReactNode;
     dataSource: [];
-    paginationConfig: TablePaginationConfig;
+    paginationConfig?: TablePaginationConfig;
     showModalUpdate: () => void;
     isDelete: boolean;
     setIsDelete: React.Dispatch<React.SetStateAction<boolean>>;
+    setISViewDeTailDes?: React.Dispatch<React.SetStateAction<boolean>>;
+    setViewDetailProduct?: React.Dispatch<React.SetStateAction<string>>;
+    setdataUpdate?: React.Dispatch<React.SetStateAction<any>>;
+    showDrawer?: () => void;
 }
 const columns: ColumnsType<DataType> = [
     {
@@ -138,6 +151,10 @@ const CustomTable = ({
     showModalUpdate,
     isDelete,
     setIsDelete,
+    setISViewDeTailDes,
+    setViewDetailProduct,
+    setdataUpdate,
+    showDrawer,
 }: PropsTable) => {
     const navigate = useNavigate();
     const {
@@ -173,6 +190,7 @@ const CustomTable = ({
         setDataReceiptUpdate,
         setDataDetailReceipt,
         setDataBannerUpdate,
+        setDataProductUpdate,
     }: any = GetContext();
     const cancelDeleteBrand = (e: any) => {
         console.log(e);
@@ -205,13 +223,25 @@ const CustomTable = ({
     const confirmDeleteSupplier = async (id: number): Promise<void> => {
         console.log('delete', id);
         const response = await DeleteSupplier(id);
+        console.log(response);
         if (response && response.status == 200) {
             message.success('Xóa thành công !');
             setIsDelete((prevIsDelete) => !prevIsDelete);
+        } else {
+            message.error('Nhà cung cấp này đã được nhập hàng');
+        }
+    };
+    const confirmDeleteReceipt = async (id: number): Promise<void> => {
+        const response = await deleteReceipt(id);
+        if (response && response.status == 200) {
+            console.log(response);
+            setIsDelete((prevIsDelete) => !prevIsDelete);
+            message.success('Xóa thành công !');
+        } else {
+            message.error('Nhà cung cấp này đã nhập hàng');
         }
     };
     const confirmDeleteDetailReceipt = async (id: number): Promise<void> => {
-        console.log('delete', id);
         const response = await DeleteDetailReceipt(id);
         if (response && response.status == 200) {
             console.log(response);
@@ -229,6 +259,7 @@ const CustomTable = ({
             console.log(isDelete);
         }
     };
+
     //
     const cancelDeleteCategory = () => {};
     const columnsBrand: ColumnsType<DataTypeBrand> = [
@@ -353,6 +384,7 @@ const CustomTable = ({
                         onClick={() => {
                             showModalUpdate();
                             // setDataUpdate(record);
+                            setDataProductUpdate(record);
                         }}
                     ></Button>
                     <DeleteCustom
@@ -377,7 +409,7 @@ const CustomTable = ({
     // collums của CategoryProduct
     const columnsCategory: ColumnsType<DataTypeBrand> = [
         {
-            title: 'Loại quần áo',
+            title: 'Danh mục',
             dataIndex: 'value',
         },
         {
@@ -393,8 +425,9 @@ const CustomTable = ({
                         icon={<HiOutlinePencilSquare />}
                         type="text"
                         onClick={() => {
-                            // showModalUpdate();
+                            showModalUpdate();
                             // setDataUpdate(record);
+                            setdataUpdate?.(record);
                         }}
                     ></Button>
                     <DeleteCustom
@@ -418,6 +451,10 @@ const CustomTable = ({
     ];
     const collumsDetailProduct: ColumnType<DataTypeProductDetail>[] = [
         {
+            title: 'ID',
+            dataIndex: 'id',
+        },
+        {
             title: 'Tên Sp',
             dataIndex: 'name',
             render: (value, record, index) => (
@@ -440,7 +477,17 @@ const CustomTable = ({
         {
             title: 'Mô tả Sp',
             dataIndex: 'contentHtml',
-            render: (value, record, index) => <Button type="link">Xem</Button>,
+            render: (value, record, index) => (
+                <Button
+                    type="link"
+                    onClick={() => {
+                        setISViewDeTailDes?.(true);
+                        setViewDetailProduct?.(record.description);
+                    }}
+                >
+                    Xem
+                </Button>
+            ),
         },
         {
             title: 'Màu sắc',
@@ -543,6 +590,10 @@ const CustomTable = ({
     ];
     const collumsSizeDetailProduct: ColumnType<DataTypeSizeProductDetail>[] = [
         {
+            title: 'ID',
+            dataIndex: 'id',
+        },
+        {
             title: 'Tên size',
             dataIndex: 'name',
         },
@@ -557,6 +608,10 @@ const CustomTable = ({
         {
             title: 'cân nặng',
             dataIndex: 'weight',
+        },
+        {
+            title: 'Số lượng',
+            dataIndex: 'quantity',
         },
         {
             title: 'Action',
@@ -642,7 +697,6 @@ const CustomTable = ({
                         title="Xóa size"
                         description="Bạn chắc chắn muốn xóa?"
                         confirm={() => {
-                            // handleDeleteDetailSize(record.id, isFetchSizeDp, setIsFetchSizeDp);
                             confirmDeleteSupplier(record.id);
                         }}
                         cancel={() => {}}
@@ -719,7 +773,7 @@ const CustomTable = ({
                         description="Bạn chắc chắn muốn xóa?"
                         confirm={() => {
                             // handleDeleteDetailSize(record.id, isFetchSizeDp, setIsFetchSizeDp);
-                            confirmDeleteSupplier(record.id);
+                            confirmDeleteReceipt(record.id);
                         }}
                         cancel={() => {}}
                         placement={'topLeft'}
@@ -803,16 +857,43 @@ const CustomTable = ({
     // Collums Blog
     const CollumsBlog: ColumnType<DatatypeBlog>[] = [
         {
+            title: 'ID',
+            dataIndex: 'id',
+        },
+        {
             title: 'Tên bài đăng',
             dataIndex: 'title',
+            render: (value, record) => (
+                <Button
+                    type="text"
+                    onClick={() => {
+                        showDrawer?.();
+                        setdataUpdate?.(record);
+                    }}
+                >
+                    <span
+                        style={{
+                            cursor: 'pointer',
+                            color: 'red',
+                        }}
+                    >
+                        {value}
+                    </span>
+                </Button>
+            ),
         },
         {
             title: 'Mô tả',
             dataIndex: 'shortDescription',
         },
         {
+            title: 'Trạng thái',
+            dataIndex: 'statusId',
+        },
+        {
             title: 'Ngày tạo',
             dataIndex: 'createdAt',
+            render: (value, record) => <span>{covertCreateAt(record?.createdAt)}</span>,
         },
         {
             title: 'Actions',
@@ -823,20 +904,14 @@ const CustomTable = ({
                         type="text"
                         onClick={() => {
                             showModalUpdate();
-                            // setDataSupplierUpdate({
-                            //     name: record.name,
-                            //     email: record.email,
-                            //     address: record.address,
-                            //     id: record.id,
-                            // });
+                            console.log(record);
+                            setdataUpdate?.(record);
                         }}
                     ></Button>
                     <DeleteCustom
                         title="Xóa size"
                         description="Bạn chắc chắn muốn xóa?"
-                        confirm={() => {
-                            // confirmDeleteSupplier(record.id);
-                        }}
+                        confirm={() => {}}
                         cancel={() => {}}
                         placement={'topLeft'}
                     >
@@ -854,6 +929,7 @@ const CustomTable = ({
         {
             title: 'Tên ',
             dataIndex: 'name',
+            render: (value) => <span>{value}</span>,
         },
         {
             title: 'Ảnh',

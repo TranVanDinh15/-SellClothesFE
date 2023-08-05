@@ -29,6 +29,7 @@ export default function Receipt() {
     console.log(dataReceiptUpdate);
     // Form cua add supplier
     const [formAdd] = useForm<formAddReceipt>();
+    const [formUpdate] = useForm<{ supplierId: number }>();
     const [isModalAddOpen, setIsModalAddOpen] = useState<boolean>(false);
     // Quản lý load lại data
     const [isLoadReceipt, setIsLoadReceipt] = useState<boolean>(false);
@@ -126,10 +127,17 @@ export default function Receipt() {
     };
     useEffect(() => {
         HandleGetReceipt(page, pageSize, setDataTable, setTotal);
-    }, [isLoadReceipt, page, pageSize]);
+    }, [isLoadReceipt, page, pageSize, isLoadReceipt, isDelete]);
     useEffect(() => {
         handleGetSelectSupplier(setListSelectSupplier);
     }, []);
+    useEffect(() => {
+        if (dataReceiptUpdate) {
+            formUpdate.setFieldsValue({
+                supplierId: dataReceiptUpdate?.supplierId?.id,
+            });
+        }
+    }, [dataReceiptUpdate]);
     return (
         <Content title={'Danh sách nhập hàng'}>
             <div className="SupplierWrapper">
@@ -160,6 +168,7 @@ export default function Receipt() {
                 }}
             >
                 <Form
+                    form={formUpdate}
                     name="basic"
                     labelCol={{ span: 24 }}
                     style={{ maxWidth: 600 }}

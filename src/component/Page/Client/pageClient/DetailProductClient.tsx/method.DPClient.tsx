@@ -10,6 +10,7 @@ import {
 } from '../../../../utils/Api/Api';
 import { message } from 'antd';
 import { useRedux } from './DetailProduct.client';
+import { handleUpdateQuantity } from '../../Cart/CartMethod';
 type DataType = {
     id: number;
     content: string;
@@ -25,12 +26,13 @@ export const onChangeSliderHeightSize = (
     heplWeight: number,
     sizeArray: any,
     setResultheplSize: React.Dispatch<React.SetStateAction<string>>,
+    setIdSize: React.Dispatch<React.SetStateAction<number | undefined>>,
 ) => {
     const sizeClientChoose = {
         height: Number(value),
         weight: heplWeight,
     };
-    handleAfterHelpSize(sizeArray, sizeClientChoose, setResultheplSize);
+    handleAfterHelpSize(sizeArray, sizeClientChoose, setResultheplSize, setIdSize);
     setHelpHeight(Number(value));
 };
 // Khi thay đổi help weight
@@ -40,12 +42,13 @@ export const onChangeSliderWeightSize = (
     heplHeight: number,
     sizeArray: any,
     setResultSize: React.Dispatch<React.SetStateAction<string>>,
+    setIdSize: React.Dispatch<React.SetStateAction<number | undefined>>,
 ) => {
     const sizeClientChoose = {
         height: heplHeight,
         weight: Number(value),
     };
-    handleAfterHelpSize(sizeArray, sizeClientChoose, setResultSize);
+    handleAfterHelpSize(sizeArray, sizeClientChoose, setResultSize, setIdSize);
     setHelpWeight(Number(value));
 };
 // Get Product
@@ -70,12 +73,15 @@ export const handleAfterHelpSize = (
         height: number;
         weight: number;
         name: string;
+        id: number;
+        quantity: number;
     }[],
     sizeClientChoose: {
         height: number;
         weight: number;
     },
     setResultheplSize: React.Dispatch<React.SetStateAction<string>>,
+    setIdSize: React.Dispatch<React.SetStateAction<number | undefined>>,
 ): void => {
     let result = null;
 
@@ -91,6 +97,9 @@ export const handleAfterHelpSize = (
     console.log(result);
     if (result) {
         setResultheplSize(result?.name.toString());
+        if (result?.quantity > 0) {
+            setIdSize(result?.id);
+        }
     }
 };
 //Xử lý khi submit Modal
@@ -269,4 +278,19 @@ export const handleDislikevsUndislike = async (
 };
 export const onChangePageCmt = (value: any, setCurrentpage: React.Dispatch<React.SetStateAction<number>>) => {
     setCurrentpage(value);
+};
+export const handleAddInCart = async (
+    size: number | undefined,
+    quantity: number,
+    dispatch: any,
+    setIsLoadCart: React.Dispatch<React.SetStateAction<boolean>>,
+): Promise<void> => {
+    console.log('ok');
+    if (!size) {
+        message.error('Bạn chưa chọn size');
+    } else {
+        await handleUpdateQuantity(size, quantity, dispatch);
+        setIsLoadCart((isLoadCart) => !isLoadCart);
+        message.success('Đã thêm vào giỏ hàng');
+    }
 };

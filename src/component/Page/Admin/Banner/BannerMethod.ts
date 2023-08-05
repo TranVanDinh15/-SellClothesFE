@@ -26,7 +26,7 @@ export const HandleGetStatusSelect = async (
                     label: item?.value,
                 };
             });
-            setStatusSelect(mapData);
+            setStatusSelect?.(mapData);
         }
     }
 };

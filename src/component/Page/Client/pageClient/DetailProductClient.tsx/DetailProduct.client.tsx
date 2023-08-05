@@ -15,6 +15,8 @@ import {
     Row,
     Slider,
     Space,
+    Tooltip,
+    message,
     notification,
 } from 'antd';
 import './DetailProduct.client.scss';
@@ -31,6 +33,7 @@ import { SiZenn } from 'react-icons/si';
 import { useNumberInput, HStack, Input } from '@chakra-ui/react';
 import {
     getProductByIdFun,
+    handleAddInCart,
     handleCancelComment,
     handleDislikevsUndislike,
     handleEvaluateProduct,
@@ -49,7 +52,8 @@ import ModalCustomer from '../../../Admin/common/Modal/ModalCustomer';
 import { GetContext } from '../../../Admin/common/Context/Context';
 import UploadImageCustomer from '../../../Admin/common/UploadImage/UploadImage';
 import { useSelector } from 'react-redux';
-
+import { useDispatch } from 'react-redux';
+import { ShoppingCartOutlined } from '@ant-design/icons';
 export interface useRedux {
     reduxAuth: {
         isAuthenticate: boolean;
@@ -58,7 +62,10 @@ export interface useRedux {
         isfail: boolean;
     };
 }
-function HookUsage() {
+interface HookUsageInterFace {
+    setAmountinstance: React.Dispatch<React.SetStateAction<number>>;
+}
+function HookUsage({ setAmountinstance }: HookUsageInterFace) {
     const { getInputProps, getIncrementButtonProps, getDecrementButtonProps } = useNumberInput({
         step: 1,
         defaultValue: 1,
@@ -70,6 +77,9 @@ function HookUsage() {
     const inc = getIncrementButtonProps();
     const dec = getDecrementButtonProps();
     const input = getInputProps();
+    useEffect(() => {
+        setAmountinstance(Number(input['aria-valuenow']));
+    }, [input, inc, dec]);
     return (
         <HStack maxW="200px">
             <Button
@@ -138,17 +148,19 @@ const filterComent = [
 const socket = io('http://localhost:8080/');
 
 export default function DetailProductClient() {
+    const dispatch = useDispatch();
     const [api, contextHolder] = notification.useNotification();
     // Get User Hiện tại
     const curentUser = useSelector((state: useRedux) => state.reduxAuth.user);
     // Lấy query từ URL
     const urlSearchParams = new URLSearchParams(window.location.search);
     const queryParams = Object.fromEntries(urlSearchParams.entries());
-    const { imagesUploadMultiple, setImagesUploadMultiple }: any = GetContext();
+    const { imagesUploadMultiple, setImagesUploadMultiple, setIsLoadCart }: any = GetContext();
     // Quản lý dữ liệu Product hiện tại
     const [productData, setProductData] = useState<any>();
     // State Detail product
     const [currentDetailProduct, setCurrentDetailProduct] = useState<any>();
+    console.log(currentDetailProduct?.size);
     // isLoading
     const [isLoading, setIsLoading] = useState<boolean>(false);
     // Hepl height cutomer
@@ -189,6 +201,10 @@ export default function DetailProductClient() {
     const [star, setStar] = useState<number>(0);
     // is filter cmt isChoose
     const [isChooseCmt, setIsChooseCmt] = useState<any>();
+    // Lưu Id size
+    const [idSize, setIdSize] = useState<number | undefined>();
+    // Lưu số lượng khách hàng cần mua
+    const [amountInstance, setAmountInstance] = useState<number>(1);
     const chooseSliderSize = (
         <div className="sliderChooseSize">
             <div className="sliderChooseSize__Item">
@@ -211,7 +227,9 @@ export default function DetailProductClient() {
                             heplWeight,
                             currentDetailProduct?.size,
                             setResultSize,
+                            setIdSize,
                         );
+                        // setIdSize(undefined);
                     }}
                 />
             </div>
@@ -235,6 +253,7 @@ export default function DetailProductClient() {
                             heplHeight,
                             currentDetailProduct?.size,
                             setResultSize,
+                            setIdSize,
                         );
                     }}
                 />
@@ -248,15 +267,19 @@ export default function DetailProductClient() {
             )}
         </div>
     );
+
     const items: CollapseProps['items'] = [
         {
             key: '1',
             label: (
-                <Button type="text" icon={<SiZenn />}>
+                <Button type="text" icon={<SiZenn />} className="helpsizeBtn">
                     Giúp bạn chọn size
                 </Button>
             ),
             children: chooseSliderSize,
+            style: {
+                transitionDuration: '0.2s',
+            },
         },
     ];
     // đánh giá cmt cha
@@ -314,7 +337,9 @@ export default function DetailProductClient() {
     useEffect(() => {
         setContentRepCmt('');
     }, [isRepComment]);
-
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, []);
     return (
         <div className="DetailProductClient">
             <div className="DetailProductClient__container">
@@ -502,13 +527,6 @@ export default function DetailProductClient() {
                                                     </div>
                                                     <div className="ListComment__Interact">
                                                         {interRact.map((itemInterract, index) => {
-                                                            console.log(
-                                                                itemInterract.id == 3 &&
-                                                                    curentUser &&
-                                                                    cmtUser?.dislikeList.some((item: any) => {
-                                                                        return item?.id == curentUser?.id;
-                                                                    }),
-                                                            );
                                                             return (
                                                                 <span
                                                                     key={index}
@@ -1087,19 +1105,66 @@ export default function DetailProductClient() {
                                             {currentDetailProduct
                                                 ? currentDetailProduct?.size?.map((item: any, index: number) => {
                                                       return (
-                                                          <Button
-                                                              size="large"
-                                                              style={{
-                                                                  backgroundColor:
-                                                                      item?.name == resultSize
-                                                                          ? 'rgb(0, 191, 255)'
-                                                                          : '',
-                                                                  color: item?.name == resultSize ? '#fff' : '',
-                                                              }}
-                                                              key={index}
-                                                          >
-                                                              {item?.name}
-                                                          </Button>
+                                                          <>
+                                                              {!item?.quantity ? (
+                                                                  <Tooltip
+                                                                      title="Hết hàng"
+                                                                      style={{
+                                                                          transition: 'ease 0.2s',
+                                                                      }}
+                                                                  >
+                                                                      {/* <span>Tooltip will show on mouse enter.</span> */}
+                                                                      <Button
+                                                                          disabled={item?.quantity ? false : true}
+                                                                          size="large"
+                                                                          style={{
+                                                                              backgroundColor:
+                                                                                  item?.name == resultSize ||
+                                                                                  item?.id == idSize
+                                                                                      ? 'rgb(0, 191, 255, 0.2)'
+                                                                                      : '',
+                                                                              color:
+                                                                                  item?.name == resultSize ||
+                                                                                  item?.id == idSize
+                                                                                      ? '#fff'
+                                                                                      : '',
+                                                                              transition: 'ease 0.1s',
+                                                                          }}
+                                                                          key={index}
+                                                                          onClick={() => {
+                                                                              setResultSize('');
+                                                                          }}
+                                                                      >
+                                                                          {item?.name}
+                                                                      </Button>
+                                                                  </Tooltip>
+                                                              ) : (
+                                                                  <Button
+                                                                      disabled={item?.quantity ? false : true}
+                                                                      size="large"
+                                                                      style={{
+                                                                          backgroundColor:
+                                                                              item?.name == resultSize ||
+                                                                              item?.id == idSize
+                                                                                  ? 'rgb(0, 191, 255)'
+                                                                                  : '',
+                                                                          color:
+                                                                              item?.name == resultSize ||
+                                                                              item?.id == idSize
+                                                                                  ? '#fff'
+                                                                                  : '',
+                                                                          transition: 'ease 0.1s',
+                                                                      }}
+                                                                      key={index}
+                                                                      onClick={() => {
+                                                                          setIdSize(Number(item?.id));
+                                                                          setResultSize('');
+                                                                      }}
+                                                                  >
+                                                                      {item?.name}
+                                                                  </Button>
+                                                              )}
+                                                          </>
                                                       );
                                                   })
                                                 : ''}
@@ -1110,25 +1175,45 @@ export default function DetailProductClient() {
                                             </div>
                                         </div>
                                     </div>
+                                    <div className="Infor__Amount">
+                                        <HookUsage setAmountinstance={setAmountInstance} />
+                                    </div>
                                     <div className="DetailProductClient__content__Infor__amountAddCart">
-                                        <div className="Infor__Amount">
-                                            <HookUsage />
-                                        </div>
-
                                         <Button
-                                            type="ghost"
+                                            icon={<ShoppingCartOutlined />}
+                                            type="default"
                                             style={{
                                                 fontSize: '15px',
                                                 padding: '20px 40px',
+                                                // backgroundColor: 'rgb(0, 191, 255)',
+                                                borderRadius: 'initial',
+                                                color: '#000',
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                border: '1px solid #333',
+                                            }}
+                                            onClick={() => {
+                                                handleAddInCart(idSize, amountInstance, dispatch, setIsLoadCart);
+                                            }}
+                                        >
+                                            Thêm vào giỏ hàng
+                                        </Button>
+                                        <Button
+                                            type="default"
+                                            style={{
+                                                fontSize: '15px',
+                                                padding: '20px 50px',
                                                 backgroundColor: 'rgb(0, 191, 255)',
-                                                marginLeft: '10px',
                                                 borderRadius: 'initial',
                                                 color: '#fff',
                                                 display: 'flex',
                                                 alignItems: 'center',
                                             }}
+                                            onClick={() => {
+                                                handleAddInCart(idSize, amountInstance, dispatch, setIsLoadCart);
+                                            }}
                                         >
-                                            Thêm vào giỏ hàng
+                                            Mua ngay
                                         </Button>
                                     </div>
                                 </div>

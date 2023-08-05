@@ -1,0 +1,20 @@
+.ChatClientWrapper__Btn {
+    button {
+        background-color: rgb(0, 191, 255);
+        // padding: 20px;
+        width: 100px;
+        height: 50px;
+        border-bottom-left-radius: initial;
+        border-bottom-right-radius: initial;
+        border-top-right-radius: 4px;
+        border-top-left-radius: 4px;
+        color: #fff;
+        font-size: 18px;
+        font-weight: 600;
+    }
+}
+.ChatClientWrapper {
+    position: fixed;
+    bottom: 0;
+    right: 30px;
+}

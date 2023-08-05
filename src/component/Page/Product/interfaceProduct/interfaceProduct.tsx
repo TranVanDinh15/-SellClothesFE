@@ -9,3 +9,7 @@ export interface detaiSizeIF {
     weight: string;
     width: string;
 }
+export interface materialProduct {
+    value: string;
+    label: string;
+}

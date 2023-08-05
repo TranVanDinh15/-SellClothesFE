@@ -35,7 +35,7 @@ function HookUsage({ value, productDetailSize, dispatch }: HookProps) {
     const { getInputProps, getIncrementButtonProps, getDecrementButtonProps } = useNumberInput({
         step: 1,
         defaultValue: value,
-        min: 1,
+        min: -1,
         max: 99,
         // precision: 2,
     });
@@ -81,29 +81,15 @@ function HookUsage({ value, productDetailSize, dispatch }: HookProps) {
         </HStack>
     );
 }
+
 export default function CartPage() {
     const dispatch = useDispatch();
+    const [isLoadCart, setIsLoadCart] = useState<boolean>(false);
     const getCartRedux = useSelector((state: cartRedux) => state.CartReducer.cartRedux);
     const [dataTableCart, setDatatableCart] = useState<dataTableCart[]>([]);
     console.log(dataTableCart);
     // const []
     console.log(getCartRedux);
-    useEffect(() => {
-        if (getCartRedux) {
-            const maptableCart = getCartRedux.cart.detail.map((item) => {
-                return {
-                    name: item.productDetailSize.productDetail.name,
-                    discountPrice: item.productDetailSize.productDetail.discountPrice,
-                    originalPrice: item.productDetailSize.productDetail.originalPrice,
-                    quantity: item.quantity,
-                    total: item.quantity * item.productDetailSize.productDetail.discountPrice,
-                    image: item.productDetailSize.productDetail.images[0],
-                    productDetailSizeId: item.productDetailSizeId,
-                };
-            });
-            setDatatableCart(maptableCart);
-        }
-    }, [getCartRedux]);
     const columns: ColumnsType<dataTableCart> = [
         {
             title: 'Sản phẩm ',
@@ -176,6 +162,25 @@ export default function CartPage() {
             ),
         },
     ];
+    useEffect(() => {
+        if (getCartRedux) {
+            const maptableCart = getCartRedux.cart.detail.map((item) => {
+                return {
+                    name: item.productDetailSize.productDetail.name,
+                    discountPrice: item.productDetailSize.productDetail.discountPrice,
+                    originalPrice: item.productDetailSize.productDetail.originalPrice,
+                    quantity: item.quantity,
+                    total: item.quantity * item.productDetailSize.productDetail.discountPrice,
+                    image: item.productDetailSize.productDetail.images[0],
+                    productDetailSizeId: item.productDetailSizeId,
+                };
+            });
+            setDatatableCart(maptableCart);
+        }
+    }, [getCartRedux]);
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, []);
 
     return (
         <div className="CartPageWrapper">

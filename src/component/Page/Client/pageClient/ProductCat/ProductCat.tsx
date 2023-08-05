@@ -412,7 +412,7 @@ export default function ProductCat() {
                           })
                           .join(',')}`
                     : ''
-            }${currentPage && pageSize ? `&page=${currentPage}&size=${pageSize}` : ''}
+            }${currentPage && pageSize ? `&page=${currentPage}&size=${pageSize}` : ''}&statusId=ACTIVE
             `);
         }
     }, [
@@ -442,6 +442,9 @@ export default function ProductCat() {
     }, []);
     useEffect(() => {
         handleReduxClientpath();
+    }, []);
+    useEffect(() => {
+        window.scrollTo(0, 0);
     }, []);
     return (
         <div className="ProductCatWrapper">

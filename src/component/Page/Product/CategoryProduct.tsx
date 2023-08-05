@@ -1,12 +1,20 @@
 import React, { useEffect, useState } from 'react';
 import Content from '../Admin/common/Content/Content';
-import { createCategory, getAllCategory } from '../../utils/Api/Api';
+import { createCategory, getAllCategory, updateBrand } from '../../utils/Api/Api';
 import IsLoading from '../Admin/common/IsLoading/IsLoading';
 import CustomTable from '../../Table/TableCustom';
 import { PlusOutlined } from '@ant-design/icons';
 import { Button, Col, Form, Input, Modal, Row, TablePaginationConfig, message } from 'antd';
 import { GetContext } from '../Admin/common/Context/Context';
+import { useForm } from 'antd/es/form/Form';
+interface formUpdate {
+    value: string;
+    id: number;
+    code: string;
+    type: string;
+}
 export default function ProductCategory() {
+    const [formUpdate] = useForm<formUpdate>();
     const [page, setPage] = useState<number>(1);
     const [pageSize, setPageSize] = useState<number>(5);
     const [isLoading, setIsLoading] = useState(false);
@@ -16,6 +24,9 @@ export default function ProductCategory() {
     const [total, setTotal] = useState<any>();
     const [isFetchBrand, setIsFetchBrand] = useState(false);
     const [isDelete, setIsDelete] = useState<boolean>(false);
+    const [dataUpdateCategory, setDataUpdateCategory] = useState<formUpdate>();
+    const [isLoadCategory, setIsLoadCategory] = useState<boolean>(false);
+    console.log(dataUpdateCategory);
     const getListCategoryFun = async () => {
         setIsLoading(true);
         const response = await getAllCategory(page, pageSize);
@@ -78,7 +89,7 @@ export default function ProductCategory() {
                 </div>
                 <div className="titleTable__btn">
                     <Button type="primary" icon={<PlusOutlined />} className="btnButton" onClick={showModalAdd}>
-                        Thêm loại sản phẩm
+                        Thêm danh mục
                     </Button>
                     <Modal
                         title="Tạo loại sản phẩm"
@@ -143,12 +154,44 @@ export default function ProductCategory() {
         pageSizeOptions: ['5', '10', '20', '50', '100'], // Tùy chọn kích thước trang
         position: ['bottomCenter'],
     };
+    // Hiển thị update
     const showModalUpdate = () => {
         setIsModalUpdate(true);
     };
+    // Xử lý  update
+    const handleUpdateCategory = async (values: any): Promise<void> => {
+        if (dataUpdateCategory) {
+            const requestData = {
+                id: dataUpdateCategory?.id,
+                value: values.value ? values.value : dataUpdateCategory?.value,
+                code: dataUpdateCategory?.code,
+                type: dataUpdateCategory?.type,
+            };
+            console.log(requestData);
+            const response = await updateBrand(requestData);
+            if (response && response.status == 200) {
+                console.log(response);
+                message.success(response.data.message);
+                setIsLoadCategory((isLoadCategory) => !isLoadCategory);
+                setIsModalUpdate(false);
+                formUpdate.setFieldsValue({
+                    value: '',
+                });
+            }
+        } else {
+            message.error('Đã có lỗi xảy ra');
+        }
+    };
     useEffect(() => {
         getListCategoryFun();
-    }, [page, pageSize, isFetchBrand, isDelete]);
+    }, [page, pageSize, isFetchBrand, isDelete, isLoadCategory]);
+    useEffect(() => {
+        if (dataUpdateCategory) {
+            formUpdate.setFieldsValue({
+                value: dataUpdateCategory?.value,
+            });
+        }
+    }, [dataUpdateCategory]);
     return (
         <Content title={'Danh mục sản phẩm'}>
             <div className="productWrapper">
@@ -163,9 +206,59 @@ export default function ProductCategory() {
                         showModalUpdate={showModalUpdate}
                         isDelete={isDelete}
                         setIsDelete={setIsDelete}
+                        setdataUpdate={setDataUpdateCategory}
                     />
                 )}
             </div>
+            <Modal
+                title="Cập Nhật"
+                open={isModalUpdate}
+                onOk={() => {}}
+                onCancel={() => {
+                    setIsModalUpdate(false);
+                }}
+                footer
+            >
+                <Form
+                    form={formUpdate}
+                    name="basic"
+                    labelCol={{ span: 24 }}
+                    wrapperCol={{ span: 24 }}
+                    style={{ maxWidth: 600 }}
+                    initialValues={{ remember: true }}
+                    onFinish={(value) => {
+                        handleUpdateCategory(value);
+                    }}
+                    // onFinishFailed={onFinishFailedUpdate}
+                    autoComplete="off"
+                >
+                    <Form.Item
+                        label="Tên danh Mục"
+                        name="value"
+                        // rules={[{ required: true, message: 'Vui lòng nhập tên thương hiệu!' }]}
+                    >
+                        <Input />
+                    </Form.Item>
+
+                    <Form.Item
+                        // wrapperCol={{ offset: 8, span: 16 }}
+                        style={{
+                            display: 'flex',
+                            justifyContent: 'center',
+                        }}
+                    >
+                        <Button
+                            type="primary"
+                            htmlType="submit"
+                            style={{
+                                width: '100px',
+                            }}
+                        >
+                            Cập nhật
+                        </Button>
+                    </Form.Item>
+                </Form>
+            </Modal>
         </Content>
     );
 }

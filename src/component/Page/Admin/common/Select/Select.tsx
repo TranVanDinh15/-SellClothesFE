@@ -9,6 +9,7 @@ interface SelectsProps {
         label: string;
     }[];
     mode: any;
+    value?: any;
 }
 const onChange = (value: string) => {
     console.log(`selected ${value}`);
@@ -18,7 +19,7 @@ const onSearch = (value: string) => {
     console.log('search:', value);
 };
 
-const SelectCustomer = ({ option, onChange, onSearch, mode }: SelectsProps) => (
+const SelectCustomer = ({ option, onChange, onSearch, mode, value }: SelectsProps) => (
     <Select
         mode={mode}
         showSearch
@@ -28,6 +29,7 @@ const SelectCustomer = ({ option, onChange, onSearch, mode }: SelectsProps) => (
         onSearch={onSearch}
         filterOption={(input, option) => (option?.label ?? '').toLowerCase().includes(input.toLowerCase())}
         options={option}
+        value={value}
     />
 );
 

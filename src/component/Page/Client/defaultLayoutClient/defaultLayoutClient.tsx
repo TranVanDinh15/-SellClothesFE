@@ -4,6 +4,7 @@ import Content from '../../Admin/common/Content/Content';
 import { Footer } from 'antd/es/layout/layout';
 import HeaderClient from '../Header/Header';
 import { Outlet } from 'react-router-dom';
+import ChatClient from '../ChatClient/ChatClient';
 
 const contentStyle: React.CSSProperties = {
     textAlign: 'center',
@@ -25,6 +26,7 @@ export default function DefaultLayoutClient() {
             {/* <Content style={contentStyle}>Content</Content> */}
             <Outlet />
             {/* <Footer style={footerStyle}>Footer</Footer> */}
+            <ChatClient />
         </Layout>
     );
 }

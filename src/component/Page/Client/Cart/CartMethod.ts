@@ -23,9 +23,12 @@ export const handleUpdateQuantity = async (productDetailSizeId: number, step: nu
         productDetailSizeId: `${productDetailSizeId}`,
         quantity: step,
     });
+    console.log(response);
     if (response && response.status == 201) {
-        // setCartData(response.data);
-        dispatch(updateCartAction(response?.data));
+        const responsInitCart = await cartInitApi();
+        if (responsInitCart && responsInitCart.status == 200) {
+            dispatch(updateCartAction(responsInitCart?.data));
+        }
     }
     console.log(response);
 };

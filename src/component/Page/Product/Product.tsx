@@ -8,6 +8,7 @@ import {
     getColorSelect,
     getListProduct,
     getStatus,
+    updateProduct,
 } from '../../utils/Api/Api';
 import IsLoading from '../Admin/common/IsLoading/IsLoading';
 import CustomTable from '../../Table/TableCustom';
@@ -20,20 +21,38 @@ import 'react-markdown-editor-lite/lib/index.css';
 import ModalCustomer from '../Admin/common/Modal/ModalCustomer';
 import { GetContext } from '../Admin/common/Context/Context';
 import DetailProductCreate from './DetailProductCreate';
+import { materialProduct } from './interfaceProduct/interfaceProduct';
+import { handleGetMaterialProduct } from './ProductMethod';
+import { useForm } from 'antd/es/form/Form';
 var MarkdownIt = require('markdown-it');
 const mdParser = new MarkdownIt(/* Markdown-it options */);
 interface markdownProps {
     html: any;
     text: any;
 }
+interface formUpdate {
+    name: string;
+    brandId: string;
+    material: string;
+    categoryId: string;
+    statusId: string;
+    color: string[];
+}
 export default function Product() {
-    const { isModalViewDes, setModalViewDes, isSaveDesProduct, isOpenDetailP, setIsOpenDetailP }: any = GetContext();
+    const {
+        dataProductUpdate,
+        isModalViewDes,
+        setModalViewDes,
+        isSaveDesProduct,
+        isOpenDetailP,
+        setIsOpenDetailP,
+    }: any = GetContext();
+    const [formUpdate] = useForm<formUpdate>();
     const [page, setPage] = useState<number>(1);
     const [pageSize, setPageSize] = useState<number>(5);
     const [isLoading, setIsLoading] = useState(false);
     const [isModalOpenAdd, setIsModalOpenAdd] = useState(false);
     const [isModalUpdate, setIsModalUpdate] = useState(false);
-    console.log(isModalUpdate);
     const [dataTable, setDataTable] = useState<[]>([]);
     const [total, setTotal] = useState<any>();
     const [listCategory, setListCategory] = useState<any>([]);
@@ -44,14 +63,19 @@ export default function Product() {
     const [statusSave, setStatusSave] = useState<any>();
     const [saveColorSelect, setSaveColorSelect] = useState([]);
     const [isDelete, setIsDelete] = useState<boolean>(false);
+    // Quản lý Material
+    const [materialProduct, setMaterialProduct] = useState<materialProduct[] | null>(null);
+    // Quản lý MarkDown cập nhật sản phẩm
+    const [contentMarkDown, setContentMarkDown] = useState<string>('');
+    const [contentMarkDownHtml, setContentMarkDownHtml] = useState<string>('');
+    // Đặt cờ get Lại product
+    const [isLoadProduct, setIsLoadProduct] = useState<boolean>(false);
     // const [isModalViewDes, setModalViewDes] = useState(false);
     // Quản lý giá trị của Markdown editor
     const [value, setValue] = useState<any>('**Hello world!!!**');
     const [text, setText] = useState<any>('**Hello world!!!**');
     const getListProductFun = async () => {
-        setIsLoading(true);
         const response = await getListProduct(page, pageSize);
-        console.log(response);
         if (response && response.status == 200) {
             const dataTableMap = response.data.data.map((item: any, index: any) => {
                 return {
@@ -67,11 +91,11 @@ export default function Product() {
                     detail: item?.detail,
                     statusId: item?.statusId,
                     createdAt: item?.createdAt,
+                    categoryId: item?.categoryId,
                 };
             });
             setTotal(response.data.meta.totalItems);
             setDataTable(dataTableMap);
-            setIsLoading(false);
         }
     };
     // lấy loại sản phẩm
@@ -91,7 +115,6 @@ export default function Product() {
     const getStatusproduct = async () => {
         const response = await getStatus();
         if (response && response.status == 200) {
-            console.log(response);
             const status = response.data.data.map((item: any) => {
                 return {
                     value: item.code,
@@ -123,63 +146,44 @@ export default function Product() {
     const showModalAdd = () => {
         setIsModalOpenAdd(true);
     };
-    // onChangeSelect Brand
-    const onChangeBrandSelect = (value: string) => {
-        setBrandSave(value);
-    };
-
-    const onSearchBrandSelect = (value: string) => {
-        console.log('search:', value);
-    };
     // onchangeSelect category
     const onChangeCategorySelect = (value: string) => {
         setCategorySave(value);
     };
 
-    const onSearchCategorySelect = (value: string) => {
-        console.log('search:', value);
-    };
+    const onSearchCategorySelect = (value: string) => {};
     // onchangeSelect status
     const onChangeStatusSelect = (value: string) => {
         setStatusSave(value);
     };
 
-    const onSearchStatusSelect = (value: string) => {
-        console.log('search:', value);
-    };
+    const onSearchStatusSelect = (value: string) => {};
 
     const onFinishAdd = async (values: any) => {
         const dataSubmit = {
-            name: values.name,
             contentMarkdown: text,
             contentHtml: value,
+            name: values.name,
             categoryId: values.categoryId,
             statusId: values.statusId,
             brandId: values.brandId,
             colorCodes: values.color,
             material: values.material,
         };
-        console.log(dataSubmit);
-        console.log(values);
-        setIsLoading(true);
+
         const response = await createNewProduct(dataSubmit);
         if (response && response.status == 201) {
-            console.log(response);
             message.success('Tạo thành công !!');
             getListProductFun();
-            setIsLoading(false);
             handleCancelAdd();
         }
     };
     //   Khi xảy ra lỗi trong form Tạo Product
-    const onFinishFailedAdd = (errorInfo: any) => {
-        console.log('Failed:', errorInfo);
-    };
+    const onFinishFailedAdd = (errorInfo: any) => {};
     // Lấy màu sắc
     const hanleGetSelectColor = async () => {
         const response = await getColorSelect();
         if (response && response.status == 200) {
-            console.log(response);
             if (response.data.data.length > 0) {
                 const result = response.data.data.map((item: any) => {
                     return {
@@ -191,9 +195,47 @@ export default function Product() {
             }
         }
     };
-    const onChangeColorSelect = (value: string) => {
-        console.log(value);
+    // Xử lý update Product
+    const HandleUpdateProduct = async (
+        values: {
+            name: string;
+            categoryId: string;
+            statusId: string;
+            brandId: string;
+            color: string[];
+            material: string;
+        },
+        contentMarkDown: string,
+        contentMarkDownHtml: string,
+    ): Promise<void> => {
+        const data = {
+            name: values.name,
+            categoryId: values.categoryId,
+            statusId: values.statusId,
+            brandId: values.brandId,
+            colorCodes: values.color,
+            material: values.material,
+            contentMarkdown: contentMarkDown,
+            contentHtml: contentMarkDownHtml,
+        };
+        const response = await updateProduct(dataProductUpdate?.id, data);
+        if (response && response.status == 200) {
+            message.success('Cập nhật thành công');
+            setIsLoadProduct((prevIsLoadProduct) => !prevIsLoadProduct);
+            setIsModalUpdate(false);
+            formUpdate.setFieldsValue({
+                name: '',
+                brandId: '',
+                categoryId: '',
+                color: [],
+                material: '',
+                statusId: '',
+            });
+            setContentMarkDown('');
+            setContentMarkDownHtml('');
+        }
     };
+    const onChangeColorSelect = (value: string) => {};
     const onSearchColorSelect = (value: string) => {};
     // dùng để hiển thị title của table
     const TitleTable = () => {
@@ -203,7 +245,15 @@ export default function Product() {
                     <span>Danh sách sản phẩm</span>
                 </div>
                 <div className="titleTable__btn">
-                    <Button type="primary" icon={<PlusOutlined />} className="btnButton" onClick={showModalAdd}>
+                    <Button
+                        type="primary"
+                        icon={<PlusOutlined />}
+                        className="btnButton"
+                        onClick={() => {
+                            showModalAdd();
+                            handleGetMaterialProduct(setMaterialProduct);
+                        }}
+                    >
                         Thêm sản phẩm
                     </Button>
 
@@ -256,7 +306,12 @@ export default function Product() {
                                         name="material"
                                         rules={[{ required: true, message: 'Vui lòng nhập chất liệu sản phẩm!' }]}
                                     >
-                                        <Input placeholder="VD: cotton, thun, ... " width={'100%'} />
+                                        <SelectCustomer
+                                            mode=""
+                                            option={materialProduct ? [...materialProduct] : []}
+                                            onChange={() => {}}
+                                            onSearch={() => {}}
+                                        />
                                     </Form.Item>
                                 </Col>
                                 <Col span={12}>
@@ -365,6 +420,11 @@ export default function Product() {
         setText(text);
         setValue(html);
     }
+    // Handle Editor Update
+    const handleEditorUpdate = ({ html, text }: markdownProps) => {
+        setContentMarkDown(text);
+        setContentMarkDownHtml(html);
+    };
     // handle Modal View Description
     const showModalViewDes = () => {
         setModalViewDes(true);
@@ -375,7 +435,7 @@ export default function Product() {
     };
     useEffect(() => {
         getListProductFun();
-    }, [page, pageSize, isDelete]);
+    }, [page, pageSize, isDelete, isLoadProduct]);
     useEffect(() => {
         getCategoryProduct();
     }, []);
@@ -385,6 +445,22 @@ export default function Product() {
         setIsOpenDetailP(false);
         hanleGetSelectColor();
     }, []);
+    useEffect(() => {
+        if (dataProductUpdate) {
+            formUpdate.setFieldsValue({
+                name: dataProductUpdate?.name,
+                brandId: dataProductUpdate?.brandId,
+                categoryId: dataProductUpdate?.categoryId,
+                color: dataProductUpdate?.detail.map((item: any) => {
+                    return item?.color?.code;
+                }),
+                material: dataProductUpdate?.material,
+                statusId: dataProductUpdate?.statusId,
+            });
+            setContentMarkDown(dataProductUpdate?.contentMarkdown);
+            setContentMarkDownHtml(dataProductUpdate?.contentHtml);
+        }
+    }, [dataProductUpdate]);
     return (
         <Content title={'Quản lý sản phẩm'}>
             <div className="productWrapper">
@@ -409,16 +485,29 @@ export default function Product() {
                 onOk={() => {}}
                 onCancel={() => {
                     setIsModalUpdate(false);
+                    formUpdate.setFieldsValue({
+                        name: '',
+                        brandId: '',
+                        categoryId: '',
+                        color: [],
+                        material: '',
+                        statusId: '',
+                    });
+                    setContentMarkDown('');
+                    setContentMarkDownHtml('');
                 }}
                 footer
                 width={'80%'}
             >
                 <Form
+                    form={formUpdate}
                     name="basic"
                     labelCol={{ span: 24 }}
                     // style={{ width: 700 }}
                     initialValues={{ remember: true }}
-                    onFinish={onFinishAdd}
+                    onFinish={(value) => {
+                        HandleUpdateProduct(value, contentMarkDown, contentMarkDownHtml);
+                    }}
                     onFinishFailed={onFinishFailedAdd}
                     autoComplete="off"
                 >
@@ -443,6 +532,7 @@ export default function Product() {
                                     option={[...brandProduct]}
                                     onChange={onChangeColorSelect}
                                     onSearch={onSearchColorSelect}
+                                    value={dataProductUpdate?.brandId}
                                 />
                             </Form.Item>
                         </Col>
@@ -468,6 +558,7 @@ export default function Product() {
                                     option={[...listCategory]}
                                     onChange={onChangeCategorySelect}
                                     onSearch={onSearchCategorySelect}
+                                    value={dataProductUpdate?.categoryId}
                                 />
                             </Form.Item>
                         </Col>
@@ -484,6 +575,7 @@ export default function Product() {
                                     option={[...statusProduct]}
                                     onChange={onChangeStatusSelect}
                                     onSearch={onSearchStatusSelect}
+                                    value={dataProductUpdate?.statusId}
                                 />
                             </Form.Item>
                         </Col>
@@ -499,6 +591,9 @@ export default function Product() {
                                     option={[...saveColorSelect]}
                                     onChange={onChangeColorSelect}
                                     onSearch={onSearchColorSelect}
+                                    value={dataProductUpdate?.detail.map((item: any) => {
+                                        return item?.color?.code;
+                                    })}
                                 />
                             </Form.Item>
                         </Col>
@@ -514,7 +609,8 @@ export default function Product() {
                         <MdEditor
                             style={{ height: '500px' }}
                             renderHTML={(text) => mdParser.render(text)}
-                            onChange={handleEditorChange}
+                            onChange={handleEditorUpdate}
+                            value={contentMarkDown}
                         />
                     </Form.Item>
                     <Form.Item
@@ -547,7 +643,7 @@ export default function Product() {
                     title={'Mô tả sản phẩm'}
                 >
                     <div
-                        contentEditable="true"
+                        contentEditable="false"
                         dangerouslySetInnerHTML={{
                             __html: `${isSaveDesProduct ? isSaveDesProduct : ''}`,
                         }}

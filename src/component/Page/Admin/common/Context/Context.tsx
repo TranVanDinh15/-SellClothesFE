@@ -88,6 +88,10 @@ type MyContextType = {
     setDataDetailReceipt: React.Dispatch<React.SetStateAction<any>>;
     dataBannerUpdate: any;
     setDataBannerUpdate: React.Dispatch<React.SetStateAction<any>>;
+    dataProductUpdate: any;
+    setDataProductUpdate: React.Dispatch<React.SetStateAction<any>>;
+    isLoadCart: boolean;
+    setIsLoadCart: React.Dispatch<React.SetStateAction<boolean>>;
 };
 const ChatContext = createContext<MyContextType | undefined>(undefined);
 const ChatProvide = ({ children }: childrenProps) => {
@@ -155,6 +159,10 @@ const ChatProvide = ({ children }: childrenProps) => {
     const [dataDetailReceipt, setDataDetailReceipt] = useState<any>();
     // Quản lý dữ liệu Banner khi nhấn vào update
     const [dataBannerUpdate, setDataBannerUpdate] = useState<any>();
+    // Quản  lý dữ liệu Product khi nhấn vào update
+    const [dataProductUpdate, setDataProductUpdate] = useState<any>();
+    // Đặt cờ Load lại Cart
+    const [isLoadCart, setIsLoadCart] = useState<boolean>(false);
     return (
         <ChatContext.Provider
             value={{
@@ -226,6 +234,10 @@ const ChatProvide = ({ children }: childrenProps) => {
                 setDataDetailReceipt,
                 dataBannerUpdate,
                 setDataBannerUpdate,
+                dataProductUpdate,
+                setDataProductUpdate,
+                isLoadCart,
+                setIsLoadCart,
             }}
         >
             {children}

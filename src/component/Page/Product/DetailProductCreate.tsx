@@ -111,6 +111,9 @@ export default function DetailProductCreate() {
     const [GetDetailP, setGetDetailP] = useState<[]>([]);
     const [selectColor, setSelectColor] = useState<[]>([]);
     const [isDelete, setIsDelete] = useState<boolean>(false);
+    const [isModalViewDes, setIsModalViewDes] = useState<boolean>(false);
+    const [viewDetailProduct, setViewDetailProduct] = useState<string>('');
+    console.log(GetDetailP);
     const titileSizeDp = () => {
         return <span></span>;
     };
@@ -192,6 +195,8 @@ export default function DetailProductCreate() {
                         }}
                         isDelete={isDelete}
                         setIsDelete={setIsDelete}
+                        setISViewDeTailDes={setIsModalViewDes}
+                        setViewDetailProduct={setViewDetailProduct}
                     />
                 ) : (
                     <IsLoading />
@@ -439,7 +444,6 @@ export default function DetailProductCreate() {
                     </Form.Item>
                 </Form>
             </ModalCustomer>
-
             {/* Modal Add Size for detail Product */}
             <ModalCustomer
                 footer={false}
@@ -687,6 +691,28 @@ export default function DetailProductCreate() {
                     <Empty />
                 )}
             </Drawer>
+            {/* Modal xem description của chi tiết sản phẩm  */}
+            <div className="modalDescription">
+                <ModalCustomer
+                    footer={true}
+                    isModalOpen={isModalViewDes}
+                    showModal={() => {
+                        setIsModalViewDes(true);
+                    }}
+                    handleOk={() => {}}
+                    handleCancel={() => {
+                        setIsModalViewDes(false);
+                    }}
+                    title={'Mô tả chi tiết sản phẩm'}
+                >
+                    <div
+                        contentEditable="false"
+                        dangerouslySetInnerHTML={{
+                            __html: `${viewDetailProduct ? viewDetailProduct : ''}`,
+                        }}
+                    ></div>
+                </ModalCustomer>
+            </div>
         </Content>
     );
 }

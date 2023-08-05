@@ -118,9 +118,9 @@
 }
 .DetailProductClient__content__Infor__amountAddCart {
     display: flex;
-    margin: 60px 0;
+    margin: 20px 0;
     justify-content: space-between;
-    gap: 20px;
+    gap: 10px;
     align-items: center;
 }
 .descriptionDetailProduct__title {
@@ -335,4 +335,10 @@
     background-color: rgb(0, 191, 255);
     color: #fff;
     border-radius: initial;
+}
+.helpsizeBtn {
+    transition-duration: 0s;
+    &:hover {
+        background-color: initial !important;
+    }
 }

@@ -6,13 +6,14 @@ import {
     deleteProductDetail,
     deleteProductDetailSize,
     getColorSelect,
+    getMaterialClient,
     getProductById,
     getProductDetailById,
     getProductDetailSize,
     updateProductDetail,
     updateProductDetailSize,
 } from '../../utils/Api/Api';
-import { detaiSizeIF } from './interfaceProduct/interfaceProduct';
+import { detaiSizeIF, materialProduct } from './interfaceProduct/interfaceProduct';
 import { AnyObject } from 'antd/es/table/Table';
 import Item from 'antd/es/list/Item';
 
@@ -20,7 +21,6 @@ import Item from 'antd/es/list/Item';
 export const handleGetColorById = async (id: string, setSelectColor: React.Dispatch<React.SetStateAction<any>>) => {
     if (id) {
         const response = await GetColorProductById(parseInt(id));
-        console.log(response);
         if (response && response.status == 200) {
             if (response.data.length > 0) {
                 const result = response.data.map((item: any) => {
@@ -60,7 +60,6 @@ export const handleCancelUpdate = (setIsModalUpdate: React.Dispatch<React.SetSta
 export const hanleGetSelectColor = async (setSaveColor: React.Dispatch<React.SetStateAction<any>>) => {
     const response = await getColorSelect();
     if (response && response.status == 200) {
-        console.log(response);
         if (response.data.data.length > 0) {
             const result = response.data.data.map((item: any) => {
                 return {
@@ -84,7 +83,6 @@ export const onFinishUpdate = async (
     setImageDp: React.Dispatch<React.SetStateAction<any>>,
     value: any,
 ) => {
-    console.log(value);
     if (detailId) {
         const reqUpdate = {
             productId: values?.productId,
@@ -116,9 +114,7 @@ export const onFinishUpdate = async (
         message.error('Sản phẩm không tồn tại');
     }
 };
-export const onFailUpdate = (errorInfo: any) => {
-    console.log('Failed:', errorInfo);
-};
+export const onFailUpdate = (errorInfo: any) => {};
 // Khi submit form add detail product
 export const onFinishAdd = async (
     values: any,
@@ -130,7 +126,7 @@ export const onFinishAdd = async (
     setIsFetchDp: React.Dispatch<React.SetStateAction<boolean>>,
     setImagesUploadMultiple: React.Dispatch<React.SetStateAction<any>>,
 ) => {
-    setIsLoading(true);
+    // setIsLoading(true);
     if (id) {
         const reqUpdate = {
             productId: parseInt(id),
@@ -143,25 +139,18 @@ export const onFinishAdd = async (
             }),
             colorId: values.colorId,
         };
-        console.log(values);
         const response = await createProductDetail(reqUpdate);
         if (response && response.status == 201) {
             message.success('Tạo thành công');
             handleCancelDp(setIsModalAddDpOpen, setImagesUploadMultiple);
-            if (isFetchDp) {
-                setIsFetchDp(false);
-            } else {
-                setIsFetchDp(true);
-            }
+            setIsFetchDp((prevIsFetchDp) => !prevIsFetchDp);
         }
     } else {
         message.error('Đã có vấn đề trong lúc tạo !!');
     }
 };
 
-export const onFailAdd = (errorInfo: any) => {
-    console.log('Failed:', errorInfo);
-};
+export const onFailAdd = (errorInfo: any) => {};
 // Lấy thông tin chi tiết sản phẩm
 export const getProductDetail = async (
     setIsLoading: React.Dispatch<React.SetStateAction<boolean>>,
@@ -171,7 +160,6 @@ export const getProductDetail = async (
     setIsLoading(true);
     const response = await getProductDetailById(productId);
     if (response && response.status == 200) {
-        console.log(response);
         if (response.data.length > 0) {
             const result = response.data.map((item: any, index: any) => {
                 return {
@@ -201,7 +189,6 @@ export const handleDeleteProductDetail = async (
 ) => {
     if (id) {
         const response = await deleteProductDetail(id);
-        console.log(response);
         if (response && response.status == 200) {
             message.success(response?.data?.message);
             if (isFetchDp) {
@@ -216,9 +203,7 @@ export const handleDeleteProductDetail = async (
 };
 export const onChangeColorSelect = (value: string) => {};
 
-export const onSearchColorSelect = (value: string) => {
-    console.log('search:', value);
-};
+export const onSearchColorSelect = (value: string) => {};
 // handle đóng mở view full detail product
 export const showViewFullDp = (setOpenFullDp: React.Dispatch<React.SetStateAction<boolean>>) => {
     setOpenFullDp(true);
@@ -237,8 +222,6 @@ export const handleSubmitAddSize = async (
     setIsLoading: React.Dispatch<React.SetStateAction<boolean>>,
     setIsModalAddSize: React.Dispatch<React.SetStateAction<boolean>>,
 ) => {
-    console.log(productId);
-    console.log(values);
     const reqAddSize = {
         productDetailId: productId,
         name: values.name,
@@ -249,7 +232,6 @@ export const handleSubmitAddSize = async (
     setIsLoading(true);
     const response = await createProductDetailSize(reqAddSize);
     if (response && response.status == 201) {
-        console.log(response);
         message.success(response.data.message);
         setIsLoading(false);
         cancelAddSizeDp(setIsModalAddSize);
@@ -274,7 +256,6 @@ export const showCloseSize = (setState: React.Dispatch<React.SetStateAction<bool
 export const handleGetSizeDp = async (id: number, setSaveSizeDp: React.Dispatch<React.SetStateAction<any>>) => {
     const response = await getProductDetailSize(id);
     if (response && response.status == 200) {
-        console.log(response);
         const sizes = response.data;
         setSaveSizeDp(sizes);
     }
@@ -335,7 +316,6 @@ export const handleSubmitUpdateSize = async (
         setIsLoading(true);
         const response = await updateProductDetailSize(reqUpdate, detailSize.id);
         if (response) {
-            console.log(response);
             message.success(response?.data?.message);
             setIsLoading(false);
             handleCancelUpdateSizeDp(setIsModalUpdateSize, formUpdateSize);
@@ -343,6 +323,21 @@ export const handleSubmitUpdateSize = async (
         }
     }
 };
-export const handleSubmitFailUpdateSize = (errorInfo: any) => {
-    console.log(errorInfo);
+export const handleSubmitFailUpdateSize = (errorInfo: any) => {};
+// Handle Get Material
+export const handleGetMaterialProduct = async (
+    setMaterialProduct: React.Dispatch<React.SetStateAction<materialProduct[] | null>>,
+): Promise<void> => {
+    const response = await getMaterialClient();
+    if (response && response.status == 200) {
+        const mapDta = response.data?.data.map((item: any, index: number) => {
+            return {
+                value: item?.code,
+                label: item?.value,
+            };
+        });
+        if (mapDta) {
+            setMaterialProduct(mapDta);
+        }
+    }
 };
