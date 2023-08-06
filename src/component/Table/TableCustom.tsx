@@ -76,6 +76,7 @@ interface PropsTable {
     setViewDetailProduct?: React.Dispatch<React.SetStateAction<string>>;
     setdataUpdate?: React.Dispatch<React.SetStateAction<any>>;
     showDrawer?: () => void;
+    collums?: any;
 }
 const columns: ColumnsType<DataType> = [
     {
@@ -155,6 +156,7 @@ const CustomTable = ({
     setViewDetailProduct,
     setdataUpdate,
     showDrawer,
+    collums,
 }: PropsTable) => {
     const navigate = useNavigate();
     const {

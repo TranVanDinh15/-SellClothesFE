@@ -1,0 +1,190 @@
+.checkOutWrapper {
+    margin-top: 100px;
+    min-height: 100vh;
+    margin-bottom: 40px;
+}
+.checkOutAddress {
+    position: relative;
+    margin: 10px 40px;
+    padding: 10px;
+    background-color: #fff;
+}
+.checkOutAddressInfor {
+    padding: 20px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.checkOutAddressInfor__name {
+    display: flex;
+    flex-direction: column;
+    span {
+        font-size: 16px;
+        font-weight: 600;
+    }
+}
+.checkOutAddressInfor__option {
+    display: flex;
+    align-items: center;
+}
+.vtrWey {
+    height: 3px;
+    width: 100%;
+    background-position-x: -30px;
+    background-size: 116px 3px;
+    background-image: repeating-linear-gradient(
+        45deg,
+        #6fa6d6,
+        #6fa6d6 33px,
+        transparent 0,
+        transparent 41px,
+        #f18d9b 0,
+        #f18d9b 74px,
+        transparent 0,
+        transparent 82px
+    );
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+}
+.checkOutAddress__Title {
+    margin-top: 20px;
+    button {
+        display: flex;
+        align-items: center;
+        font-size: 1.125rem;
+        color: #ee4d2d;
+        // margin-bottom: 20px;
+        text-transform: capitalize;
+        flex: 1 1 auto;
+    }
+}
+.checkOutProduct__Box,
+.MethodPay {
+    margin: 10px 40px;
+    padding: 10px;
+    background-color: #fff;
+}
+.ChooseVoucher__title,
+.ChooseVoucher__text {
+    button {
+        display: flex;
+        align-items: center;
+    }
+}
+.ChooseVoucher__title {
+    display: flex;
+    button {
+        font-size: 20px;
+    }
+}
+.checkOutProduct__ChooseVoucher {
+    padding: 20px 0;
+    display: flex;
+    justify-content: space-between;
+}
+.ProductName__CheckOut__box {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.ChooseVoucher__typeTransport {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+}
+.typeTransport__text {
+    span {
+        color: green;
+        font-size: 20px;
+    }
+}
+.typeTransport__result {
+    display: flex;
+    align-items: center;
+    button {
+        text-transform: uppercase;
+    }
+}
+.typeTransport__Result__text {
+    display: flex;
+    flex-direction: column;
+    font-size: 14px;
+    span {
+        + span {
+            opacity: 0.6;
+        }
+    }
+}
+.TotalPrice__CheckOut {
+    padding: 10px;
+    display: flex;
+    justify-content: end;
+    align-items: center;
+    gap: 20px;
+}
+.TotalPrice__CheckOut__result {
+    font-size: 20px;
+    font-weight: 600;
+    color: rgb(0, 191, 255);
+}
+.checkOutVoucher {
+    margin: 10px 40px;
+    padding: 10px;
+    background-color: #fff;
+}
+.MethodPay__Box {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    border-bottom: 1px solid #ccc;
+}
+.MethodPay__Box__ChangeMethodPay {
+    display: flex;
+    align-items: center;
+}
+.MethodPay__Box__ChangeMethodPay {
+    button {
+        text-transform: uppercase;
+    }
+}
+.MethodPay__Box__text {
+    span {
+        font-size: 20px;
+    }
+}
+.TotalPriceResult {
+    padding: 20px;
+    min-height: 150px;
+    table {
+        tbody {
+            position: absolute;
+            right: 60px;
+        }
+    }
+}
+.TotalPriceResult_Des {
+    background-color: #fff;
+    margin-bottom: 20px;
+}
+.totalGoods {
+    .ant-descriptions-item-content {
+        font-size: 24px;
+        color: red;
+        font-weight: 600;
+    }
+}
+.TotalPriceResult__Btn {
+    display: flex;
+    justify-content: right;
+    margin-right: 20px;
+    button {
+        width: 200px;
+        height: 50px;
+        background-color: rgb(0, 191, 255);
+        color: #fff;
+    }
+}

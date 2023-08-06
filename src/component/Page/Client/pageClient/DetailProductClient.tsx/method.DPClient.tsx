@@ -289,8 +289,8 @@ export const handleAddInCart = async (
     if (!size) {
         message.error('Bạn chưa chọn size');
     } else {
-        await handleUpdateQuantity(size, quantity, dispatch);
-        setIsLoadCart((isLoadCart) => !isLoadCart);
+        await handleUpdateQuantity(size, quantity, dispatch, setIsLoadCart);
+        // setIsLoadCart((isLoadCart) => !isLoadCart);
         message.success('Đã thêm vào giỏ hàng');
     }
 };

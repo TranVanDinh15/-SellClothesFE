@@ -18,7 +18,12 @@ export const handleGetCart = async (
         console.log(error);
     }
 };
-export const handleUpdateQuantity = async (productDetailSizeId: number, step: number, dispatch: any) => {
+export const handleUpdateQuantity = async (
+    productDetailSizeId: number,
+    step: number,
+    dispatch: any,
+    setIsLoadCart: React.Dispatch<React.SetStateAction<boolean>>,
+) => {
     const response = await addCartApi({
         productDetailSizeId: `${productDetailSizeId}`,
         quantity: step,
@@ -27,7 +32,24 @@ export const handleUpdateQuantity = async (productDetailSizeId: number, step: nu
     if (response && response.status == 201) {
         const responsInitCart = await cartInitApi();
         if (responsInitCart && responsInitCart.status == 200) {
+            console.log(responsInitCart);
             dispatch(updateCartAction(responsInitCart?.data));
+            setIsLoadCart((isLoadCart) => !isLoadCart);
+        }
+    }
+    console.log(response);
+};
+export const hadnleUpdateZero = async (productDetailSizeId: number, step: number, dispatch: any) => {
+    const response = await addCartApi({
+        productDetailSizeId: `${productDetailSizeId}`,
+        quantity: step,
+    });
+    if (response && response.status == 201) {
+        const responsInitCart = await cartInitApi();
+        if (responsInitCart && responsInitCart.status == 200) {
+            console.log(responsInitCart);
+            dispatch(updateCartAction(responsInitCart?.data));
+            // setIsLoadCart((isLoadCart) => !isLoadCart);
         }
     }
     console.log(response);

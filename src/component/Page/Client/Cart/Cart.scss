@@ -91,3 +91,19 @@
         }
     }
 }
+.pageCartName {
+    display: flex;
+    align-items: center;
+    span {
+        height: 40px;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        font-size: 14px;
+        font-size: rgb(56, 56, 61);
+        font-weight: 400;
+        white-space: 2;
+    }
+}

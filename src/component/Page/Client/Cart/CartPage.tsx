@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import './Cart.scss';
 import { Col, Image, Row } from 'antd';
 import { Space, Table, Tag, Button } from 'antd';
@@ -8,8 +8,10 @@ import { dataCart } from './CartInterFace';
 import { HStack, Input, useNumberInput } from '@chakra-ui/react';
 import { convertVND } from '../../Admin/common/method/method';
 import { BsTrash } from 'react-icons/bs';
-import { handleUpdateQuantity } from './CartMethod';
+import { hadnleUpdateZero, handleUpdateQuantity } from './CartMethod';
 import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import { GetContext } from '../../Admin/common/Context/Context';
 const { Column, ColumnGroup } = Table;
 
 export interface cartRedux {
@@ -25,35 +27,40 @@ export type dataTableCart = {
     total: number;
     image: string;
     productDetailSizeId: number;
+    productDetailSizeName: string;
+    color: string;
 };
 interface HookProps {
     value: number;
     productDetailSize: number;
     dispatch: any;
+    setIsLoadCart: React.Dispatch<React.SetStateAction<boolean>>;
 }
-function HookUsage({ value, productDetailSize, dispatch }: HookProps) {
+function HookUsage({ value, productDetailSize, dispatch, setIsLoadCart }: HookProps) {
     const { getInputProps, getIncrementButtonProps, getDecrementButtonProps } = useNumberInput({
         step: 1,
-        defaultValue: value,
-        min: -1,
+        value: value,
+        // min: 0,
         max: 99,
         // precision: 2,
     });
-
     const inc = getIncrementButtonProps();
     const dec = getDecrementButtonProps();
     const input = getInputProps();
-    console.log(input);
     return (
-        <HStack minWidth={'100px'}>
+        <HStack minWidth={'80px'}>
             <Button
                 {...dec}
                 style={{
                     borderRadius: 'initial',
                     height: '41.33px',
+                    width: '40px',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
                 }}
                 onClick={() => {
-                    handleUpdateQuantity(productDetailSize, -1, dispatch);
+                    handleUpdateQuantity(productDetailSize, -1, dispatch, setIsLoadCart);
                 }}
             >
                 -
@@ -63,7 +70,7 @@ function HookUsage({ value, productDetailSize, dispatch }: HookProps) {
                 style={{
                     borderRadius: 'initial',
                     height: '41.33px',
-                    width: '55px',
+                    width: '51px',
                 }}
             />
             <Button
@@ -71,9 +78,14 @@ function HookUsage({ value, productDetailSize, dispatch }: HookProps) {
                 style={{
                     borderRadius: 'initial',
                     height: '41.33px',
+                    width: '40px',
+
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
                 }}
                 onClick={() => {
-                    handleUpdateQuantity(productDetailSize, 1, dispatch);
+                    handleUpdateQuantity(productDetailSize, 1, dispatch, setIsLoadCart);
                 }}
             >
                 +
@@ -83,10 +95,15 @@ function HookUsage({ value, productDetailSize, dispatch }: HookProps) {
 }
 
 export default function CartPage() {
+    const navigate = useNavigate();
     const dispatch = useDispatch();
-    const [isLoadCart, setIsLoadCart] = useState<boolean>(false);
+    const { setIsLoadCart }: any = GetContext();
+    // const [isLoadCartPage, setIsLoadCartPage] = useState<boolean>(false);
     const getCartRedux = useSelector((state: cartRedux) => state.CartReducer.cartRedux);
+    console.log(getCartRedux);
     const [dataTableCart, setDatatableCart] = useState<dataTableCart[]>([]);
+    const [valueInput, setValueInput] = useState<number | undefined>();
+    console.log(valueInput);
     console.log(dataTableCart);
     // const []
     console.log(getCartRedux);
@@ -99,6 +116,7 @@ export default function CartPage() {
                     style={{
                         display: 'flex',
                     }}
+                    className="pageCartName"
                 >
                     <Image
                         style={
@@ -106,13 +124,23 @@ export default function CartPage() {
                                 // flexBasis: '50%',
                             }
                         }
-                        width={80}
+                        width={70}
                         src={`${process.env.REACT_APP_IMAGE_PRODUCT}${record.image}`}
                     />
                     <span>{record.name}</span>
                 </div>
             ),
-            width: '45%',
+            width: '40%',
+        },
+        {
+            title: 'Size',
+            dataIndex: '',
+            render: (value, record) => <span>{record.productDetailSizeName}</span>,
+        },
+        {
+            title: 'Màu',
+            dataIndex: '',
+            render: (value, record) => <span>{record.color}</span>,
         },
         {
             title: 'Đơn giá',
@@ -146,21 +174,34 @@ export default function CartPage() {
             title: 'Số lượng',
             dataIndex: 'quantity',
             render: (value, record) => (
-                <HookUsage value={record.quantity} productDetailSize={record.productDetailSizeId} dispatch={dispatch} />
+                <HookUsage
+                    value={record.quantity}
+                    productDetailSize={record.productDetailSizeId}
+                    dispatch={dispatch}
+                    setIsLoadCart={setIsLoadCart}
+                />
             ),
         },
         {
             title: 'Tổng tiền',
-            render: (value, record) => <span>{convertVND(record.total)}</span>,
-        },
-        {
-            title: 'Xóa',
             render: (value, record) => (
-                <div>
-                    <BsTrash />
-                </div>
+                <span
+                    onClick={() => {
+                        console.log(record);
+                    }}
+                >
+                    {convertVND(Number(record.discountPrice) * Number(record.quantity))}
+                </span>
             ),
         },
+        // {
+        //     title: 'Xóa',
+        //     render: (value, record) => (
+        //         <div>
+        //             <BsTrash />
+        //         </div>
+        //     ),
+        // },
     ];
     useEffect(() => {
         if (getCartRedux) {
@@ -173,6 +214,8 @@ export default function CartPage() {
                     total: item.quantity * item.productDetailSize.productDetail.discountPrice,
                     image: item.productDetailSize.productDetail.images[0],
                     productDetailSizeId: item.productDetailSizeId,
+                    productDetailSizeName: item?.productDetailSize.name,
+                    color: item.productDetailSize.productDetail.color.value,
                 };
             });
             setDatatableCart(maptableCart);
@@ -186,7 +229,7 @@ export default function CartPage() {
         <div className="CartPageWrapper">
             <Row gutter={20}>
                 <Col
-                    span={16}
+                    span={17}
                     style={{
                         backgroundColor: '#fff',
                         minHeight: '100vh',
@@ -200,7 +243,7 @@ export default function CartPage() {
                     <Table dataSource={dataTableCart} columns={columns} pagination={false}></Table>
                 </Col>
                 <Col
-                    span={8}
+                    span={7}
                     style={{
                         backgroundColor: '#fff',
                         minHeight: '100vh',
@@ -225,6 +268,9 @@ export default function CartPage() {
                                             width: '100px',
                                             height: '40px',
                                             borderRadius: 'initial',
+                                        }}
+                                        onClick={() => {
+                                            navigate('/thanh-toan');
                                         }}
                                     >
                                         Thanh Toán

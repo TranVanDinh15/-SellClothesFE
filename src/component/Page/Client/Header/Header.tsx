@@ -165,7 +165,9 @@ export default function HeaderClient() {
     }, [curentUser, isLoadCart]);
     useEffect(() => {
         if (cartData?.cart.detail && cartData.cart.detail.length > 0) {
-            setAmountCart(cartData.cart.detail.length);
+            setAmountCart(cartData?.cart?.detail.length);
+        } else {
+            setAmountCart(0);
         }
     }, [cartData]);
     return (

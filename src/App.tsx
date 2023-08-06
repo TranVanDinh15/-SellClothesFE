@@ -125,7 +125,7 @@ function App() {
                     errorElement: <NotFound type={'notRole'} />,
                 },
                 {
-                    path: '/thanh-toan/:id',
+                    path: '/thanh-toan',
                     element: <CheckOut />,
                     errorElement: <NotFound type={'notAccess'} />,
                 },

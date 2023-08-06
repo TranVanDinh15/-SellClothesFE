@@ -21,6 +21,9 @@ export default function HomeClient() {
     useEffect(() => {
         handleGetAllSlider();
     }, []);
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, []);
     return (
         <div className="HomeClientWrapper">
             <div className="HomeClientWrapper__slider">
