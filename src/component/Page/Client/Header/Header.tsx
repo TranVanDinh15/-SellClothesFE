@@ -23,6 +23,7 @@ import Cart, { useRedux } from '../Cart/Cart';
 import { handleGetCart } from '../Cart/CartMethod';
 import { dataCart } from '../Cart/CartInterFace';
 import { LogOut } from '../../../utils/Api/Api';
+import { json } from 'stream/consumers';
 const headerStyle: React.CSSProperties = {
     color: '#fff',
     minHeight: '90px',
@@ -101,7 +102,8 @@ export default function HeaderClient() {
     const [cartData, setCartData] = useState<dataCart>();
 
     const { itemCategory, setItemCategory, setSortId, urlCustomer, setUrlCustomer, isLoadCart }: any = GetContext();
-    const tokenLocal = localStorage.getItem('token');
+    const [tokenLocal, setTokenLocal] = useState<string>('');
+    console.log(tokenLocal);
     const userLogin = useSelector((state: reduxIterface) => state.reduxAuth.user);
     const [headerCategory, setHeaderCategory] = useState<headerCategory[]>([]);
     const [dataCategory, setDatacategory] = useState<dataCategoy[]>([]);
@@ -111,6 +113,7 @@ export default function HeaderClient() {
     const [openSearch, setOpenSearch] = useState(false);
     // Quản lý hiển thị số lượng sản phẩm trong giỏ hàng
     const [amountCart, setAmountCart] = useState<number>(0);
+    const [isLoadToken, setIsLoadToken] = useState<boolean>(false);
     const [categoryBlog, setCategoryBlog] = useState<{ value: string; code: string }[] | undefined>();
     console.log(categoryBlog);
     const { Option } = Select;
@@ -174,6 +177,8 @@ export default function HeaderClient() {
                             key={index}
                             onClick={() => {
                                 item.id == 3 && LogOut();
+                                localStorage.removeItem('token');
+                                setIsLoadToken((isLoadToken) => !isLoadToken);
                             }}
                         >
                             {/* <Link to="/"> */}
@@ -206,6 +211,10 @@ export default function HeaderClient() {
             setAmountCart(0);
         }
     }, [cartData]);
+    useEffect(() => {
+        const token = localStorage.getItem('token');
+        token ? setTokenLocal(token) : setTokenLocal('');
+    }, [isLoadToken]);
     return (
         <Header style={headerStyle}>
             <header className="headerClientAbove">
