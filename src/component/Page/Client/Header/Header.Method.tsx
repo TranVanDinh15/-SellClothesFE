@@ -1,5 +1,5 @@
 import { message } from 'antd';
-import { getAllCategory } from '../../../utils/Api/Api';
+import { getAllCategory, getSubjectId } from '../../../utils/Api/Api';
 import { dataCategoy, headerCategory, headerCategoryMapItem } from './HeaderInterface';
 const filterCategory = (dataCategory: dataCategoy[], parentCode: string) => {
     var tree = [];
@@ -49,10 +49,20 @@ export const showResultSearch = (setOpen: React.Dispatch<React.SetStateAction<bo
 export const onCloseResultSearch = (setOpen: React.Dispatch<React.SetStateAction<boolean>>) => {
     setOpen(false);
 };
-// export const showFilter = (setOpen: React.Dispatch<React.SetStateAction<boolean>>) => {
-//     setOpen(true);
-// };
-
-// export const onCloseFilter = (setOpen: React.Dispatch<React.SetStateAction<boolean>>) => {
-//     setOpen(false);
-// };
+export const handleGetSubjectId = async (
+    setSubjectId: React.Dispatch<React.SetStateAction<{ value: string; code: string }[] | undefined>>,
+) => {
+    const response = await getSubjectId();
+    if (response && response.status == 200) {
+        //    setSubjectId(response)
+        const mapData = response.data?.data
+            ? response.data?.data.map((item: any, index: any) => {
+                  return {
+                      value: item?.value,
+                      code: item?.code,
+                  };
+              })
+            : '';
+        mapData && setSubjectId(mapData);
+    }
+};

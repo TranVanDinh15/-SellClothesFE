@@ -28,7 +28,6 @@ export const handleUpdateQuantity = async (
         productDetailSizeId: `${productDetailSizeId}`,
         quantity: step,
     });
-    console.log(response);
     if (response && response.status == 201) {
         const responsInitCart = await cartInitApi();
         if (responsInitCart && responsInitCart.status == 200) {
@@ -37,7 +36,6 @@ export const handleUpdateQuantity = async (
             setIsLoadCart((isLoadCart) => !isLoadCart);
         }
     }
-    console.log(response);
 };
 export const hadnleUpdateZero = async (productDetailSizeId: number, step: number, dispatch: any) => {
     const response = await addCartApi({
@@ -52,5 +50,4 @@ export const hadnleUpdateZero = async (productDetailSizeId: number, step: number
             // setIsLoadCart((isLoadCart) => !isLoadCart);
         }
     }
-    console.log(response);
 };

@@ -23,6 +23,7 @@ import Receipt from './component/Page/Admin/Receipt/Receipt';
 import ReceiptDetail from './component/Page/Admin/Receipt/ReceiptDetail';
 import Banner from './component/Page/Admin/Banner/Banner';
 import DashBoadCustom from './component/Page/Admin/Dashboard/DashBoad';
+import BlogClient from './component/Page/Client/pageClient/BlogClient/BlogClient';
 function App() {
     const token = localStorage.getItem('token');
     const router = createBrowserRouter([
@@ -122,6 +123,11 @@ function App() {
                 {
                     path: '/Cart',
                     element: <CartPage />,
+                    errorElement: <NotFound type={'notRole'} />,
+                },
+                {
+                    path: '/blog/:subjectId',
+                    element: <BlogClient />,
                     errorElement: <NotFound type={'notRole'} />,
                 },
                 {

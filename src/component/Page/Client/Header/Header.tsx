@@ -4,7 +4,13 @@ import './HeaderClient.css';
 import { Link, useNavigate } from 'react-router-dom';
 import { Avatar, Badge, Button, Drawer, Input, Menu, Popover, Select } from 'antd';
 import { PhoneOutlined, SearchOutlined, ShoppingCartOutlined, ShoppingOutlined, UserOutlined } from '@ant-design/icons';
-import { getListCategoryFun, getListCategorySub, onCloseResultSearch, showResultSearch } from './Header.Method';
+import {
+    getListCategoryFun,
+    getListCategorySub,
+    handleGetSubjectId,
+    onCloseResultSearch,
+    showResultSearch,
+} from './Header.Method';
 import { chidrenCategory, dataCategoy, headerCategory } from './HeaderInterface';
 import { useSelector } from 'react-redux';
 import { reduxIterface } from '../LoginClient/Login.Interface';
@@ -16,6 +22,7 @@ import images from '../../../../asset';
 import Cart, { useRedux } from '../Cart/Cart';
 import { handleGetCart } from '../Cart/CartMethod';
 import { dataCart } from '../Cart/CartInterFace';
+import { LogOut } from '../../../utils/Api/Api';
 const headerStyle: React.CSSProperties = {
     color: '#fff',
     minHeight: '90px',
@@ -92,8 +99,7 @@ export default function HeaderClient() {
     const curentUser = useSelector((state: useRedux) => state.reduxAuth.user);
     // Chứa dữ liệu Cart
     const [cartData, setCartData] = useState<dataCart>();
-    console.log(curentUser);
-    console.log(cartData);
+
     const { itemCategory, setItemCategory, setSortId, urlCustomer, setUrlCustomer, isLoadCart }: any = GetContext();
     const tokenLocal = localStorage.getItem('token');
     const userLogin = useSelector((state: reduxIterface) => state.reduxAuth.user);
@@ -105,6 +111,8 @@ export default function HeaderClient() {
     const [openSearch, setOpenSearch] = useState(false);
     // Quản lý hiển thị số lượng sản phẩm trong giỏ hàng
     const [amountCart, setAmountCart] = useState<number>(0);
+    const [categoryBlog, setCategoryBlog] = useState<{ value: string; code: string }[] | undefined>();
+    console.log(categoryBlog);
     const { Option } = Select;
     const selectBefore = (
         <Select defaultValue="Sản Phẩm" style={{ width: 120 }}>
@@ -135,15 +143,42 @@ export default function HeaderClient() {
             </ul>
         );
     };
+    const subNavItemBlog = () => {
+        return (
+            <>
+                {categoryBlog ? (
+                    <ul>
+                        {categoryBlog.map((item: { value: string; code: string }, index: number) => {
+                            return (
+                                <li className="subnavCategory" key={index}>
+                                    <Link to={`/blog/${item.code}`}>
+                                        <span>{item.value}</span>
+                                    </Link>
+                                </li>
+                            );
+                        })}
+                    </ul>
+                ) : (
+                    ''
+                )}
+            </>
+        );
+    };
     const subNavItemUser = (itemsData: chidrenCategory[]) => {
         return (
             <ul>
                 {itemsData.map((item: chidrenCategory, index: number) => {
                     return (
-                        <li className="subnavCategory" key={index}>
-                            <Link to="/">
-                                <span>{item.name}</span>
-                            </Link>
+                        <li
+                            className="subnavCategory"
+                            key={index}
+                            onClick={() => {
+                                item.id == 3 && LogOut();
+                            }}
+                        >
+                            {/* <Link to="/"> */}
+                            <span>{item.name}</span>
+                            {/* </Link> */}
                         </li>
                     );
                 })}
@@ -152,6 +187,7 @@ export default function HeaderClient() {
     };
     useEffect(() => {
         getListCategoryFun(setHeaderCategory);
+        handleGetSubjectId(setCategoryBlog);
     }, []);
     useEffect(() => {
         if (saveCodeCategory) {
@@ -254,7 +290,11 @@ export default function HeaderClient() {
                     {itemsMenu.map((item: any, index: number) => {
                         return (
                             <li key={index}>
-                                <Popover content={subNavItemHeader(item.children)} placement="bottomLeft" arrow={false}>
+                                <Popover
+                                    content={item?.id == 1 ? subNavItemBlog() : subNavItemHeader(item.children)}
+                                    placement="bottomLeft"
+                                    arrow={false}
+                                >
                                     <Button type="text" className="ListHeaderCat ">
                                         {item.name}
                                     </Button>

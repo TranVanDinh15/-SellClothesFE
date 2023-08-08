@@ -5,8 +5,8 @@
     gap: 20px;
 }
 .headerClientAbove__Logo a img {
-    width: 100px;
-    height: 100px;
+    width: 120px;
+    height: 90px;
     object-fit: contain;
 }
 .headerClientAbove {
@@ -125,6 +125,7 @@
 .subnavCategory {
     width: 200px;
     padding: 10px 4px;
+    cursor: pointer;
 }
 .subnavCategory a {
     /* color: #11006f; */

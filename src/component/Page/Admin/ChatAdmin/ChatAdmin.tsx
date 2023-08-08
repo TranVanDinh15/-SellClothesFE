@@ -1,28 +1,15 @@
-import { MessageOutlined, SendOutlined, UserOutlined } from '@ant-design/icons';
+import { CheckCircleOutlined, MessageOutlined, SendOutlined, UserOutlined } from '@ant-design/icons';
 import { Button, Popover, Badge, Input, Row, Col, Avatar, Image } from 'antd';
 import React, { useEffect, useState } from 'react';
-import './ChatClient.scss';
-import { handleCreateRoom, handleGetMess, handleGetRoom, handleGetadminApp } from './ChatClientMethod';
+// import './ChatAdmin.scss';
+// import { handleCreateRoom, handleGetMess, handleGetRoom, handleGetadminApp } from './ChatClientMethod';
 import SelectCustomer from '../../Admin/common/Select/Select';
 import { socket } from '../../Admin/common/Socket/SocketConfig';
+import { handleGetRoomsAdmin } from './ChatAdminMethod';
 import { useSelector } from 'react-redux';
-import { match } from 'assert';
 export interface adminAppIf {
     value: string;
     label: string;
-}
-export interface ListRooms {
-    id: number;
-    userOneId: number;
-    userTwoId: number;
-    createdAt: string;
-    updatedAt: string;
-    unreadCount: number;
-    userTwo: {
-        firstName: string;
-        image: string;
-        lastName: string;
-    };
 }
 export interface useRedux {
     reduxAuth: {
@@ -30,6 +17,18 @@ export interface useRedux {
         user: any;
         isLoading: boolean;
         isfail: boolean;
+    };
+}
+export interface ListRooms {
+    id: number;
+    userOneId: number;
+    userTwoId: number;
+    createdAt: string;
+    updatedAt: string;
+    userOne: {
+        firstName: string;
+        image: string;
+        lastName: string;
     };
 }
 interface messageIF {
@@ -57,7 +56,7 @@ interface messageIF {
     };
     userId: number;
 }
-export default function ChatClient() {
+export default function ChatAdmin() {
     // Get User Hiện tại
     const curentUser = useSelector((state: useRedux) => state.reduxAuth.user);
     // Quản lý Input nhập tin nhắn
@@ -68,13 +67,9 @@ export default function ChatClient() {
     const [currentRoomId, setCurrentRoomId] = useState<number>(0);
     const [isTyping, setIsTyping] = useState<boolean>(false);
     const [userReceiveId, setUserReceiveId] = useState<number>(0);
-    const [numberRoom, setNumberRoom] = useState<number>(0);
     const [unreadMark, setUnReadMark] = useState<number>(0);
     const [isFlagStatus, setIsFlagStatus] = useState<string>('');
     const [isFlagReadvsUnRead, setIsFlagReadvsUnRead] = useState<any>();
-    const [isLoadRoom, setIsLoadRoom] = useState<boolean>(false);
-
-    console.log(listRoomChat);
     const contentMessage = (
         <div className="ChatClienContent">
             <Row gutter={16}>
@@ -92,7 +87,7 @@ export default function ChatClient() {
                                         const data = {
                                             userTwoId: value,
                                         };
-                                        handleCreateRoom(data);
+                                        // handleCreateRoom(data);
                                     }}
                                     onSearch={(value: any) => {
                                         // onChangeProductSelect(value, setProductDetailApp);
@@ -108,28 +103,23 @@ export default function ChatClient() {
                                 <div className="ListRoomMessage__Content__Item">
                                     {listRoomChat
                                         ? listRoomChat.map((item, index) => {
-                                              console.log(item);
                                               return (
-                                                  <Badge count={item?.unreadCount}>
-                                                      <Button
-                                                          type="text"
-                                                          key={index}
-                                                          onClick={() => {
-                                                              //   handleGetMess(Number(item.userTwoId), setMessageByRoom);
-                                                              socket.emit('join', {
-                                                                  roomId: item.id,
-                                                                  userId: item.userTwoId,
-                                                              });
-                                                              setCurrentRoomId(item.id);
-                                                              console.log(item);
-                                                              setUserReceiveId(item?.userTwoId);
-                                                              setNumberRoom(item?.id);
-                                                          }}
-                                                      >
-                                                          <Avatar size="small" icon={<UserOutlined />} />
-                                                          <span>{`${item.userTwo.firstName} ${item.userTwo.lastName}`}</span>
-                                                      </Button>
-                                                  </Badge>
+                                                  <Button
+                                                      type="text"
+                                                      key={index}
+                                                      onClick={() => {
+                                                          //   handleGetMess(Number(item.userTwoId), setMessageByRoom);
+                                                          socket.emit('join', {
+                                                              roomId: item.id,
+                                                              userId: item.userOneId,
+                                                          });
+                                                          setCurrentRoomId(item.id);
+                                                          setUserReceiveId(item?.userOneId);
+                                                      }}
+                                                  >
+                                                      <Avatar size="small" icon={<UserOutlined />} />
+                                                      <span>{`${item.userOne.firstName} ${item.userOne.lastName}`}</span>
+                                                  </Button>
                                               );
                                           })
                                         : ''}
@@ -141,12 +131,11 @@ export default function ChatClient() {
                 <Col span={18}>
                     <div className="ChatClienContent__BoxChat">
                         <div className="titleName">
-                            <Badge status="success" text={`Phòng ${numberRoom ? numberRoom : ''}`} />
+                            <Badge status="success" text="TD Shop" />
                         </div>
                         <div className="SpaceChat">
                             {getMessageByRoom
                                 ? getMessageByRoom.map((item, index) => {
-                                      console.log(item);
                                       return (
                                           <div
                                               className={`${
@@ -155,6 +144,11 @@ export default function ChatClient() {
                                                       : `SpaceChat__MessageAdmin`
                                               }  `}
                                               key={index}
+                                              //   onClick={() => {
+                                              //       isFlagStatus && isFlagStatus == item?.id
+                                              //           ? setIsFlagStatus('')
+                                              //           : setIsFlagStatus(item.id);
+                                              //   }}
                                           >
                                               <div className="messageItem">
                                                   <div
@@ -197,13 +191,16 @@ export default function ChatClient() {
                                     </span>
                                 </div>
                             </div>
+                            {isTyping === false ? '' : <img width={'80px'} src="https://kyawmal.tech/loading.gif" />}
                         </div>
                         <div className="InputChat">
-                            {isTyping == false ? '' : <img width={'80px'} src="https://kyawmal.tech/loading.gif" />}
                             <Input
                                 placeholder="Nhập nội dung tin nhắn"
                                 spellCheck={false}
                                 // value={message}
+                                onChange={(value) => {
+                                    setMessage(String(value.target.value));
+                                }}
                                 onFocus={() => {
                                     socket.emit('typing', {
                                         userId: curentUser?.id,
@@ -218,10 +215,8 @@ export default function ChatClient() {
                                         typing: false,
                                     });
                                 }}
-                                onChange={(value) => {
-                                    setMessage(String(value.target.value));
-                                }}
                             />
+
                             <SendOutlined
                                 className={`SendMessageIcon ${message ? 'sendMessageHaveText' : ''}`}
                                 onClick={() => {
@@ -232,7 +227,6 @@ export default function ChatClient() {
                                             text: message,
                                             userIdReceive: userReceiveId,
                                         });
-                                        // setIsFlagReadvsUnRead('');
                                     }
                                 }}
                             />
@@ -243,12 +237,14 @@ export default function ChatClient() {
         </div>
     );
     useEffect(() => {
-        handleGetadminApp(setAdminApp);
+        // handleGetadminApp(setAdminApp);
     }, []);
-    useEffect(() => {}, []);
+    useEffect(() => {
+        handleGetRoomsAdmin(setListRoomChat);
+    }, []);
     useEffect(() => {
         socket.on('roomMessages', (data) => {
-            console.log('messageRoom', data);
+            console.log(data); // x8WIv7-mJelg7on_ALbx
             if (data) {
                 setMessageByRoom(data);
                 setTimeout(() => {
@@ -259,15 +255,15 @@ export default function ChatClient() {
     }, [socket]);
     useEffect(() => {
         socket.on('messSent', (data) => {
-            console.log('sent:', data); // x8WIv7-mJelg7on_ALbx
+            console.log(data); // x8WIv7-mJelg7on_ALbx
+            console.log(getMessageByRoom.includes(data?.id));
             setMessageByRoom((messageByRoom) => [...messageByRoom, data]);
+            setIsFlagStatus('Đã gửi');
         });
         socket.on('message', (data) => {
-            console.log('message', data); // x8WIv7-mJelg7on_ALbx
             setMessageByRoom((messageByRoom) => [...messageByRoom, data]);
-            console.log(data);
-
             socket.emit('read', { id: data?.id, roomId: data?.roomId, userId: curentUser?.id });
+            console.log(data);
         });
         socket.on('typing', (data) => {
             console.log(data);
@@ -275,9 +271,8 @@ export default function ChatClient() {
         });
         socket.on('unReadMark', (data) => {
             console.log('unReadMark', data);
-            // data && data?.totalRoomUnRead && curentUser?.id == data?.userId && setUnReadMark(data?.totalRoomUnRead);
             setUnReadMark(data?.totalRoomUnRead);
-            handleGetRoom(setListRoomChat);
+            handleGetRoomsAdmin(setListRoomChat);
         });
         socket.on('pleaseCheck', (data) => {
             console.log('pleaseCheck', data);
@@ -314,7 +309,7 @@ export default function ChatClient() {
                         <span
                             style={{
                                 fontSize: '20px',
-                                color: 'rgb(0, 191, 255)',
+                                color: '#1677ff',
                             }}
                         >
                             Chat
@@ -325,13 +320,7 @@ export default function ChatClient() {
                     className="PopoverChat"
                 >
                     <Badge count={unreadMark ? unreadMark : 0}>
-                        <Button
-                            type="ghost"
-                            icon={<MessageOutlined />}
-                            onClick={() => {
-                                handleGetRoom(setListRoomChat);
-                            }}
-                        >
+                        <Button type="ghost" icon={<MessageOutlined />}>
                             Chat
                         </Button>
                     </Badge>

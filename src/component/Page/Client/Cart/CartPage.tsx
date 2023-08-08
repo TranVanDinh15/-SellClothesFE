@@ -100,13 +100,9 @@ export default function CartPage() {
     const { setIsLoadCart }: any = GetContext();
     // const [isLoadCartPage, setIsLoadCartPage] = useState<boolean>(false);
     const getCartRedux = useSelector((state: cartRedux) => state.CartReducer.cartRedux);
-    console.log(getCartRedux);
     const [dataTableCart, setDatatableCart] = useState<dataTableCart[]>([]);
     const [valueInput, setValueInput] = useState<number | undefined>();
-    console.log(valueInput);
-    console.log(dataTableCart);
-    // const []
-    console.log(getCartRedux);
+
     const columns: ColumnsType<dataTableCart> = [
         {
             title: 'Sản phẩm ',
@@ -185,13 +181,7 @@ export default function CartPage() {
         {
             title: 'Tổng tiền',
             render: (value, record) => (
-                <span
-                    onClick={() => {
-                        console.log(record);
-                    }}
-                >
-                    {convertVND(Number(record.discountPrice) * Number(record.quantity))}
-                </span>
+                <span onClick={() => {}}>{convertVND(Number(record.discountPrice) * Number(record.quantity))}</span>
             ),
         },
         // {

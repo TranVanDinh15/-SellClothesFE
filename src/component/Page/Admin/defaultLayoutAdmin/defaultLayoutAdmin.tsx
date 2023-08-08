@@ -14,6 +14,7 @@ import { AntDesignOutlined } from '@ant-design/icons';
 import { Avatar } from 'antd';
 import './defaultLayoutAdmin.css';
 import images from '../../../../asset';
+import ChatAdmin from '../ChatAdmin/ChatAdmin';
 const { Search } = Input;
 const { Header, Content, Footer, Sider } = Layout;
 type MenuItem = Required<MenuProps>['items'][number];
@@ -37,15 +38,12 @@ const items: MenuItem[] = [
     getItem('Quản lý sản phẩm', '/Admin/Product', <RiProductHuntLine className="iconSidebarCss" />, [
         getItem('Danh sách sản phẩm', '/Admin/Product'),
         getItem('Danh mục sản phẩm', '/Admin/Product/Category'),
-        // getItem('Màu sắc', '/Admin/Product/Color'),
     ]),
     getItem('Quản lý NCC', '/Admin/Supplier', <BiUser className="iconSidebarCss" />),
     getItem('Quản lý nhập hàng', '/Admin/ImportFoods', <BiImport className="iconSidebarCss" />),
 
     getItem('Quản lý bài đăng', '/Admin/Blog/listBlog', <TbBrandBlogger className="iconSidebarCss" />),
     getItem('Quản lý Banner', '/Admin/Banner', <BsCardImage className="iconSidebarCss" />),
-    // getItem('User', 'sub1', <UserOutlined />, [getItem('Tom', '3'), getItem('Bill', '4'), getItem('Alex', '5')]),
-    // getItem('Team', 'sub2', <TeamOutlined />, [getItem('Team 1', '6'), getItem('Team 2', '8')]),
 ];
 const onSearch = (value: string) => console.log(value);
 export default function DefaultLayoutAdmin() {
@@ -114,6 +112,7 @@ export default function DefaultLayoutAdmin() {
                 </Content>
                 {/* <Footer style={{ textAlign: 'center' }}>Ant Design ©2023 Created by Ant UED</Footer> */}
             </Layout>
+            <ChatAdmin />
         </Layout>
     );
 }

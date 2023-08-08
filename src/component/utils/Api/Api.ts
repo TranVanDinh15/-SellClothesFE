@@ -24,7 +24,10 @@ export const deleteBrand = (id: any) => {
 export const loginAdmin = (data: any) => {
     return AxiosInstance.post('/auth/login', data);
 };
-
+// LogOut
+export const LogOut = () => {
+    return AxiosInstance.patch('/auth/logout');
+};
 // get category paginate
 export const getAllCategory = (page: any, pagesize: any) => {
     return AxiosInstance.get(`/all-code/CATEGORY?page=${page}&size=${pagesize}&sortcreatedAt=DESC`);
@@ -301,4 +304,24 @@ export const getAmountOrder = (startDate: any, endDate: any) => {
 // get product Sold
 export const getProductSold = (startDate: any, endDate: any) => {
     return AxiosInstance.get(`/dashboard/product-sold?startDate=${startDate}&endDate=${endDate}`);
+};
+// Get User Role Id
+export const getUserRoleId = (id: string) => {
+    return AxiosInstance.get(`/user?roleId=${id}`);
+};
+// Create Room Message
+export const createRoomMessage = (data: { userTwoId: number }) => {
+    return AxiosInstance.post(`/room-messages/create`, data);
+};
+// Get Rooms by Id
+export const getRooms = () => {
+    return AxiosInstance.get('/room-messages/rooms');
+};
+// Get Message
+export const getMessageByRoom = (id: number) => {
+    return AxiosInstance.get(`/room-messages/messages/${id}`);
+};
+// Get rooms Admin
+export const getRoomsAdmin = () => {
+    return AxiosInstance.get(`/room-messages/rooms-admin`);
 };
