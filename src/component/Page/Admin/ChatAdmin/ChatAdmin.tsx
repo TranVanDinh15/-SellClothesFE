@@ -25,6 +25,7 @@ export interface ListRooms {
     userTwoId: number;
     createdAt: string;
     updatedAt: string;
+    unreadCount: string;
     userOne: {
         firstName: string;
         image: string;
@@ -104,22 +105,23 @@ export default function ChatAdmin() {
                                     {listRoomChat
                                         ? listRoomChat.map((item, index) => {
                                               return (
-                                                  <Button
-                                                      type="text"
-                                                      key={index}
-                                                      onClick={() => {
-                                                          //   handleGetMess(Number(item.userTwoId), setMessageByRoom);
-                                                          socket.emit('join', {
-                                                              roomId: item.id,
-                                                              userId: item.userOneId,
-                                                          });
-                                                          setCurrentRoomId(item.id);
-                                                          setUserReceiveId(item?.userOneId);
-                                                      }}
-                                                  >
-                                                      <Avatar size="small" icon={<UserOutlined />} />
-                                                      <span>{`${item.userOne.firstName} ${item.userOne.lastName}`}</span>
-                                                  </Button>
+                                                  <Badge count={item?.unreadCount}>
+                                                      <Button
+                                                          type="text"
+                                                          key={index}
+                                                          onClick={() => {
+                                                              socket.emit('join', {
+                                                                  roomId: item.id,
+                                                                  userId: item.userOneId,
+                                                              });
+                                                              setCurrentRoomId(item.id);
+                                                              setUserReceiveId(item?.userOneId);
+                                                          }}
+                                                      >
+                                                          <Avatar size="small" icon={<UserOutlined />} />
+                                                          <span>{`${item.userOne.firstName} ${item.userOne.lastName}`}</span>
+                                                      </Button>
+                                                  </Badge>
                                               );
                                           })
                                         : ''}
@@ -238,8 +240,6 @@ export default function ChatAdmin() {
     );
     useEffect(() => {
         // handleGetadminApp(setAdminApp);
-    }, []);
-    useEffect(() => {
         handleGetRoomsAdmin(setListRoomChat);
     }, []);
     useEffect(() => {
@@ -261,9 +261,9 @@ export default function ChatAdmin() {
             setIsFlagStatus('Đã gửi');
         });
         socket.on('message', (data) => {
+            console.log('message', data);
             setMessageByRoom((messageByRoom) => [...messageByRoom, data]);
             socket.emit('read', { id: data?.id, roomId: data?.roomId, userId: curentUser?.id });
-            console.log(data);
         });
         socket.on('typing', (data) => {
             console.log(data);
@@ -320,7 +320,7 @@ export default function ChatAdmin() {
                     className="PopoverChat"
                 >
                     <Badge count={unreadMark ? unreadMark : 0}>
-                        <Button type="ghost" icon={<MessageOutlined />}>
+                        <Button type="ghost" icon={<MessageOutlined />} onClick={() => {}}>
                             Chat
                         </Button>
                     </Badge>

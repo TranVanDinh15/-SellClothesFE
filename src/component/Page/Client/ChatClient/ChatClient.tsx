@@ -116,6 +116,7 @@ export default function ChatClient() {
                                                           key={index}
                                                           onClick={() => {
                                                               //   handleGetMess(Number(item.userTwoId), setMessageByRoom);
+
                                                               socket.emit('join', {
                                                                   roomId: item.id,
                                                                   userId: item.userTwoId,
@@ -243,7 +244,7 @@ export default function ChatClient() {
         </div>
     );
     useEffect(() => {
-        handleGetadminApp(setAdminApp);
+        // handleGetadminApp(setAdminApp);
     }, []);
     useEffect(() => {}, []);
     useEffect(() => {
@@ -261,12 +262,11 @@ export default function ChatClient() {
         socket.on('messSent', (data) => {
             console.log('sent:', data); // x8WIv7-mJelg7on_ALbx
             setMessageByRoom((messageByRoom) => [...messageByRoom, data]);
+            setIsFlagStatus('Đã gửi');
         });
         socket.on('message', (data) => {
             console.log('message', data); // x8WIv7-mJelg7on_ALbx
             setMessageByRoom((messageByRoom) => [...messageByRoom, data]);
-            console.log(data);
-
             socket.emit('read', { id: data?.id, roomId: data?.roomId, userId: curentUser?.id });
         });
         socket.on('typing', (data) => {
