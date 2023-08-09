@@ -24,6 +24,7 @@ import ReceiptDetail from './component/Page/Admin/Receipt/ReceiptDetail';
 import Banner from './component/Page/Admin/Banner/Banner';
 import DashBoadCustom from './component/Page/Admin/Dashboard/DashBoad';
 import BlogClient from './component/Page/Client/pageClient/BlogClient/BlogClient';
+import BlogClientItem from './component/Page/Client/pageClient/BlogClient/BlogClientItem';
 function App() {
     const token = localStorage.getItem('token');
     const router = createBrowserRouter([
@@ -128,6 +129,11 @@ function App() {
                 {
                     path: '/blog/:subjectId',
                     element: <BlogClient />,
+                    errorElement: <NotFound type={'notRole'} />,
+                },
+                {
+                    path: '/:SujectId/:id',
+                    element: <BlogClientItem />,
                     errorElement: <NotFound type={'notRole'} />,
                 },
                 {

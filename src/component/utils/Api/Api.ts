@@ -221,6 +221,10 @@ export const deleteReceipt = (id: number) => {
 export const GetBlog = (currentPage: number, pageSize: number) => {
     return AxiosInstance.get(`/blog?page=${currentPage}&size=${pageSize}&sortupdatedAt=DESC`);
 };
+// Get Blog By Id
+export const GetBlogById = (SubjectId: string, currentPage: number, pageSize: number) => {
+    return AxiosInstance.get(`/blog/?SubjectId=${SubjectId}&page=${currentPage}&size=${pageSize}&sortupdatedAt=DESC`);
+};
 // Add Blog
 export const AddBlog = (data: { title: string; shortDescription: string }) => {
     return AxiosInstance.post(`/blog`, data);

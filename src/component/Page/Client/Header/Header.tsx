@@ -2,7 +2,7 @@ import { Header } from 'antd/es/layout/layout';
 import React, { useEffect, useState } from 'react';
 import './HeaderClient.css';
 import { Link, useNavigate } from 'react-router-dom';
-import { Avatar, Badge, Button, Drawer, Input, Menu, Popover, Select } from 'antd';
+import { Avatar, Badge, Button, Drawer, Input, Menu, Popover, Select, message } from 'antd';
 import { PhoneOutlined, SearchOutlined, ShoppingCartOutlined, ShoppingOutlined, UserOutlined } from '@ant-design/icons';
 import {
     getListCategoryFun,
@@ -114,7 +114,7 @@ export default function HeaderClient() {
     // Quản lý hiển thị số lượng sản phẩm trong giỏ hàng
     const [amountCart, setAmountCart] = useState<number>(0);
     const [isLoadToken, setIsLoadToken] = useState<boolean>(false);
-    const [categoryBlog, setCategoryBlog] = useState<{ value: string; code: string }[] | undefined>();
+    const [categoryBlog, setCategoryBlog] = useState<{ value: string; code: string; id: number }[] | undefined>();
     console.log(categoryBlog);
     const { Option } = Select;
     const selectBefore = (
@@ -151,7 +151,7 @@ export default function HeaderClient() {
             <>
                 {categoryBlog ? (
                     <ul>
-                        {categoryBlog.map((item: { value: string; code: string }, index: number) => {
+                        {categoryBlog.map((item: { value: string; code: string; id: number }, index: number) => {
                             return (
                                 <li className="subnavCategory" key={index}>
                                     <Link to={`/blog/${item.code}`}>
@@ -175,8 +175,9 @@ export default function HeaderClient() {
                         <li
                             className="subnavCategory"
                             key={index}
-                            onClick={() => {
-                                item.id == 3 && LogOut();
+                            onClick={async () => {
+                                item.id == 3 && (await LogOut());
+                                message.success('Đã đăng xuất tài khoản');
                                 localStorage.removeItem('token');
                                 setIsLoadToken((isLoadToken) => !isLoadToken);
                             }}
@@ -464,12 +465,9 @@ export default function HeaderClient() {
                         <Popover
                             content={<Cart cartData={cartData} />}
                             arrow={true}
-                            style={{
-                                borderRadius: 'initial',
-                                marginTop: '20px ',
-                            }}
                             title={'Sản phẩm mới thêm'}
                             placement="bottomLeft"
+                            className="headerClientAbove__Cart__Popover"
                         >
                             <Badge count={amountCart}>
                                 <Button
@@ -478,7 +476,6 @@ export default function HeaderClient() {
                                         <ShoppingOutlined
                                             style={{
                                                 fontSize: '25px',
-                                                // color: '#11006f',
                                             }}
                                         />
                                     }
@@ -487,86 +484,24 @@ export default function HeaderClient() {
                         </Popover>
                     </div>
                     {tokenLocal ? (
-                        <Button
-                            type="ghost"
-                            style={{
-                                verticalAlign: 'middle',
-                                display: 'flex',
-                                gap: '4px',
-                                alignItems: 'center',
-                            }}
-                        >
+                        <Button className="boxUserAlreadyLogin" type="ghost">
                             <Popover content={subNavItemUser(manageUser)} placement="bottomLeft" arrow={false}>
-                                <div
-                                    style={{
-                                        verticalAlign: 'middle',
-                                        display: 'flex',
-                                        gap: '4px',
-                                        alignItems: 'center',
-                                    }}
-                                >
+                                <div className="boxUserAlreadyLogin__AvatarAndName">
                                     <Avatar
                                         size="default"
                                         icon={<UserOutlined />}
                                         src={`${process.env.REACT_APP_IMAGE_AVATAR_URL}${curentUser?.image}`}
                                     />
-                                    <span
-                                        style={{
-                                            fontSize: '13px',
-                                            color: '#000',
-                                        }}
-                                    >
-                                        {curentUser?.fullName}
-                                    </span>
+                                    <span>{curentUser?.fullName}</span>
                                 </div>
                             </Popover>
                         </Button>
                     ) : (
-                        <div
-                            className="headerClientAbove__LoginOut"
-                            style={{
-                                verticalAlign: 'middle',
-                            }}
-                        >
-                            {/* <Button
-                                type="text"
-                                icon={
-                                    <UserOutlined
-                                        style={{
-                                            border: 'none',
-                                            fontSize: '16px',
-                                            // color: '#11006f',
-                                        }}
-                                    />
-                                }
-                            ></Button> */}
-                            <Button
-                                type="text"
-                                style={{
-                                    fontSize: '15px',
-                                    padding: '4px ',
-                                    // color: '#11006f',
-                                }}
-                            >
-                                Đăng Ký
-                            </Button>
-                            <span
-                                style={{
-                                    // color: '#11006f',
-                                    fontSize: '15px',
-                                }}
-                            >
-                                \
-                            </span>
+                        <div className="headerClientAbove__LoginOut">
+                            <Button type="text">Đăng Ký</Button>
+                            <span>\</span>
                             <Link to={'/signIn'}>
-                                <Button
-                                    type="text"
-                                    style={{
-                                        fontSize: '15px',
-                                        padding: '4px',
-                                        // color: '#11006f',
-                                    }}
-                                >
+                                <Button type="text" className="btnLoginClick">
                                     Đăng Nhập
                                 </Button>
                             </Link>

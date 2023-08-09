@@ -50,7 +50,7 @@ export const onCloseResultSearch = (setOpen: React.Dispatch<React.SetStateAction
     setOpen(false);
 };
 export const handleGetSubjectId = async (
-    setSubjectId: React.Dispatch<React.SetStateAction<{ value: string; code: string }[] | undefined>>,
+    setSubjectId: React.Dispatch<React.SetStateAction<{ value: string; code: string; id: number }[] | undefined>>,
 ) => {
     const response = await getSubjectId();
     if (response && response.status == 200) {
@@ -60,6 +60,7 @@ export const handleGetSubjectId = async (
                   return {
                       value: item?.value,
                       code: item?.code,
+                      id: item?.id,
                   };
               })
             : '';

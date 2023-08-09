@@ -133,6 +133,7 @@
 }
 .headerClientAbove__Cart {
     display: flex;
+    transform: translateY(-13px);
 }
 .searchResultInputContainer input {
     height: 40px;
@@ -165,5 +166,39 @@
     height: 41px;
 }
 .ant-popover-content {
+    margin-top: 20px;
+}
+.boxUserAlreadyLogin {
+    vertical-align: middle;
+    display: flex;
+    gap: 4px;
+    align-items: center;
+}
+.boxUserAlreadyLogin__AvatarAndName {
+    vertical-align: middle;
+    display: flex;
+    gap: 4px;
+    align-items: center;
+}
+.boxUserAlreadyLogin__AvatarAndName span {
+    font-size: 13px;
+    color: #000;
+}
+.headerClientAbove__LoginOut {
+    vertical-align: middle;
+}
+.headerClientAbove__LoginOut button {
+    font-size: 15px;
+    padding: 4px;
+}
+.headerClientAbove__LoginOut span {
+    font-size: 15px;
+}
+.btnLoginClick {
+    font-size: 15px;
+    padding: 4px;
+}
+.headerClientAbove__Cart__Popover {
+    border-radius: initial;
     margin-top: 20px;
 }

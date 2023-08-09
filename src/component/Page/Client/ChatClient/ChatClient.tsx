@@ -23,6 +23,7 @@ export interface ListRooms {
         firstName: string;
         image: string;
         lastName: string;
+        statusId: string;
     };
 }
 export interface useRedux {
@@ -69,6 +70,7 @@ export default function ChatClient() {
     const [message, setMessage] = useState<string>('');
     const [adminApp, setAdminApp] = useState<adminAppIf[] | undefined>();
     const [listRoomChat, setListRoomChat] = useState<ListRooms[] | undefined>();
+    console.log(listRoomChat);
     const [getMessageByRoom, setMessageByRoom] = useState<messageIF[]>([]);
     const [currentRoomId, setCurrentRoomId] = useState<number>(0);
     const [isTyping, setIsTyping] = useState<boolean>(false);
@@ -125,13 +127,14 @@ export default function ChatClient() {
                                         ? listRoomChat.map((item, index) => {
                                               console.log(item);
                                               return (
-                                                  <Badge count={item?.unreadCount}>
+                                                  <Badge
+                                                      count={item?.unreadCount}
+                                                      //   status={item.userTwo.statusId === 'ON' ? 'success' : 'default'}
+                                                  >
                                                       <Button
                                                           type="text"
                                                           key={index}
                                                           onClick={() => {
-                                                              //   handleGetMess(Number(item.userTwoId), setMessageByRoom);
-
                                                               socket.emit('join', {
                                                                   roomId: item.id,
                                                                   userId: item.userTwoId,
@@ -142,6 +145,11 @@ export default function ChatClient() {
                                                               setNumberRoom(item?.id);
                                                           }}
                                                       >
+                                                          <Badge
+                                                              status={
+                                                                  item.userTwo.statusId === 'ON' ? 'success' : 'default'
+                                                              }
+                                                          />
                                                           <Avatar size="small" icon={<UserOutlined />} />
                                                           <span>{`${item.userTwo.firstName} ${item.userTwo.lastName}`}</span>
                                                       </Button>
