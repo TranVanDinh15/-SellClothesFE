@@ -98,9 +98,9 @@ export default function HeaderClient() {
     const navigate = useNavigate();
     // Get User Hiện tại
     const curentUser = useSelector((state: useRedux) => state.reduxAuth.user);
+    console.log(curentUser);
     // Chứa dữ liệu Cart
     const [cartData, setCartData] = useState<dataCart>();
-
     const { itemCategory, setItemCategory, setSortId, urlCustomer, setUrlCustomer, isLoadCart }: any = GetContext();
     const [tokenLocal, setTokenLocal] = useState<string>('');
     console.log(tokenLocal);
@@ -487,15 +487,40 @@ export default function HeaderClient() {
                         </Popover>
                     </div>
                     {tokenLocal ? (
-                        <div
+                        <Button
+                            type="ghost"
                             style={{
                                 verticalAlign: 'middle',
+                                display: 'flex',
+                                gap: '4px',
+                                alignItems: 'center',
                             }}
                         >
                             <Popover content={subNavItemUser(manageUser)} placement="bottomLeft" arrow={false}>
-                                <Avatar size="default" icon={<UserOutlined />} />
+                                <div
+                                    style={{
+                                        verticalAlign: 'middle',
+                                        display: 'flex',
+                                        gap: '4px',
+                                        alignItems: 'center',
+                                    }}
+                                >
+                                    <Avatar
+                                        size="default"
+                                        icon={<UserOutlined />}
+                                        src={`${process.env.REACT_APP_IMAGE_AVATAR_URL}${curentUser?.image}`}
+                                    />
+                                    <span
+                                        style={{
+                                            fontSize: '13px',
+                                            color: '#000',
+                                        }}
+                                    >
+                                        {curentUser?.fullName}
+                                    </span>
+                                </div>
                             </Popover>
-                        </div>
+                        </Button>
                     ) : (
                         <div
                             className="headerClientAbove__LoginOut"

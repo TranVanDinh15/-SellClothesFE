@@ -1,12 +1,13 @@
-import { CheckCircleOutlined, MessageOutlined, SendOutlined, UserOutlined } from '@ant-design/icons';
-import { Button, Popover, Badge, Input, Row, Col, Avatar, Image } from 'antd';
-import React, { useEffect, useState } from 'react';
+import { CheckCircleOutlined, DownOutlined, MessageOutlined, SendOutlined, UserOutlined } from '@ant-design/icons';
+import { Button, Popover, Badge, Input, Row, Col, Avatar, Image, Empty } from 'antd';
+import React, { useEffect, useRef, useState } from 'react';
 // import './ChatAdmin.scss';
 // import { handleCreateRoom, handleGetMess, handleGetRoom, handleGetadminApp } from './ChatClientMethod';
 import SelectCustomer from '../../Admin/common/Select/Select';
 import { socket } from '../../Admin/common/Socket/SocketConfig';
 import { handleGetRoomsAdmin } from './ChatAdminMethod';
 import { useSelector } from 'react-redux';
+import images from '../../../../asset';
 export interface adminAppIf {
     value: string;
     label: string;
@@ -57,7 +58,11 @@ interface messageIF {
     };
     userId: number;
 }
+
 export default function ChatAdmin() {
+    const containerRef = useRef<HTMLDivElement>(null);
+    const messagesEndRef = useRef<HTMLDivElement | null>(null);
+    const [isAtBottom, setIsAtBottom] = useState<boolean>(false);
     // Get User Hiện tại
     const curentUser = useSelector((state: useRedux) => state.reduxAuth.user);
     // Quản lý Input nhập tin nhắn
@@ -71,6 +76,18 @@ export default function ChatAdmin() {
     const [unreadMark, setUnReadMark] = useState<number>(0);
     const [isFlagStatus, setIsFlagStatus] = useState<string>('');
     const [isFlagReadvsUnRead, setIsFlagReadvsUnRead] = useState<any>();
+    const [isNewMessage, setIsNewMessage] = useState<boolean>(false);
+    const [isDownEndPage, setIsDownEndPage] = useState<boolean>(false);
+    const checkScrollPosition = () => {
+        if (containerRef.current) {
+            const { scrollTop, clientHeight, scrollHeight } = containerRef.current;
+            if (scrollTop + clientHeight >= scrollHeight) {
+                setIsAtBottom(true);
+            } else {
+                setIsAtBottom(false);
+            }
+        }
+    };
     const contentMessage = (
         <div className="ChatClienContent">
             <Row gutter={16}>
@@ -131,113 +148,167 @@ export default function ChatAdmin() {
                     </div>
                 </Col>
                 <Col span={18}>
-                    <div className="ChatClienContent__BoxChat">
-                        <div className="titleName">
-                            <Badge status="success" text="TD Shop" />
-                        </div>
-                        <div className="SpaceChat">
-                            {getMessageByRoom
-                                ? getMessageByRoom.map((item, index) => {
-                                      return (
-                                          <div
-                                              className={`${
-                                                  curentUser && curentUser?.id == item.userId
-                                                      ? `SpaceChat__Message`
-                                                      : `SpaceChat__MessageAdmin`
-                                              }  `}
-                                              key={index}
-                                              //   onClick={() => {
-                                              //       isFlagStatus && isFlagStatus == item?.id
-                                              //           ? setIsFlagStatus('')
-                                              //           : setIsFlagStatus(item.id);
-                                              //   }}
-                                          >
-                                              <div className="messageItem">
-                                                  <div
-                                                      className={`${
-                                                          curentUser && curentUser?.id == item.userId
-                                                              ? `cssMessageUser`
-                                                              : `cssMessageAdmin`
-                                                      }  `}
-                                                      style={{
-                                                          display: 'flex',
-                                                          flexDirection: 'column',
-                                                      }}
-                                                  >
-                                                      <span>{item.text}</span>
+                    {getMessageByRoom && getMessageByRoom.length > 0 ? (
+                        <div className="ChatClienContent__BoxChat">
+                            <div className="titleName">
+                                <Badge status="success" text="TD Shop" />
+                            </div>
+                            <div className="SpaceChat" ref={containerRef} onScroll={checkScrollPosition}>
+                                {getMessageByRoom
+                                    ? getMessageByRoom.map((item, index) => {
+                                          return (
+                                              <div
+                                                  className={`${
+                                                      curentUser && curentUser?.id == item.userId
+                                                          ? `SpaceChat__Message`
+                                                          : `SpaceChat__MessageAdmin`
+                                                  }  `}
+                                                  key={index}
+                                              >
+                                                  <div className="messageItem">
+                                                      <div
+                                                          style={{
+                                                              display: 'flex',
+                                                              gap: '5px',
+                                                          }}
+                                                      >
+                                                          {curentUser && curentUser?.id != item.userId ? (
+                                                              <div>
+                                                                  <img
+                                                                      style={{
+                                                                          width: '30px',
+                                                                          height: '30px',
+                                                                          objectFit: 'cover',
+                                                                          borderRadius: '50%',
+                                                                      }}
+                                                                      src={`${process.env.REACT_APP_IMAGE_AVATAR_URL}${item.user.image}`}
+                                                                  />
+                                                              </div>
+                                                          ) : (
+                                                              ''
+                                                          )}
+                                                          <div
+                                                              className={`${
+                                                                  curentUser && curentUser?.id == item.userId
+                                                                      ? `cssMessageUser`
+                                                                      : `cssMessageAdmin`
+                                                              }  `}
+                                                              style={{
+                                                                  minWidth: '50px',
+                                                              }}
+                                                          >
+                                                              <span>{item.text}</span>
+                                                          </div>
+                                                      </div>
+                                                      {item?.id ===
+                                                      getMessageByRoom[getMessageByRoom.length - 1]?.id ? (
+                                                          <>
+                                                              <span
+                                                                  style={{
+                                                                      fontSize: '13px',
+                                                                      opacity: '0.6',
+                                                                      textAlign: 'center',
+                                                                  }}
+                                                              >
+                                                                  {' '}
+                                                                  {isFlagStatus
+                                                                      ? isFlagStatus
+                                                                      : isFlagReadvsUnRead && 'Chưa xem'}
+                                                              </span>
+                                                          </>
+                                                      ) : (
+                                                          ''
+                                                      )}
                                                   </div>
                                               </div>
-                                          </div>
-                                      );
-                                  })
-                                : ''}
-                            <div
-                                style={{
-                                    display: 'flex',
-                                    justifyContent: 'right',
-                                }}
-                            >
-                                <div>
-                                    <span
+                                          );
+                                      })
+                                    : ''}
+                                {isTyping == false ? (
+                                    ''
+                                ) : (
+                                    <div
                                         style={{
-                                            marginTop: '4px',
-                                            opacity: '0.6',
-                                            //   display:
-                                            //       isFlagStatus == item.id || item?.unRead
-                                            //           ? 'block'
-                                            //           : 'none',
-                                            fontSize: '13px',
+                                            position: 'absolute',
+                                            bottom: '20px',
                                         }}
                                     >
-                                        {isFlagStatus ? isFlagStatus : isFlagReadvsUnRead && 'Chưa xem'}
-                                    </span>
-                                </div>
+                                        <img width={'80px'} src="https://kyawmal.tech/loading.gif" />
+                                    </div>
+                                )}
+                                {isNewMessage && isAtBottom == false ? (
+                                    <div className="ReciveMessage">
+                                        <Button
+                                            icon={<DownOutlined />}
+                                            onClick={() => {
+                                                setIsDownEndPage((isDownEndPage) => !isDownEndPage);
+                                                setIsNewMessage(false);
+                                            }}
+                                        >
+                                            Có tin nhắn mới
+                                        </Button>
+                                    </div>
+                                ) : (
+                                    ''
+                                )}
+                                <div ref={messagesEndRef} />
                             </div>
-                            {isTyping === false ? '' : <img width={'80px'} src="https://kyawmal.tech/loading.gif" />}
-                        </div>
-                        <div className="InputChat">
-                            <Input
-                                placeholder="Nhập nội dung tin nhắn"
-                                spellCheck={false}
-                                // value={message}
-                                onChange={(value) => {
-                                    setMessage(String(value.target.value));
-                                }}
-                                onFocus={() => {
-                                    socket.emit('typing', {
-                                        userId: curentUser?.id,
-                                        roomId: currentRoomId,
-                                        typing: true,
-                                    });
-                                }}
-                                onBlur={() => {
-                                    socket.emit('typing', {
-                                        userId: curentUser?.id,
-                                        roomId: currentRoomId,
-                                        typing: false,
-                                    });
-                                }}
-                            />
-
-                            <SendOutlined
-                                className={`SendMessageIcon ${message ? 'sendMessageHaveText' : ''}`}
-                                onClick={() => {
-                                    if (currentRoomId) {
-                                        socket.emit('message', {
-                                            userIdSend: curentUser?.id,
+                            <div className="InputChat">
+                                <Input
+                                    placeholder="Nhập nội dung tin nhắn"
+                                    spellCheck={false}
+                                    // value={message}
+                                    onChange={(value) => {
+                                        setMessage(String(value.target.value));
+                                    }}
+                                    onFocus={() => {
+                                        socket.emit('typing', {
+                                            userId: curentUser?.id,
                                             roomId: currentRoomId,
-                                            text: message,
-                                            userIdReceive: userReceiveId,
+                                            typing: true,
                                         });
-                                    }
-                                }}
-                            />
+                                    }}
+                                    onBlur={() => {
+                                        socket.emit('typing', {
+                                            userId: curentUser?.id,
+                                            roomId: currentRoomId,
+                                            typing: false,
+                                        });
+                                    }}
+                                />
+
+                                <SendOutlined
+                                    className={`SendMessageIcon ${message ? 'sendMessageHaveText' : ''}`}
+                                    onClick={() => {
+                                        if (currentRoomId) {
+                                            socket.emit('message', {
+                                                userIdSend: curentUser?.id,
+                                                roomId: currentRoomId,
+                                                text: message,
+                                                userIdReceive: userReceiveId,
+                                            });
+                                        }
+                                    }}
+                                />
+                            </div>
                         </div>
-                    </div>
+                    ) : (
+                        <Empty
+                            image={images.logo}
+                            imageStyle={{ height: 100 }}
+                            description={<span>Xin chào</span>}
+                            className="EmptyMessage"
+                        ></Empty>
+                    )}
                 </Col>
             </Row>
         </div>
     );
+
+    // Chạy xuống cuối trang khi nhấn vào tin nhắn mới
+    const scrollToBottom = () => {
+        messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    };
     useEffect(() => {
         // handleGetadminApp(setAdminApp);
         handleGetRoomsAdmin(setListRoomChat);
@@ -264,6 +335,7 @@ export default function ChatAdmin() {
             console.log('message', data);
             setMessageByRoom((messageByRoom) => [...messageByRoom, data]);
             socket.emit('read', { id: data?.id, roomId: data?.roomId, userId: curentUser?.id });
+            setIsNewMessage(true);
         });
         socket.on('typing', (data) => {
             console.log(data);
@@ -295,11 +367,26 @@ export default function ChatAdmin() {
             getMessageByRoom.some((item) => {
                 return item.unRead == true;
             });
-        console.log(check);
         if (check) {
             setIsFlagReadvsUnRead(true);
         }
     }, [getMessageByRoom]);
+    useEffect(() => {
+        const container = containerRef.current;
+        if (container) {
+            container.addEventListener('scroll', checkScrollPosition);
+        }
+
+        return () => {
+            if (container) {
+                container.removeEventListener('scroll', checkScrollPosition);
+            }
+        };
+    }, []);
+    useEffect(scrollToBottom, [isDownEndPage]);
+    useEffect(() => {
+        isAtBottom == true && setIsNewMessage(false);
+    }, [isAtBottom]);
     return (
         <div className="ChatClientWrapper">
             <div className="ChatClientWrapper__Btn">

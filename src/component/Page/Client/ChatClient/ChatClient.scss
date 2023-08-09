@@ -140,3 +140,32 @@
         }
     }
 }
+.EmptyMessage {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    span {
+        font-size: 18px;
+    }
+}
+.messageItem {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+}
+.SpaceChat__MessageAdmin {
+    display: flex;
+    justify-content: left;
+    gap: 5px;
+}
+
+.ReciveMessage {
+    position: absolute;
+    bottom: 50px;
+    right: 30px;
+}
