@@ -18,7 +18,6 @@ interface Cartprops {
     cartData: dataCart | undefined;
 }
 export default function Cart({ cartData }: Cartprops) {
-    console.log(cartData);
     const navigate = useNavigate();
     return (
         <div className="CartWrapper">

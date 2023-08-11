@@ -160,7 +160,6 @@ export default function DetailProductClient() {
     const [productData, setProductData] = useState<any>();
     // State Detail product
     const [currentDetailProduct, setCurrentDetailProduct] = useState<any>();
-    console.log(currentDetailProduct?.size);
     // isLoading
     const [isLoading, setIsLoading] = useState<boolean>(false);
     // Hepl height cutomer

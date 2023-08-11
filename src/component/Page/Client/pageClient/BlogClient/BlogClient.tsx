@@ -48,7 +48,7 @@ export default function BlogClient() {
         if (param && param?.subjectId) {
             handleGetBlogById(param?.subjectId, currentPage, pageSizeBlog, setListBlog, setTotalItemPage);
         }
-    }, []);
+    }, [param]);
     const news = (
         <Col span={8}>
             <div className="newsBlog">
@@ -147,7 +147,9 @@ export default function BlogClient() {
                                                           cover={
                                                               <img
                                                                   alt="example"
-                                                                  src={`${process.env.REACT_APP_IMAGE_BLOGS_URL}${arr[2].images[0]}`}
+                                                                  src={`${process.env.REACT_APP_IMAGE_BLOGS_URL}${
+                                                                      arr[2].images && arr[2]?.images[0]
+                                                                  }`}
                                                                   style={{
                                                                       height: '300px',
                                                                       objectFit: 'contain',
@@ -159,10 +161,10 @@ export default function BlogClient() {
                                                           }}
                                                       >
                                                           <div className="BogItem__Title">
-                                                              <span>{arr[2].title}</span>
+                                                              <span>{arr[2]?.title}</span>
                                                           </div>
                                                           <div className="BogItem__description">
-                                                              <span>{arr[2].shortDescription}</span>
+                                                              <span>{arr[2]?.shortDescription}</span>
                                                           </div>
                                                       </Card>
                                                   </Col>
@@ -175,7 +177,9 @@ export default function BlogClient() {
                                                       cover={
                                                           <img
                                                               alt="example"
-                                                              src={`${process.env.REACT_APP_IMAGE_BLOGS_URL}${item.images[0]}`}
+                                                              src={`${process.env.REACT_APP_IMAGE_BLOGS_URL}${
+                                                                  item.images && item?.images[0]
+                                                              }`}
                                                               style={{
                                                                   height: '300px',
                                                                   objectFit: 'contain',
@@ -190,7 +194,7 @@ export default function BlogClient() {
                                                           <span>{item?.title}</span>
                                                       </div>
                                                       <div className="BogItem__description">
-                                                          <span>{item.shortDescription}</span>
+                                                          <span>{item?.shortDescription}</span>
                                                       </div>
                                                   </Card>
                                               </Col>

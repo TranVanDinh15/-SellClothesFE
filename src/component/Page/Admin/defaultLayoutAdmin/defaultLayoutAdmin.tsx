@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { PieChartOutlined } from '@ant-design/icons';
 import { RiProductHuntLine } from 'react-icons/ri';
 import { BiImport, BiUser } from 'react-icons/bi';
-import { BsCardImage } from 'react-icons/bs';
+import { BsCardImage, BsTicketPerforated } from 'react-icons/bs';
 import { TbBrandCake } from 'react-icons/tb';
 import { HiOutlineUsers } from 'react-icons/hi';
 import { TbBrandBlogger } from 'react-icons/tb';
@@ -44,6 +44,7 @@ const items: MenuItem[] = [
 
     getItem('Quản lý bài đăng', '/Admin/Blog/listBlog', <TbBrandBlogger className="iconSidebarCss" />),
     getItem('Quản lý Banner', '/Admin/Banner', <BsCardImage className="iconSidebarCss" />),
+    getItem('Quản lý Voucher', '/Admin/Voucher', <BsTicketPerforated className="iconSidebarCss" />),
 ];
 const onSearch = (value: string) => console.log(value);
 export default function DefaultLayoutAdmin() {

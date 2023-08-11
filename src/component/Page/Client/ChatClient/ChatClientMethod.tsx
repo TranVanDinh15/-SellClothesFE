@@ -34,7 +34,6 @@ export const handleGetRoom = async (
 ): Promise<void> => {
     const response = await getRooms();
     if (response && response.status == 200) {
-        console.log(response);
         setListRoom(response.data);
     }
 };

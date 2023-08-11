@@ -144,7 +144,7 @@
 }
 .searchResultInput {
     display: flex;
-    justify-content: center;
+    /* justify-content: center; */
 }
 .headerClientAbove__search {
     transform: translateY(6px);
@@ -154,14 +154,17 @@
     display: flex;
     align-items: center;
     gap: 10px;
-    /* margin: 0 20px; */
     padding: 0 60px;
+    cursor: pointer;
 }
 
 .searchResultInput__Item__Infor__name span {
     font-size: 14px;
 }
-
+.searchResultInput__Item__Infor__name__Price span {
+    font-size: 14px;
+    color: red;
+}
 .searchResultInputContainer input {
     height: 41px;
 }
@@ -201,4 +204,18 @@
 .headerClientAbove__Cart__Popover {
     border-radius: initial;
     margin-top: 20px;
+}
+
+.SelectBeforeSearch .ant-select-selector {
+    border: none !important;
+}
+.searchResultBox {
+    display: flex;
+    flex-direction: column;
+    justify-content: left;
+}
+.searchResultInput__Item__Infor {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
 }

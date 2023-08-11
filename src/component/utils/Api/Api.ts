@@ -1,4 +1,4 @@
-import { dataUpdateBlog, reqProductSize, reqUpdateDetailP, reqUpdateSize } from './ApiInterFace';
+import { dataCreateVoucher, dataUpdateBlog, reqProductSize, reqUpdateDetailP, reqUpdateSize } from './ApiInterFace';
 import AxiosInstance from './Axios-custom';
 // get thương hiệu
 export const getAllBrand = (page: any, pagesize: any) => {
@@ -221,9 +221,15 @@ export const deleteReceipt = (id: number) => {
 export const GetBlog = (currentPage: number, pageSize: number) => {
     return AxiosInstance.get(`/blog?page=${currentPage}&size=${pageSize}&sortupdatedAt=DESC`);
 };
+// Get Blog By Subject
+export const GetBlogBySubjectId = (SubjectId: string, currentPage: number, pageSize: number) => {
+    return AxiosInstance.get(
+        `/blog/?subjectId=${SubjectId}&page=${currentPage}&size=${pageSize}&sortupdatedAt=DESC&statusId=ACTIVE`,
+    );
+};
 // Get Blog By Id
-export const GetBlogById = (SubjectId: string, currentPage: number, pageSize: number) => {
-    return AxiosInstance.get(`/blog/?SubjectId=${SubjectId}&page=${currentPage}&size=${pageSize}&sortupdatedAt=DESC`);
+export const GetBlogById = (id: number) => {
+    return AxiosInstance.get(`/blog/${id}`);
 };
 // Add Blog
 export const AddBlog = (data: { title: string; shortDescription: string }) => {
@@ -328,4 +334,20 @@ export const getMessageByRoom = (id: number) => {
 // Get rooms Admin
 export const getRoomsAdmin = () => {
     return AxiosInstance.get(`/room-messages/rooms-admin`);
+};
+// Get type voucher
+export const getTypeVoucher = () => {
+    return AxiosInstance.get(`/all-code/TYPE_VOUCHER`);
+};
+// create  voucher
+export const createVoucher = (data: dataCreateVoucher) => {
+    return AxiosInstance.post(`/voucher`, data);
+};
+// Search Product
+export const searchProduct = (typeSearch: string, query: string) => {
+    return AxiosInstance.get(`/${typeSearch}/search?${query}`);
+};
+// Search Product
+export const searchBlog = (typeSearch: string, query: string) => {
+    return AxiosInstance.get(`/${typeSearch}?${query}`);
 };

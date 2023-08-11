@@ -63,14 +63,12 @@ export default function ChatClient() {
     const containerRef = useRef<HTMLDivElement>(null);
     const messagesEndRef = useRef<HTMLDivElement | null>(null);
     const [isAtBottom, setIsAtBottom] = useState<boolean>(false);
-    console.log(isAtBottom);
     // Get User Hiện tại
     const curentUser = useSelector((state: useRedux) => state.reduxAuth.user);
     // Quản lý Input nhập tin nhắn
     const [message, setMessage] = useState<string>('');
     const [adminApp, setAdminApp] = useState<adminAppIf[] | undefined>();
     const [listRoomChat, setListRoomChat] = useState<ListRooms[] | undefined>();
-    console.log(listRoomChat);
     const [getMessageByRoom, setMessageByRoom] = useState<messageIF[]>([]);
     const [currentRoomId, setCurrentRoomId] = useState<number>(0);
     const [isTyping, setIsTyping] = useState<boolean>(false);
@@ -81,7 +79,6 @@ export default function ChatClient() {
     const [isFlagReadvsUnRead, setIsFlagReadvsUnRead] = useState<any>();
     const [isNewMessage, setIsNewMessage] = useState<boolean>(false);
     const [isDownEndPage, setIsDownEndPage] = useState<boolean>(false);
-    console.log(isAtBottom);
     const checkScrollPosition = () => {
         if (containerRef.current) {
             const { scrollTop, clientHeight, scrollHeight } = containerRef.current;
@@ -125,7 +122,6 @@ export default function ChatClient() {
                                 <div className="ListRoomMessage__Content__Item">
                                     {listRoomChat
                                         ? listRoomChat.map((item, index) => {
-                                              console.log(item);
                                               return (
                                                   <Badge
                                                       count={item?.unreadCount}
@@ -140,7 +136,6 @@ export default function ChatClient() {
                                                                   userId: item.userTwoId,
                                                               });
                                                               setCurrentRoomId(item.id);
-                                                              console.log(item);
                                                               setUserReceiveId(item?.userTwoId);
                                                               setNumberRoom(item?.id);
                                                           }}
@@ -171,7 +166,6 @@ export default function ChatClient() {
                             <div className="SpaceChat" ref={containerRef} onScroll={checkScrollPosition}>
                                 {getMessageByRoom
                                     ? getMessageByRoom.map((item, index) => {
-                                          console.log(item);
                                           return (
                                               <div
                                                   className={`${
@@ -330,7 +324,6 @@ export default function ChatClient() {
     useEffect(() => {}, []);
     useEffect(() => {
         socket.on('roomMessages', (data) => {
-            console.log('messageRoom', data);
             if (data) {
                 setMessageByRoom(data);
                 setTimeout(() => {
@@ -341,34 +334,28 @@ export default function ChatClient() {
     }, [socket]);
     useEffect(() => {
         socket.on('messSent', (data) => {
-            console.log('sent:', data); // x8WIv7-mJelg7on_ALbx
             setMessageByRoom((messageByRoom) => [...messageByRoom, data]);
             setIsFlagStatus('Đã gửi');
         });
         socket.on('message', (data) => {
-            console.log('message', data); // x8WIv7-mJelg7on_ALbx
             setMessageByRoom((messageByRoom) => [...messageByRoom, data]);
             socket.emit('read', { id: data?.id, roomId: data?.roomId, userId: curentUser?.id });
             setIsNewMessage(true);
         });
         socket.on('typing', (data) => {
-            console.log(data);
             setIsTyping(data?.typing);
         });
         socket.on('unReadMark', (data) => {
-            console.log('unReadMark', data);
             // data && data?.totalRoomUnRead && curentUser?.id == data?.userId && setUnReadMark(data?.totalRoomUnRead);
             setUnReadMark(data?.totalRoomUnRead);
             handleGetRoom(setListRoomChat);
         });
         socket.on('pleaseCheck', (data) => {
-            console.log('pleaseCheck', data);
             if (data?.userId && data?.userId == curentUser?.id) {
                 socket.emit('unReadCheck', { userId: curentUser?.id });
             }
         });
         socket.on('AlreadyRead', (data) => {
-            console.log('AlreadyRead', data);
             setIsFlagStatus('Đã xem');
             setIsFlagReadvsUnRead(false);
         });
@@ -382,7 +369,6 @@ export default function ChatClient() {
             getMessageByRoom.some((item) => {
                 return item.unRead == true;
             });
-        console.log(check);
         if (check) {
             setIsFlagReadvsUnRead(true);
         }

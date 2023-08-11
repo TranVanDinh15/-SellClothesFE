@@ -1,5 +1,5 @@
 import { message } from 'antd';
-import { getAllCategory, getSubjectId } from '../../../utils/Api/Api';
+import { getAllCategory, getSubjectId, searchProduct } from '../../../utils/Api/Api';
 import { dataCategoy, headerCategory, headerCategoryMapItem } from './HeaderInterface';
 const filterCategory = (dataCategory: dataCategoy[], parentCode: string) => {
     var tree = [];

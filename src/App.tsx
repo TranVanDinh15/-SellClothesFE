@@ -25,6 +25,7 @@ import Banner from './component/Page/Admin/Banner/Banner';
 import DashBoadCustom from './component/Page/Admin/Dashboard/DashBoad';
 import BlogClient from './component/Page/Client/pageClient/BlogClient/BlogClient';
 import BlogClientItem from './component/Page/Client/pageClient/BlogClient/BlogClientItem';
+import VoucherAdmin from './component/Page/Admin/VoucherAdmin/VoucherAdmin';
 function App() {
     const token = localStorage.getItem('token');
     const router = createBrowserRouter([
@@ -89,6 +90,11 @@ function App() {
                 {
                     path: 'Banner',
                     element: <Banner />,
+                    errorElement: <NotFound type={'notRole'} />,
+                },
+                {
+                    path: 'Voucher',
+                    element: <VoucherAdmin />,
                     errorElement: <NotFound type={'notRole'} />,
                 },
             ],

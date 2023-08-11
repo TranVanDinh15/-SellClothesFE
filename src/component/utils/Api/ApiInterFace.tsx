@@ -40,3 +40,10 @@ export interface dataUpdateBlog {
     contentHtml: string;
     images: string[];
 }
+export interface dataCreateVoucher {
+    toDate: string;
+    fromDate: string;
+    typeVoucherId: number;
+    amount: number;
+    codeVoucher: string;
+}
