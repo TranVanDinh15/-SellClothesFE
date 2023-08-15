@@ -92,6 +92,8 @@ type MyContextType = {
     setDataProductUpdate: React.Dispatch<React.SetStateAction<any>>;
     isLoadCart: boolean;
     setIsLoadCart: React.Dispatch<React.SetStateAction<boolean>>;
+    isLoadSearch: boolean;
+    setIsLoadSearch: React.Dispatch<React.SetStateAction<boolean>>;
 };
 const ChatContext = createContext<MyContextType | undefined>(undefined);
 const ChatProvide = ({ children }: childrenProps) => {
@@ -163,6 +165,8 @@ const ChatProvide = ({ children }: childrenProps) => {
     const [dataProductUpdate, setDataProductUpdate] = useState<any>();
     // Đặt cờ Load lại Cart
     const [isLoadCart, setIsLoadCart] = useState<boolean>(false);
+    // Đặt cờ Load lại Search Product
+    const [isLoadSearch, setIsLoadSearch] = useState<boolean>(false);
     return (
         <ChatContext.Provider
             value={{
@@ -238,6 +242,8 @@ const ChatProvide = ({ children }: childrenProps) => {
                 setDataProductUpdate,
                 isLoadCart,
                 setIsLoadCart,
+                isLoadSearch,
+                setIsLoadSearch,
             }}
         >
             {children}

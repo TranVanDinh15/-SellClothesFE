@@ -1,0 +1,62 @@
+.demo-logo-vertical {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+    img {
+        border-radius: 50%;
+    }
+}
+.MenuProfile {
+    margin-top: 20px;
+}
+.LayoutProfile {
+    background-color: #fff;
+}
+
+.AccountWrapper {
+    display: flex;
+    justify-content: space-between;
+}
+.VerifyMailWrapper {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.VerifyMailContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    border: 1px solid #ccc;
+    width: 400px;
+    height: 400px;
+}
+.Address__Btn {
+    button {
+        background-color: rgb(0, 191, 255);
+        color: #fff;
+        border-radius: initial;
+    }
+}
+.Address__Box {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.Address__title {
+    span {
+        font-size: 16px;
+        font-weight: 600;
+    }
+}
+.Address__Infor {
+    margin-top: 20px;
+    .Address__Infor__Item {
+        border-bottom: 1px solid #ccc;
+        margin-top: 20px;
+        display: flex;
+        justify-content: space-between;
+    }
+}

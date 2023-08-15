@@ -102,7 +102,7 @@ export default function HeaderClient() {
     const curentUser = useSelector((state: useRedux) => state.reduxAuth.user);
     // Chứa dữ liệu Cart
     const [cartData, setCartData] = useState<dataCart>();
-    const { itemCategory, setItemCategory, setSortId, urlCustomer, setUrlCustomer, isLoadCart }: any = GetContext();
+    const { setItemCategory, setUrlCustomer, isLoadCart, setIsLoadSearch }: any = GetContext();
     const [tokenLocal, setTokenLocal] = useState<string>('');
     const userLogin = useSelector((state: reduxIterface) => state.reduxAuth.user);
     const [headerCategory, setHeaderCategory] = useState<headerCategory[]>([]);
@@ -192,10 +192,13 @@ export default function HeaderClient() {
                             className="subnavCategory"
                             key={index}
                             onClick={async () => {
-                                item.id == 3 && (await LogOut());
-                                message.success('Đã đăng xuất tài khoản');
-                                localStorage.removeItem('token');
-                                setIsLoadToken((isLoadToken) => !isLoadToken);
+                                item.id === 0 && navigate('/Profile');
+                                if (item.id === 3) {
+                                    await LogOut();
+                                    message.success('Đã đăng xuất tài khoản');
+                                    localStorage.removeItem('token');
+                                    setIsLoadToken((isLoadToken) => !isLoadToken);
+                                }
                             }}
                         >
                             {/* <Link to="/"> */}
@@ -486,15 +489,22 @@ export default function HeaderClient() {
                                       })
                                     : ''}
                             </div>
-
-                            <div
-                                style={{
-                                    display: 'flex',
-                                    justifyContent: 'center',
-                                }}
-                            >
-                                <Link to={'/'}>Xem tất cả</Link>
-                            </div>
+                            {resultSearch.length > 0 ? (
+                                <div
+                                    style={{
+                                        display: 'flex',
+                                        justifyContent: 'center',
+                                    }}
+                                    onClick={() => {
+                                        onCloseResultSearch(setOpenSearch);
+                                        setIsLoadSearch((isLoadSearch: boolean) => !isLoadSearch);
+                                    }}
+                                >
+                                    <Link to={`/tim-kiem?name=${searchTerm}`}>Xem tất cả</Link>
+                                </div>
+                            ) : (
+                                ''
+                            )}
                         </Drawer>
                     </div>
                     <div className="headerClientAbove__Cart">

@@ -6,60 +6,55 @@ import { useForm } from 'antd/es/form/Form';
 import { Button, Col, DatePicker, Form, Input, Row, TablePaginationConfig } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import ModalCustomer from '../common/Modal/ModalCustomer';
+import UploadImageCustomer from '../common/UploadImage/UploadImage';
 import SelectCustomer from '../common/Select/Select';
 import { GetContext } from '../common/Context/Context';
-import {
-    handleAddVoucher,
-    handleGetStatusUpdate,
-    handleGetTypeVoucherSelect,
-    handleUpdateVoucher,
-    handlegetVoucher,
-} from './VoucherAdminMethod';
-// import { handleAddVoucher, handleGetTypeVoucher } from './VoucherAdminMethod';
+import { addTypeVoucher, getTypeCodeVoucher, handleAddVoucher, handleGetTypeVoucher } from './VoucherAdminMethod';
 export interface StatusSelect {
     value: string;
     label: string;
 }
-export interface formAddVoucher {
-    toDate: string;
-    fromDate: string;
-    typeVoucherId: number;
-    amount: number;
-    codeVoucher: string;
+export interface formAddTypeVoucher {
+    typeVoucherCode: string;
+    value: number;
+    minValue: number;
+    maxValue: number;
 }
-export interface formUpdateVoucher {
-    statusId: string;
-}
-export default function VoucherAdmin() {
-    const { dataUpdate }: any = GetContext();
-    console.log(dataUpdate);
-    // Form cua add Voucher
-    const [formAdd] = useForm<formAddVoucher>();
-    const [formUpdate] = useForm<formUpdateVoucher>();
+
+export default function TypeVoucher() {
+    const { imagesUploadMultiple, setImagesUploadMultiple, dataBannerUpdate, setImageDp, setDataBannerUpdate }: any =
+        GetContext();
+    console.log(imagesUploadMultiple);
+    // Form cua add Banner
+    const [formAdd] = useForm<formAddTypeVoucher>();
     // Form cua Update Banner
+    const [formUpdate] = useForm<formAddTypeVoucher>();
     const [isModalAddOpen, setIsModalAddOpen] = useState<boolean>(false);
-    const [isModalUpdateOpen, setIsModalUpdateOpen] = useState<boolean>(false);
     // Quản lý load lại data
-    const [isLoadVoucher, setIsLoadVoucher] = useState<boolean>(false);
+    const [isLoadVoucher, setIsLoadTypeVoucher] = useState<boolean>(false);
     const [dataTable, setDataTable] = useState<[]>([]);
     const [total, setTotal] = useState<number>();
     const [pageSize, setPageSize] = useState<any>(5);
     const [page, setPage] = useState<any>(1);
-    // Select type Voucher
-    const [typeVoucherSelect, setTypeVoucherSelect] = useState<StatusSelect[] | null>(null);
-    console.log(typeVoucherSelect);
+    const [typeVoucherCode, setTypeVoucherCode] = useState<StatusSelect[] | null>(null);
+    console.log(typeVoucherCode);
+    // Quản lý đóng mở update Biên lai nhập hàng
+    const [isOpenUpdateBanner, setIsOpenUpdateBanner] = useState<boolean>(false);
+    // Quản lý status Banner khi thêm banner
+    const [statusSelect, setStatusSelect] = useState<StatusSelect[] | undefined>();
+    // Quản lý image  Add
+    const [image, setImage] = useState<string>('');
     // Quanr lý xóa  Banner
     const [isDelete, setIsDelete] = useState<boolean>(true);
+    // type voucher
+    const [typeVoucher, setTypeVoucher] = useState<{ value: string; label: string }[] | null>(null);
     const [toDate, setToDate] = useState<string>('');
     const [fromDate, setFromDate] = useState<string>('');
-    // Quản lý Status để update voucher
-    const [statusVoucherSelect, setStatusVoucherSelect] = useState<StatusSelect[] | null>(null);
-    console.log(dataUpdate);
     const TitleTable = () => {
         return (
             <div className="titleTable">
                 <div className="titleTable__Heading">
-                    <span>Danh sách Voucher</span>
+                    <span>CÁC LOẠI VOUCHER</span>
                 </div>
                 <div className="titleTable__btn">
                     <Button
@@ -70,7 +65,7 @@ export default function VoucherAdmin() {
                             setIsModalAddOpen(true);
                         }}
                     >
-                        Thêm Voucher
+                        Thêm loại Voucher
                     </Button>
                     {/* Add Banner */}
                     <ModalCustomer
@@ -79,7 +74,7 @@ export default function VoucherAdmin() {
                         handleCancel={() => {
                             setIsModalAddOpen(false);
                         }}
-                        title={'Thêm Voucher'}
+                        title={'Thêm loại Voucher'}
                         footer={true}
                         showModal={() => {
                             setIsModalAddOpen(true);
@@ -92,15 +87,7 @@ export default function VoucherAdmin() {
                             style={{ maxWidth: 600 }}
                             initialValues={{ remember: true }}
                             onFinish={(value) => {
-                                const data = {
-                                    toDate: toDate,
-                                    fromDate: fromDate,
-                                    typeVoucherId: value?.typeVoucherId,
-                                    amount: Number(value.amount),
-                                    codeVoucher: value.codeVoucher,
-                                };
-
-                                handleAddVoucher(data, setIsModalAddOpen, formAdd, setIsLoadVoucher);
+                                addTypeVoucher(value, formAdd, setIsModalAddOpen, setIsLoadTypeVoucher);
                             }}
                             // onFinishFailed={onFinishFailed}
                             autoComplete="off"
@@ -114,63 +101,48 @@ export default function VoucherAdmin() {
                             >
                                 <Col span={12}>
                                     <Form.Item
-                                        label="Ngày bắt đầu"
-                                        name="fromDate"
+                                        label="Kiểu voucher"
+                                        name="typeVoucherCode"
                                         rules={[{ required: true, message: 'Vui lòng điền đầy đủ thông tin!' }]}
                                     >
-                                        <DatePicker
-                                            onChange={(date: any, dateString: string) => {
-                                                setFromDate(dateString);
+                                        <SelectCustomer
+                                            mode=""
+                                            option={typeVoucherCode ? [...typeVoucherCode] : []}
+                                            onChange={(value: any) => {
+                                                // onChangeProductSelect(value, setProductDetailApp);
                                             }}
-                                            format="DD/MM/YYYY"
+                                            onSearch={(value: any) => {
+                                                // onChangeProductSelect(value, setProductDetailApp);
+                                            }}
                                         />
                                     </Form.Item>
                                 </Col>
                                 <Col span={12}>
                                     <Form.Item
-                                        label="Ngày kết thúc"
-                                        name="toDate"
+                                        label="Giá trị Áp dụng"
+                                        name="value"
                                         rules={[{ required: true, message: 'Vui lòng điền đầy đủ thông tin!' }]}
                                     >
-                                        <DatePicker
-                                            onChange={(date: any, dateString: string) => {
-                                                setToDate(dateString);
-                                            }}
-                                            format="DD/MM/YYYY"
-                                        />
+                                        <Input placeholder="VD: 2000000" />
                                     </Form.Item>
                                 </Col>
 
                                 <Col span={12}>
                                     <Form.Item
-                                        label="Kiểu Voucher"
-                                        name="typeVoucherId"
+                                        label="Tối thiểu"
+                                        name="minValue"
                                         rules={[{ required: true, message: 'Vui lòng điền đầy đủ thông tin!' }]}
                                     >
-                                        <SelectCustomer
-                                            mode=""
-                                            option={typeVoucherSelect ? [...typeVoucherSelect] : []}
-                                            onChange={(value: any) => {}}
-                                            onSearch={(value: any) => {}}
-                                        />
+                                        <Input placeholder="VD: 100000" />
                                     </Form.Item>
                                 </Col>
                                 <Col span={12}>
                                     <Form.Item
-                                        label="Số lượng"
-                                        name="amount"
+                                        label="Tối đa"
+                                        name="maxValue"
                                         rules={[{ required: true, message: 'Vui lòng điền đầy đủ thông tin!' }]}
                                     >
-                                        <Input />
-                                    </Form.Item>
-                                </Col>
-                                <Col span={12}>
-                                    <Form.Item
-                                        label="Mã Voucher"
-                                        name="codeVoucher"
-                                        rules={[{ required: true, message: 'Vui lòng điền đầy đủ thông tin!' }]}
-                                    >
-                                        <Input />
+                                        <Input placeholder="VD: 2000000" />
                                     </Form.Item>
                                 </Col>
                             </Row>
@@ -181,7 +153,7 @@ export default function VoucherAdmin() {
                                 }}
                             >
                                 <Button type="primary" htmlType="submit">
-                                    Thêm Voucher
+                                    Thêm
                                 </Button>
                             </Form.Item>
                         </Form>
@@ -205,62 +177,80 @@ export default function VoucherAdmin() {
         position: ['bottomCenter'],
     };
     useEffect(() => {
-        handlegetVoucher(pageSize, page, setDataTable, setTotal);
+        // HandleGetBanner(page, pageSize, setDataTable, setTotal);
+        handleGetTypeVoucher(setDataTable, setTotal, page, pageSize);
     }, [isLoadVoucher, page, pageSize, isDelete]);
     useEffect(() => {
-        handleGetTypeVoucherSelect(setTypeVoucherSelect);
+        // HandleGetStatusSelect(setStatusSelect);
     }, []);
+    useEffect(() => {
+        if (imagesUploadMultiple.length > 0) {
+            setImage(imagesUploadMultiple[0]?.image);
+        }
+    }, [imagesUploadMultiple]);
 
     useEffect(() => {
-        handleGetStatusUpdate(setStatusVoucherSelect);
+        getTypeCodeVoucher(setTypeVoucherCode);
     }, []);
-    useEffect(() => {
-        formUpdate.setFieldsValue({
-            statusId: dataUpdate?.statusId,
-        });
-    }, [dataUpdate]);
     return (
-        <Content title={'Danh sách Voucher'}>
+        <Content title={'Các loại Voucher'}>
             <div className="SupplierWrapper">
                 <CustomTable
-                    name="CollumsVoucher"
+                    name="typeVoucher"
                     title={TitleTable}
                     dataSource={dataTable}
                     paginationConfig={paginationConfig}
                     showModalUpdate={() => {
-                        setIsModalUpdateOpen(true);
+                        // setIsOpenUpdateSupplier(true);
+                        setIsOpenUpdateBanner(true);
                     }}
                     isDelete={isDelete}
                     setIsDelete={setIsDelete}
                 />
             </div>
-            <ModalCustomer
-                isModalOpen={isModalUpdateOpen}
+            {/* Modal Custom Update */}
+            {/* <ModalCustomer
+                isModalOpen={isOpenUpdateBanner}
                 handleOk={() => {}}
                 handleCancel={() => {
-                    setIsModalUpdateOpen(false);
+                    setIsOpenUpdateBanner(false);
+                    setImage('');
+                    setImagesUploadMultiple([]);
+                    setImageDp([]);
+                    setDataBannerUpdate('');
                 }}
-                title={'Cập nhật voucher'}
+                title={'Cập nhật Banner'}
                 footer={true}
-                showModal={() => {}}
+                showModal={() => {
+                    setIsModalAddOpen(true);
+                }}
             >
                 <Form
                     form={formUpdate}
                     name="basic"
                     labelCol={{ span: 24 }}
+                    style={{ maxWidth: 600 }}
+                    initialValues={{ remember: true }}
                     onFinish={(value) => {
-                        if (dataUpdate) {
-                            handleUpdateVoucher(
-                                Number(dataUpdate?.id),
-                                {
-                                    statusId: value?.statusId,
-                                },
-                                setIsLoadVoucher,
-                                formUpdate,
-                                setIsModalUpdateOpen,
-                            );
+                        if (dataBannerUpdate) {
+                            console.log('ok');
+                            // HandleUpdateBanner(
+                            //     dataBannerUpdate?.id,
+                            //     value,
+                            //     image ? image : dataBannerUpdate?.image,
+                            //     isLoadVoucher,
+                            //    setIsLoadTypeVoucher,
+                            //     setIsOpenUpdateBanner,
+                            //     formUpdate,
+                            //     setImage,
+                            //     setImagesUploadMultiple,
+                            //     setImageDp,
+                            //     setDataBannerUpdate,
+                            // );
                         }
                     }}
+                    // onFinishFailed={onFinishFailed}
+
                     autoComplete="off"
                 >
                     <Row
@@ -272,31 +262,71 @@ export default function VoucherAdmin() {
                     >
                         <Col span={12}>
                             <Form.Item
+                                label="Tên Banner"
+                                name="name"
+                                rules={[{ required: true, message: 'Vui lòng điền đầy đủ thông tin!' }]}
+                            >
+                                <Input />
+                            </Form.Item>
+                        </Col>
+                        <Col span={12}>
+                            <Form.Item
+                                label="Mô tả ngắn"
+                                name="description"
+                                rules={[{ required: true, message: 'Vui lòng điền đầy đủ thông tin!' }]}
+                            >
+                                <Input />
+                            </Form.Item>
+                        </Col>
+                        <Col span={12}>
+                            <Form.Item
+                                label="Ảnh (1 ảnh)"
+                                // name="description"
+                            >
+                                <UploadImageCustomer multilple={true} />
+                            </Form.Item>
+                        </Col>
+                        <Col span={12}>
+                            <Form.Item
                                 label="Trạng thái"
                                 name="statusId"
                                 rules={[{ required: true, message: 'Vui lòng điền đầy đủ thông tin!' }]}
                             >
                                 <SelectCustomer
                                     mode=""
-                                    option={statusVoucherSelect ? [...statusVoucherSelect] : []}
+                                    option={statusSelect ? [...statusSelect] : []}
                                     onChange={(value: any) => {
-                                        // onChangeProductSelect(value, setProductDetailApp);
+                                        // onChangeCategorySelect(
+                                        //     value,
+                                        //     setProductApp,
+                                        //     setProductDetailApp,
+                                        //     setProductDetailSizeApp,
+                                        // );
                                     }}
                                     onSearch={(value: any) => {
-                                        // onChangeProductSelect(value, setProductDetailApp);
+                                        // onChangeCategorySelect(
+                                        //     value,
+                                        //     setProductApp,
+                                        //     setProductDetailApp,
+                                        //     setProductDetailSizeApp,
+                                        // );
                                     }}
                                 />
                             </Form.Item>
                         </Col>
                     </Row>
-
-                    <Form.Item wrapperCol={{ offset: 9, span: 16 }}>
+                    <Form.Item
+                        style={{
+                            display: 'flex',
+                            justifyContent: 'center',
+                        }}
+                    >
                         <Button type="primary" htmlType="submit">
-                            Cập nhật
+                            Cập nhật Banner
                         </Button>
                     </Form.Item>
                 </Form>
-            </ModalCustomer>
+            </ModalCustomer> */}
         </Content>
     );
 }

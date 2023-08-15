@@ -47,3 +47,9 @@ export interface dataCreateVoucher {
     amount: number;
     codeVoucher: string;
 }
+export interface createTypeVoucherIF {
+    typeVoucherCode: string;
+    value: number;
+    minValue: number;
+    maxValue: number;
+}

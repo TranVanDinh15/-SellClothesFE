@@ -44,12 +44,14 @@ const items: MenuItem[] = [
 
     getItem('Quản lý bài đăng', '/Admin/Blog/listBlog', <TbBrandBlogger className="iconSidebarCss" />),
     getItem('Quản lý Banner', '/Admin/Banner', <BsCardImage className="iconSidebarCss" />),
-    getItem('Quản lý Voucher', '/Admin/Voucher', <BsTicketPerforated className="iconSidebarCss" />),
+    getItem('Quản lý Voucher', '/Admin/Voucher', <BsTicketPerforated className="iconSidebarCss" />, [
+        getItem('Danh sách Voucher', '/Admin/Voucher'),
+        getItem('Các kiểu Voucher', '/Admin/kieu-voucher'),
+    ]),
 ];
 const onSearch = (value: string) => console.log(value);
 export default function DefaultLayoutAdmin() {
     const location = useLocation();
-    console.log(location.pathname);
     const navigate = useNavigate();
     const [collapsed, setCollapsed] = useState(false);
     const {

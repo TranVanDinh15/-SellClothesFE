@@ -111,3 +111,45 @@ export interface DatatypeBanner {
         code: string;
     };
 }
+export interface typeVoucher {
+    id: number;
+    typeVoucherCode: string;
+    value: number;
+    maxValue: number;
+    minValue: number;
+    statusId: string;
+    createdAt: string;
+    updatedAt: string;
+    typeVoucher: {
+        id: number;
+        type: string;
+        value: string;
+        code: string;
+        parentCode: any;
+        hexCode: any;
+        createdAt: string;
+        updatedAt: string;
+    };
+}
+export interface voucherIF {
+    id: number;
+    fromDate: string;
+    toDate: string;
+    typeVoucherId: number;
+    amount: number;
+    statusId: string;
+    usedAmount: number;
+    codeVoucher: string;
+    createdAt: string;
+    updatedAt: string;
+    typeVoucher: {
+        id: number;
+        typeVoucherCode: string;
+        value: number;
+        maxValue: number;
+        minValue: number;
+        statusId: string;
+        createdAt: string;
+        updatedAt: string;
+    };
+}

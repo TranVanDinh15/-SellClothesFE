@@ -1,4 +1,12 @@
-import { dataCreateVoucher, dataUpdateBlog, reqProductSize, reqUpdateDetailP, reqUpdateSize } from './ApiInterFace';
+import axios from 'axios';
+import {
+    createTypeVoucherIF,
+    dataCreateVoucher,
+    dataUpdateBlog,
+    reqProductSize,
+    reqUpdateDetailP,
+    reqUpdateSize,
+} from './ApiInterFace';
 import AxiosInstance from './Axios-custom';
 // get thương hiệu
 export const getAllBrand = (page: any, pagesize: any) => {
@@ -336,12 +344,27 @@ export const getRoomsAdmin = () => {
     return AxiosInstance.get(`/room-messages/rooms-admin`);
 };
 // Get type voucher
-export const getTypeVoucher = () => {
+export const getTypeVoucher = (currentPage: number, pageSize: number) => {
+    return AxiosInstance.get(`/voucher/type-voucher?page=${pageSize}&size=${currentPage}&updatedAt=DESC`);
+};
+export const getCodeTypeVoucher = () => {
     return AxiosInstance.get(`/all-code/TYPE_VOUCHER`);
+};
+// Create type Voucher
+export const createTypeVoucher = (data: createTypeVoucherIF) => {
+    return AxiosInstance.post(`/voucher/type-voucher`, data);
+};
+// get Voucher
+export const getVoucher = (currentPage: number, pageSize: number) => {
+    return AxiosInstance.get(`/voucher?page=${pageSize}&size=${currentPage}&updatedAt=DESC`);
 };
 // create  voucher
 export const createVoucher = (data: dataCreateVoucher) => {
     return AxiosInstance.post(`/voucher`, data);
+};
+// update Voucher
+export const updateVoucher = (id: number, data: { statusId: string }) => {
+    return AxiosInstance.patch(`/voucher/update/${id}`, data);
 };
 // Search Product
 export const searchProduct = (typeSearch: string, query: string) => {
@@ -350,4 +373,59 @@ export const searchProduct = (typeSearch: string, query: string) => {
 // Search Product
 export const searchBlog = (typeSearch: string, query: string) => {
     return AxiosInstance.get(`/${typeSearch}?${query}`);
+};
+// Get Profile
+export const getProfile = () => {
+    return AxiosInstance.get('/user/profile');
+};
+// Send verify mail
+export const verifyMail = () => {
+    return AxiosInstance.post('/user/verify-email');
+};
+// Verify Api
+export const verifyApi = (data: { token: string }) => {
+    return AxiosInstance.patch('/user/verify', data);
+};
+// get Provinces
+export const getProvinces = () => {
+    return axios.get(`${process.env.REACT_APP__PROVINCES__URL}`);
+};
+// get District
+export const getDistrict = (query: string) => {
+    return axios.get(`${process.env.REACT_APP__PROVINCES__URL}${query}`);
+};
+export const getWard = (query: string) => {
+    return axios.get(`${process.env.REACT_APP__DISTRICT__URL}${query}`);
+};
+export const getWardById = (query: string) => {
+    return axios.get(`${process.env.REACT_APP__WARD__URL}${query}`);
+};
+// create Address
+export const createAddress = (data: {
+    shipName: string;
+    shipAddress: string;
+    shipPhoneNumber: string;
+    shipEmail: string;
+}) => {
+    return AxiosInstance.post('/user/address', data);
+};
+// get Address
+export const getAddress = () => {
+    return AxiosInstance.get('/user/address');
+};
+// update Address
+export const updateAddress = (
+    id: number,
+    data: {
+        shipName: string;
+        shipAddress: string;
+        shipPhoneNumber: string;
+        shipEmail: string;
+    },
+) => {
+    return AxiosInstance.put(`/user/address/${id}`, data);
+};
+// Delete Address
+export const deleteAddress = (id: number) => {
+    return AxiosInstance.delete(`/user/address/${id}`);
 };

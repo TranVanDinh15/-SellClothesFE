@@ -27,6 +27,8 @@ import {
     DatatypeDetailReceipt,
     DatatypeReceipt,
     DatatypeSupplier,
+    typeVoucher,
+    voucherIF,
 } from './TableInterface';
 import { handleDeleteDetailSize, handleDeleteProductDetail, handleGetSizeDp } from '../Page/Product/ProductMethod';
 interface DataType {
@@ -923,6 +925,7 @@ const CustomTable = ({
             ),
         },
     ];
+    // Collums Banner
     const CollumsBanner: ColumnType<DatatypeBanner>[] = [
         {
             title: 'ID',
@@ -982,6 +985,114 @@ const CustomTable = ({
                             }}
                         ></Button>
                     </DeleteCustom>
+                </div>
+            ),
+        },
+    ];
+    // Collums typeVoucher
+    const CollumsTypeVoucher: ColumnType<typeVoucher>[] = [
+        {
+            title: 'ID',
+            dataIndex: 'id',
+        },
+        {
+            title: 'Tên ',
+            // dataIndex: 'name',
+            render: (value, record) => <span>{record.typeVoucher.value}</span>,
+        },
+        {
+            title: 'Giá trị',
+            // dataIndex: 'image',
+            render: (value, record) => <span>{record.value}</span>,
+        },
+        {
+            title: 'Tối thiểu',
+            // dataIndex: 'image',
+            render: (value, record) => <span>{convertVND(Number(record.minValue))}</span>,
+        },
+        {
+            title: 'Tối đa',
+            // dataIndex: 'image',
+            render: (value, record) => <span>{convertVND(Number(record.maxValue))}</span>,
+        },
+        {
+            title: 'Trạng thái',
+            // dataIndex: 'image',
+            render: (value, record) => <span>{record.statusId}</span>,
+        },
+        {
+            title: 'Ngày tạo',
+            render: (value, record) => <span>{covertCreateAt(record.createdAt)}</span>,
+        },
+        {
+            title: 'Actions',
+            render: (value, record) => (
+                <div>
+                    <Button
+                        icon={<HiOutlinePencilSquare />}
+                        type="text"
+                        onClick={() => {
+                            showModalUpdate();
+                            // setDataBannerUpdate(record);
+                            // setDataUpdate;
+                        }}
+                    ></Button>
+                </div>
+            ),
+        },
+    ];
+    // Collums Voucher
+    const CollumsVoucher: ColumnType<voucherIF>[] = [
+        {
+            title: 'ID',
+            dataIndex: 'id',
+        },
+        {
+            title: 'Loại Voucher',
+            // dataIndex: 'name',
+            render: (value, record) => <span>{record.typeVoucher.typeVoucherCode}</span>,
+        },
+        {
+            title: 'Bắt đầu',
+            // dataIndex: 'image',
+            render: (value, record) => <span>{record.fromDate}</span>,
+        },
+        {
+            title: 'Kết thúc',
+            // dataIndex: 'image',
+            render: (value, record) => <span>{record.toDate}</span>,
+        },
+        {
+            title: 'Số lượng',
+            // dataIndex: 'image',
+            render: (value, record) => <span>{record.amount}</span>,
+        },
+        {
+            title: 'code',
+            // dataIndex: 'image',
+            render: (value, record) => <span>{record.codeVoucher}</span>,
+        },
+        {
+            title: 'Trạng thái',
+            // dataIndex: 'image',
+            render: (value, record) => <span>{record.statusId}</span>,
+        },
+        {
+            title: 'Ngày tạo',
+            render: (value, record) => <span>{covertCreateAt(record.createdAt)}</span>,
+        },
+        {
+            title: 'Actions',
+            render: (value, record) => (
+                <div>
+                    <Button
+                        icon={<HiOutlinePencilSquare />}
+                        type="text"
+                        onClick={() => {
+                            showModalUpdate();
+                            setDataUpdate(record);
+                        }}
+                    ></Button>
                 </div>
             ),
         },
@@ -1051,6 +1162,21 @@ const CustomTable = ({
             )}
             {name == 'Banner' ? (
                 <Table columns={CollumsBanner} dataSource={dataSource} title={title} pagination={paginationConfig} />
+            ) : (
+                ''
+            )}
+            {name == 'typeVoucher' ? (
+                <Table
+                    columns={CollumsTypeVoucher}
+                    dataSource={dataSource}
+                    title={title}
+                    pagination={paginationConfig}
+                />
+            ) : (
+                ''
+            )}
+            {name == 'CollumsVoucher' ? (
+                <Table columns={CollumsVoucher} dataSource={dataSource} title={title} pagination={paginationConfig} />
             ) : (
                 ''
             )}

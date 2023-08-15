@@ -26,6 +26,12 @@ import DashBoadCustom from './component/Page/Admin/Dashboard/DashBoad';
 import BlogClient from './component/Page/Client/pageClient/BlogClient/BlogClient';
 import BlogClientItem from './component/Page/Client/pageClient/BlogClient/BlogClientItem';
 import VoucherAdmin from './component/Page/Admin/VoucherAdmin/VoucherAdmin';
+import SearchPage from './component/Page/Client/SearchPage/SearchPage';
+import TypeVoucher from './component/Page/Admin/VoucherAdmin/TypeVoucher';
+import Profile from './component/Page/Client/Profile/Profile';
+import Account from './component/Page/Client/Profile/Account';
+import VerifyMail from './component/Page/Client/Profile/VerifyMail';
+import Address from './component/Page/Client/Profile/Address';
 function App() {
     const token = localStorage.getItem('token');
     const router = createBrowserRouter([
@@ -97,6 +103,11 @@ function App() {
                     element: <VoucherAdmin />,
                     errorElement: <NotFound type={'notRole'} />,
                 },
+                {
+                    path: 'kieu-voucher',
+                    element: <TypeVoucher />,
+                    errorElement: <NotFound type={'notRole'} />,
+                },
             ],
         },
         {
@@ -147,9 +158,36 @@ function App() {
                     element: <CheckOut />,
                     errorElement: <NotFound type={'notAccess'} />,
                 },
+                {
+                    path: '/tim-kiem',
+                    element: <SearchPage />,
+                    errorElement: <NotFound type={'notAccess'} />,
+                },
+                {
+                    path: '/Profile',
+                    element: <Profile />,
+                    errorElement: <NotFound type={'notAccess'} />,
+                    children: [
+                        {
+                            index: true,
+                            // path: 'account',
+                            element: <Account />,
+                            errorElement: <NotFound type={'notAccess'} />,
+                        },
+                        {
+                            path: 'Address',
+                            element: <Address />,
+                            errorElement: <NotFound type={'notAccess'} />,
+                        },
+                    ],
+                },
             ],
         },
-
+        {
+            path: '/verify/:token',
+            element: <VerifyMail />,
+            errorElement: <NotFound type={'notAccess'} />,
+        },
         {
             path: '/signIn',
             element: <LoginClient />,
