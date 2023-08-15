@@ -5,6 +5,7 @@ import {
     getDistrict,
     getProfile,
     getProvinces,
+    getVoucherUser,
     getWard,
     getWardById,
     updateAddress,
@@ -13,6 +14,7 @@ import {
 } from '../../../utils/Api/Api';
 import { profileIF } from './Account';
 import { AddressIF, DistrictIF, WardIF, provincesIF } from './Address';
+import { listVoucherIF } from '../VoucherClient/VoucherClient';
 
 export const handleGetProfile = async (
     setProfileUser: React.Dispatch<React.SetStateAction<profileIF | null>>,
@@ -187,5 +189,19 @@ export const handleUpdateAddress = async (
         });
         setIsLoadAddress((isLoadAddress) => !isLoadAddress);
         message.success('Đã cập nhật địa chỉ');
+    }
+};
+export const handleGetVoucherUser = async (
+    id: number,
+    currentPage: number,
+    pageSize: number,
+    setDataVoucher: React.Dispatch<React.SetStateAction<listVoucherIF[] | null>>,
+    setTotal: React.Dispatch<React.SetStateAction<number | undefined>>,
+): Promise<void> => {
+    const response = await getVoucherUser(id, currentPage, pageSize);
+    if (response && response.status == 200) {
+        console.log(response);
+        setDataVoucher(response.data?.data);
+        setTotal(response.data?.meta?.totalItems);
     }
 };

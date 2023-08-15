@@ -32,6 +32,8 @@ import Profile from './component/Page/Client/Profile/Profile';
 import Account from './component/Page/Client/Profile/Account';
 import VerifyMail from './component/Page/Client/Profile/VerifyMail';
 import Address from './component/Page/Client/Profile/Address';
+import VoucherClient from './component/Page/Client/VoucherClient/VoucherClient';
+import VoucherUser from './component/Page/Client/Profile/VoucherUser';
 function App() {
     const token = localStorage.getItem('token');
     const router = createBrowserRouter([
@@ -179,7 +181,17 @@ function App() {
                             element: <Address />,
                             errorElement: <NotFound type={'notAccess'} />,
                         },
+                        {
+                            path: 'Voucher',
+                            element: <VoucherUser />,
+                            errorElement: <NotFound type={'notAccess'} />,
+                        },
                     ],
+                },
+                {
+                    path: '/Giam-gia',
+                    element: <VoucherClient />,
+                    errorElement: <NotFound type={'notAccess'} />,
                 },
             ],
         },

@@ -123,7 +123,7 @@ export default function TypeVoucher() {
                                         name="value"
                                         rules={[{ required: true, message: 'Vui lòng điền đầy đủ thông tin!' }]}
                                     >
-                                        <Input placeholder="VD: 2000000" />
+                                        <Input placeholder="Nhập Số, 50% = 50, 100k = 100000" />
                                     </Form.Item>
                                 </Col>
 

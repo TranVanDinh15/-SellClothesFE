@@ -3,7 +3,8 @@ import React from 'react';
 import './Profile.scss';
 import { UploadOutlined, UserOutlined, VideoCameraOutlined } from '@ant-design/icons';
 import { Layout, Menu, theme } from 'antd';
-import { BsClockHistory } from 'react-icons/bs';
+import { BsClockHistory, BsTicketPerforated } from 'react-icons/bs';
+
 import { RiLockPasswordLine } from 'react-icons/ri';
 import { GiPositionMarker } from 'react-icons/gi';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
@@ -22,8 +23,9 @@ function getItem(label: React.ReactNode, key: React.Key, icon?: React.ReactNode,
 }
 const items: MenuItem[] = [
     getItem('Tài khoản của tôi', '/Profile', <UserOutlined className="iconSidebarCss" />),
-    getItem('Đơn hàng của tôi', '/Admin/Voucher', <BsClockHistory className="iconSidebarCss" />),
-    getItem('Đổi mật khẩu', '/Admin/Voucher', <RiLockPasswordLine className="iconSidebarCss" />),
+    getItem('Đơn hàng của tôi', '/Profile/Order', <BsClockHistory className="iconSidebarCss" />),
+    getItem('Voucher hiện có', '/Profile/Voucher', <BsTicketPerforated className="iconSidebarCss" />),
+    getItem('Đổi mật khẩu', '/Profile/ChangePassword', <RiLockPasswordLine className="iconSidebarCss" />),
     getItem('Địa chỉ', '/Profile/Address', <GiPositionMarker className="iconSidebarCss" />),
 ];
 export default function Profile() {

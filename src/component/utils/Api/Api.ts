@@ -358,6 +358,12 @@ export const createTypeVoucher = (data: createTypeVoucherIF) => {
 export const getVoucher = (currentPage: number, pageSize: number) => {
     return AxiosInstance.get(`/voucher?page=${pageSize}&size=${currentPage}&updatedAt=DESC`);
 };
+export const getVoucherClient = (currentPage: number, pageSize: number) => {
+    return AxiosInstance.get(`/voucher?page=${pageSize}&size=${currentPage}&statusId=ACTIVE&updatedAt=DESC`);
+};
+export const getVoucherUser = (id: number, currentPage: number, pageSize: number) => {
+    return AxiosInstance.get(`/voucher?userId=${id}&page=${pageSize}&size=${currentPage}&updatedAt=DESC`);
+};
 // create  voucher
 export const createVoucher = (data: dataCreateVoucher) => {
     return AxiosInstance.post(`/voucher`, data);
@@ -428,4 +434,8 @@ export const updateAddress = (
 // Delete Address
 export const deleteAddress = (id: number) => {
     return AxiosInstance.delete(`/user/address/${id}`);
+};
+// Add Voucher in List
+export const addVoucher = (code: string) => {
+    return AxiosInstance.patch(`/user/voucher/add/${code}`);
 };

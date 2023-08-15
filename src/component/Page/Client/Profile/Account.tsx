@@ -26,11 +26,14 @@ export default function Account() {
     const [profileUser, setProfileUser] = useState<profileIF | null>(null);
     // reload Get Profile
     const [isLoadAccount, setIsLoadAccount] = useState<boolean>(false);
-    
+
     // console.log(curentUser);
     useEffect(() => {
         handleGetProfile(setProfileUser);
     }, [isLoadAccount]);
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, []);
     return (
         <div className="AccountWrapper">
             <Descriptions column={1}>

@@ -42,21 +42,21 @@ const headerStyle: React.CSSProperties = {
 const itemsMenu = [
     {
         id: 0,
-        name: 'VỀ CHÚNG TÔI',
-        children: [
-            {
-                id: 1,
-                name: 'Áo khoác',
-            },
-            {
-                id: 2,
-                name: 'Bảo vệ khách hàng',
-            },
-            {
-                id: 3,
-                name: 'Câu chuyện và nhân vật',
-            },
-        ],
+        name: 'Mã giảm giá',
+        // children: [
+        // {
+        //     id: 1,
+        //     name: 'Áo khoác',
+        // },
+        // {
+        //     id: 2,
+        //     name: 'Bảo vệ khách hàng',
+        // },
+        // {
+        //     id: 3,
+        //     name: 'Câu chuyện và nhân vật',
+        // },
+        // ],
     },
     {
         id: 1,
@@ -150,15 +150,17 @@ export default function HeaderClient() {
     const subNavItemHeader = (itemsData: chidrenCategory[]) => {
         return (
             <ul>
-                {itemsData.map((item: chidrenCategory, index: number) => {
-                    return (
-                        <li className="subnavCategory" key={index}>
-                            <Link to="/">
-                                <span>{item.name}</span>
-                            </Link>
-                        </li>
-                    );
-                })}
+                {itemsData &&
+                    itemsData.length > 0 &&
+                    itemsData.map((item: chidrenCategory, index: number) => {
+                        return (
+                            <li className="subnavCategory" key={index}>
+                                <Link to="/">
+                                    <span>{item.name}</span>
+                                </Link>
+                            </li>
+                        );
+                    })}
             </ul>
         );
     };
@@ -347,15 +349,27 @@ export default function HeaderClient() {
                     {itemsMenu.map((item: any, index: number) => {
                         return (
                             <li key={index}>
-                                <Popover
-                                    content={item?.id == 1 ? subNavItemBlog() : subNavItemHeader(item.children)}
-                                    placement="bottomLeft"
-                                    arrow={false}
-                                >
-                                    <Button type="text" className="ListHeaderCat ">
+                                {item?.children ? (
+                                    <Popover
+                                        content={item?.id == 1 ? subNavItemBlog() : subNavItemHeader(item.children)}
+                                        placement="bottomLeft"
+                                        arrow={false}
+                                    >
+                                        <Button type="text" className="ListHeaderCat ">
+                                            {item.name}
+                                        </Button>
+                                    </Popover>
+                                ) : (
+                                    <Button
+                                        type="text"
+                                        className="ListHeaderCat "
+                                        onClick={() => {
+                                            item?.id == 0 && navigate('/Giam-gia');
+                                        }}
+                                    >
                                         {item.name}
                                     </Button>
-                                </Popover>
+                                )}
                             </li>
                         );
                     })}

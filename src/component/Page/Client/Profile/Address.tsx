@@ -77,6 +77,9 @@ export default function Address() {
         setDistrictName('');
         setWardName('');
     }, [isLoadAddress]);
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, []);
     return (
         <div className="AddressWrapper">
             <div className="Address__Box">

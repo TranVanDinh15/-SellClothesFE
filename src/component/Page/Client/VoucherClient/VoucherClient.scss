@@ -1,0 +1,64 @@
+.VoucherClientWrapper {
+    margin-top: 100px;
+    min-height: 100vh;
+    background-color: #fff;
+    padding: 40px;
+}
+.VoucherBanner {
+    display: flex;
+    justify-content: center;
+}
+.VoucherTitle {
+    margin: 20px;
+}
+.VoucherClientBox {
+    background-color: #fef9e2;
+    padding: 20px;
+}
+
+.ListVoucherClient__Item {
+    background-color: #fff;
+    display: flex;
+    align-items: center;
+}
+
+.ListVoucherClient__Item__Infor {
+    width: 300px;
+    flex: 1;
+    background-color: #fff;
+    height: 200px;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+.ListVoucherClient__Logo {
+    padding: 0 20px;
+}
+.VoucherClient__bigText {
+    span {
+        font-size: 24px;
+        font-weight: 600;
+    }
+}
+.ListVoucherClient__Item__Infor {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    button {
+        width: 200px;
+        height: 40px;
+        background-color: red;
+        color: #fff;
+        font-size: 18px;
+    }
+}
+.VoucherClient__smallText {
+    span {
+        opacity: 0.8;
+    }
+}
+.ListVoucherClient__ItemUser {
+    border: 1px solid #ccc;
+}

@@ -34,6 +34,7 @@ export default function Cart({ cartData }: Cartprops) {
                                         width={50}
                                         // height={44}
                                         src={`${process.env.REACT_APP_IMAGE_PRODUCT}${item.productDetailSize.productDetail.images[0]}`}
+                                        preview={false}
                                     />
                                 </div>
                                 <div className="IsCartContainer__NameProduct">
