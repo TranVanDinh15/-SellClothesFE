@@ -439,3 +439,27 @@ export const deleteAddress = (id: number) => {
 export const addVoucher = (code: string) => {
     return AxiosInstance.patch(`/user/voucher/add/${code}`);
 };
+// Send Mail Change Password
+export const sendMailChangePassord = () => {
+    return AxiosInstance.post(`/user/change-pass`);
+};
+// Change Password
+export const changePassword = (data: { token: string; newPass: string }) => {
+    return AxiosInstance.patch(`/user/change-pass`, data);
+};
+// Get type Ship
+export const getTypeShip = () => {
+    return AxiosInstance.get('/order/type-ship');
+};
+// Get payMent
+export const getPayment = () => {
+    return AxiosInstance.get('/all-code/PAYMENT');
+};
+// create Order
+export const createOrder = (data: { addressUserId: number; typeShipId: number; type: string }) => {
+    return AxiosInstance.post(`/order`, data);
+};
+// use Voucher Price
+export const VoucherUseApi = (data: { voucherCode: string }) => {
+    return AxiosInstance.put(`/cart`, data);
+};

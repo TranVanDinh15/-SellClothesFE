@@ -1,9 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { Descriptions, Button } from 'antd';
+import { Descriptions, Button, message } from 'antd';
 import { CheckCircleOutlined, MailOutlined } from '@ant-design/icons';
 import { handleGetProfile, handleVerifyMail } from './ProfileMethod';
+import { RiLockPasswordLine } from 'react-icons/ri';
+
 import { useSelector } from 'react-redux';
 import { useRedux } from '../Cart/Cart';
+import { sendMailChangePassord } from '../../../utils/Api/Api';
 export interface profileIF {
     createdAt: string;
     dob: string;
@@ -70,6 +73,21 @@ export default function Account() {
                         Xác thực mail
                     </Button>
                 )}
+                <Button
+                    icon={<RiLockPasswordLine />}
+                    style={{
+                        backgroundColor: '#fff',
+                        color: '#000',
+                        minWidth: '150px',
+                    }}
+                    onClick={async () => {
+                        const response = await sendMailChangePassord();
+                        console.log(response);
+                        response && response.status == 201 && message.success('Vui lòng kiểm tra email  ');
+                    }}
+                >
+                    Đổi mật khẩu
+                </Button>
             </div>
         </div>
     );

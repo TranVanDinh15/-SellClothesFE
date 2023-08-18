@@ -34,6 +34,7 @@ import VerifyMail from './component/Page/Client/Profile/VerifyMail';
 import Address from './component/Page/Client/Profile/Address';
 import VoucherClient from './component/Page/Client/VoucherClient/VoucherClient';
 import VoucherUser from './component/Page/Client/Profile/VoucherUser';
+import ChangPassword from './component/Page/Client/Profile/ChangPassword';
 function App() {
     const token = localStorage.getItem('token');
     const router = createBrowserRouter([
@@ -198,6 +199,11 @@ function App() {
         {
             path: '/verify/:token',
             element: <VerifyMail />,
+            errorElement: <NotFound type={'notAccess'} />,
+        },
+        {
+            path: '/confirm/:token',
+            element: <ChangPassword />,
             errorElement: <NotFound type={'notAccess'} />,
         },
         {

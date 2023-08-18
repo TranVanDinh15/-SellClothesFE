@@ -188,3 +188,112 @@
         color: #fff;
     }
 }
+.VoucherShop {
+    padding: 20px 0;
+    div {
+        button {
+            display: flex;
+            align-items: center;
+            font-size: 14px;
+            justify-content: center;
+        }
+    }
+}
+.contentVoucherWrapper {
+    width: 400px;
+    min-height: 200px;
+    background-color: #fff;
+}
+.contentVoucher__ApplyVoucher {
+    margin: 20px;
+}
+.contentVoucher__Image {
+    display: flex;
+    justify-content: center;
+}
+.contentVoucher__Infor {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 20px 0;
+    span {
+        font-size: 18px;
+        font-weight: 600;
+        + span {
+            font-size: 14px;
+            opacity: 0.8;
+            font-weight: 500;
+        }
+    }
+}
+.ListVoucherClient__CheckOut {
+    display: flex;
+    gap: 50px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    align-items: center;
+}
+.CheckOut__bigText {
+    span {
+        font-weight: 600;
+        font-size: 15px;
+    }
+}
+.ListVoucherClientCheckout__Logo {
+    display: flex;
+    align-items: center;
+}
+.ContentAddress {
+    width: 520px;
+}
+.ContentAddress__Infor__Item {
+    .ant-descriptions {
+        span {
+            font-size: 12px;
+        }
+    }
+    .ant-descriptions-item-content {
+        font-size: 13px !important;
+    }
+}
+.ContentAddress__Infor__Top {
+    display: flex;
+    align-items: center;
+}
+.ContentAddress__Infor {
+    padding: 10px;
+    border: 1px solid #ccc;
+}
+.ContentAddress__BtnAdd__Container {
+    display: flex;
+    justify-content: right;
+    padding: 20px;
+    align-items: center;
+    gap: 20px;
+}
+.ContentAddress__BtnAdd {
+    margin-top: 20px;
+    width: 100px;
+    height: 40px;
+    background-color: rgb(0, 191, 255);
+    color: #fff;
+}
+.ContentAddress__BtnCancel {
+    margin-top: 20px;
+    width: 100px;
+    height: 40px;
+}
+.TypeShipWrapper {
+    width: 400px;
+}
+.TypeShipWrapper__Item__Text {
+    font-size: 14px;
+}
+.TypeShipWrapper__Item__Price {
+    color: red;
+}
+.useVoucherBtn {
+    margin-top: 20px;
+    display: flex;
+    justify-content: right;
+}

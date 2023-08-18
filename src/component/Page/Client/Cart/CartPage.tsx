@@ -102,7 +102,6 @@ export default function CartPage() {
     const getCartRedux = useSelector((state: cartRedux) => state.CartReducer.cartRedux);
     const [dataTableCart, setDatatableCart] = useState<dataTableCart[]>([]);
     const [valueInput, setValueInput] = useState<number | undefined>();
-
     const columns: ColumnsType<dataTableCart> = [
         {
             title: 'Sản phẩm ',
@@ -122,6 +121,7 @@ export default function CartPage() {
                         }
                         width={70}
                         src={`${process.env.REACT_APP_IMAGE_PRODUCT}${record.image}`}
+                        preview={false}
                     />
                     <span>{record.name}</span>
                 </div>

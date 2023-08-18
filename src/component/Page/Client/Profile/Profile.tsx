@@ -25,7 +25,6 @@ const items: MenuItem[] = [
     getItem('Tài khoản của tôi', '/Profile', <UserOutlined className="iconSidebarCss" />),
     getItem('Đơn hàng của tôi', '/Profile/Order', <BsClockHistory className="iconSidebarCss" />),
     getItem('Voucher hiện có', '/Profile/Voucher', <BsTicketPerforated className="iconSidebarCss" />),
-    getItem('Đổi mật khẩu', '/Profile/ChangePassword', <RiLockPasswordLine className="iconSidebarCss" />),
     getItem('Địa chỉ', '/Profile/Address', <GiPositionMarker className="iconSidebarCss" />),
 ];
 export default function Profile() {

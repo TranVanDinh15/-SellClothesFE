@@ -74,7 +74,10 @@ export default function VoucherClient() {
                                           {item?.typeVoucher?.typeVoucherCode ==
                                           process.env.REACT_APP__CODE__VOUCHER__PERCENT ? (
                                               <Col span={8} key={index}>
-                                                  <Badge.Ribbon text={`x${item?.amount}`} color="red">
+                                                  <Badge.Ribbon
+                                                      text={`x${Number(item?.amount) - Number(item?.addToUserAmount)}`}
+                                                      color="red"
+                                                  >
                                                       <div className="ListVoucherClient__Item ">
                                                           <div className="ListVoucherClient__Logo">
                                                               <Image src={images.logo} preview={false} width={80} />
@@ -116,7 +119,10 @@ export default function VoucherClient() {
                                               </Col>
                                           ) : (
                                               <Col span={8} key={index}>
-                                                  <Badge.Ribbon text={`x${item?.amount}`} color="red">
+                                                  <Badge.Ribbon
+                                                      text={`x${Number(item?.amount) - Number(item?.addToUserAmount)}`}
+                                                      color="red"
+                                                  >
                                                       <div className="ListVoucherClient__Item">
                                                           <div className="ListVoucherClient__Logo">
                                                               <Image src={images.logo} preview={false} width={80} />
