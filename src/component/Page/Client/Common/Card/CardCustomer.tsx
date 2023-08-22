@@ -1,7 +1,8 @@
-import { Card } from 'antd';
+import { Button, Card } from 'antd';
 import React, { useState, useEffect } from 'react';
 import SliderCustomColorP from '../../Slider/SliderCustom.ColorP';
 import { convertVND } from '../../../Admin/common/method/method';
+import { StarOutlined } from '@ant-design/icons';
 interface props {
     item: {
         id: number;
@@ -12,6 +13,7 @@ interface props {
         madeBy?: string;
         sold: number;
         view: number;
+        rating: number;
         detail: {
             color: {
                 value: string;
@@ -31,54 +33,167 @@ export default function CardCustomer({ item, clickCard }: props) {
             setCurrentDetail(item?.detail[0]);
         }
     }, [item]);
+    console.log(item);
     return (
-        <Card
-            onClick={() => {
-                clickCard();
-            }}
-            hoverable
-            style={{ width: '220px' }}
-            cover={
-                <div className="tabProductWrapper">
-                    <div className="soldWrapper">
-                        <span>Đã bán {item.sold}</span>
-                    </div>
-                    <div className="disccount__card">
-                        <span>
-                            {Math.round(
-                                ((currentDetail?.originalPrice - currentDetail?.discountPrice) /
-                                    currentDetail?.originalPrice) *
-                                    100,
-                            )}
-                            %
-                        </span>
-                    </div>
-                    <img alt="example" src={`${process.env.REACT_APP_IMAGE_PRODUCT}${currentDetail?.images[0]}`} />
-                </div>
-            }
-        >
-            <div className="cardProduct__Infor">
-                <div className="cardProduct__Infor_name">
-                    <span>{item.name}</span>
-                </div>
+        <>
+            {currentDetail?.discountPrice ? (
+                <Card
+                    hoverable
+                    style={{ width: '220px' }}
+                    cover={
+                        <div
+                            className="tabProductWrapper"
+                            onClick={() => {
+                                clickCard();
+                            }}
+                        >
+                            <div className="soldWrapper">
+                                <span
+                                    style={{
+                                        color: '#fff',
+                                    }}
+                                >
+                                    <StarOutlined
+                                        style={{
+                                            color: 'yellow',
+                                            marginRight: '4px',
+                                        }}
+                                    />
 
-                <div className="cardProduct__Infor_Price">
-                    <div className="cardProduct__Infor_PriceOriginal">
-                        <span>{convertVND(currentDetail?.discountPrice)}</span>
-                    </div>
-                    <div className="cardProduct__Infor_PriceDisccount">
-                        <span>{convertVND(currentDetail?.originalPrice)}</span>
-                    </div>
-                </div>
-                <div
-                    className="sliderCustomColorP"
-                    style={{
-                        padding: '0 10px',
-                    }}
+                                    {Math.round(item?.rating)}
+                                </span>
+                                <span
+                                    style={{
+                                        color: '#fff',
+                                        padding: '0 8px',
+                                    }}
+                                >
+                                    Đã bán {item.sold}
+                                </span>
+                            </div>
+                            <div className="disccount__card">
+                                <span>
+                                    {Math.round(
+                                        ((currentDetail?.originalPrice - currentDetail?.discountPrice) /
+                                            currentDetail?.originalPrice) *
+                                            100,
+                                    )}
+                                    %
+                                </span>
+                            </div>
+                            <img
+                                alt="example"
+                                src={`${process.env.REACT_APP_IMAGE_PRODUCT}${currentDetail?.images[0]}`}
+                            />
+                        </div>
+                    }
                 >
-                    <SliderCustomColorP items={item} setCurrentDetail={setCurrentDetail} />
-                </div>
-            </div>
-        </Card>
+                    <div className="cardProduct__Infor">
+                        <div
+                            className="cardProduct__Infor_name"
+                            onClick={() => {
+                                clickCard();
+                            }}
+                        >
+                            <span>{item.name}</span>
+                        </div>
+
+                        <div
+                            className="cardProduct__Infor_Price"
+                            onClick={() => {
+                                clickCard();
+                            }}
+                        >
+                            <div className="cardProduct__Infor_PriceOriginal">
+                                <span>{convertVND(currentDetail?.discountPrice)}</span>
+                            </div>
+                            <div className="cardProduct__Infor_PriceDisccount">
+                                <span>{convertVND(currentDetail?.originalPrice)}</span>
+                            </div>
+                        </div>
+                        <div
+                            className="sliderCustomColorP"
+                            style={{
+                                padding: '0 10px',
+                            }}
+                        >
+                            <SliderCustomColorP items={item} setCurrentDetail={setCurrentDetail} />
+                        </div>
+                    </div>
+                </Card>
+            ) : (
+                <Card
+                    hoverable
+                    style={{ width: '220px' }}
+                    cover={
+                        <div
+                            className="tabProductWrapper"
+                            onClick={() => {
+                                clickCard();
+                            }}
+                        >
+                            <div className="soldWrapper">
+                                <span
+                                    style={{
+                                        color: '#fff',
+                                    }}
+                                >
+                                    <StarOutlined
+                                        style={{
+                                            color: 'yellow',
+                                            marginRight: '4px',
+                                        }}
+                                    />
+
+                                    {Math.round(item?.rating)}
+                                </span>
+                                <span
+                                    style={{
+                                        color: '#fff',
+                                        padding: '0 8px',
+                                    }}
+                                >
+                                    Đã bán {item.sold}
+                                </span>
+                            </div>
+                            <img
+                                alt="example"
+                                src={`${process.env.REACT_APP_IMAGE_PRODUCT}${currentDetail?.images[0]}`}
+                            />
+                        </div>
+                    }
+                >
+                    <div className="cardProduct__Infor">
+                        <div
+                            className="cardProduct__Infor_name"
+                            onClick={() => {
+                                clickCard();
+                            }}
+                        >
+                            <span>{item.name}</span>
+                        </div>
+
+                        <div
+                            className="cardProduct__Infor_Price"
+                            onClick={() => {
+                                clickCard();
+                            }}
+                        >
+                            <div className="cardProduct__Infor_PriceOriginal">
+                                <span>{convertVND(currentDetail?.originalPrice)}</span>
+                            </div>
+                        </div>
+                        <div
+                            className="sliderCustomColorP"
+                            style={{
+                                padding: '0 10px',
+                            }}
+                        >
+                            <SliderCustomColorP items={item} setCurrentDetail={setCurrentDetail} />
+                        </div>
+                    </div>
+                </Card>
+            )}
+        </>
     );
 }

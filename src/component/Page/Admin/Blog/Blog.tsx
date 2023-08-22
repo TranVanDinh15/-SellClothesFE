@@ -80,14 +80,14 @@ export default function Blog() {
     const [isupdateImage, setIsUpdateImage] = useState<boolean>(false);
     const [imageUpdate, setImageUpdate] = useState<any>();
     const [open, setOpen] = useState(false);
+    console.log(imageUpdate);
     const showDrawer = () => {
         setOpen(true);
     };
     const onClose = () => {
         setOpen(false);
     };
-    console.log(imageUpdate);
-    console.log(dataUpdateBlog);
+
     const data = [
         {
             title: 'Ant Design Title 1',
@@ -187,6 +187,7 @@ export default function Blog() {
     function handleEditorChange({ html, text }: markdownProps) {
         setText(text);
         setValue(html);
+        console.log(html);
     }
     useEffect(() => {
         console.log('load');
@@ -337,19 +338,33 @@ export default function Blog() {
                                 onClick={() => {
                                     if (dataUpdateBlog) {
                                         const data = {
-                                            contentHtml: dataUpdateBlog.contentHtml,
-                                            contentMarkdown: dataUpdateBlog.contentMarkdown,
+                                            contentHtml: dataUpdateBlog.contentHtml
+                                                ? dataUpdateBlog.contentHtml
+                                                : value,
+                                            contentMarkdown: dataUpdateBlog.contentMarkdown
+                                                ? dataUpdateBlog.contentMarkdown
+                                                : '**Hello world!!!**',
                                             images:
-                                                imagesUploadMultiple.length > 0
-                                                    ? imagesUploadMultiple
-                                                          .map((item: any) => {
+                                                imageUpdate && imageUpdate.length > 0
+                                                    ? imagesUploadMultiple.length > 0
+                                                        ? imagesUploadMultiple
+                                                              .map((item: any) => {
+                                                                  if (item?.image) {
+                                                                      return item?.image;
+                                                                  }
+                                                              })
+                                                              .concat(imageUpdate)
+                                                        : imageUpdate
+                                                    : imagesUploadMultiple.map((item: any) => {
+                                                          if (item?.image) {
                                                               return item?.image;
-                                                          })
-                                                          .concat(imageUpdate)
-                                                    : imageUpdate,
+                                                          }
+                                                      }),
                                             shortDescription: dataUpdateBlog.shortDescription,
                                             statusId: dataUpdateBlog.statusId,
-                                            subjectId: dataUpdateBlog.subjectId,
+                                            subjectId: dataUpdateBlog.subjectId
+                                                ? dataUpdateBlog.subjectId
+                                                : formUpdate?.getFieldValue('subjectId'),
                                             title: dataUpdateBlog.title,
                                         };
                                         handleUpdateImageBlog(
@@ -362,6 +377,7 @@ export default function Blog() {
                                             setImagesUploadMultiple,
                                             setImageDp,
                                         );
+                                        console.log(data);
                                     }
                                 }}
                             >

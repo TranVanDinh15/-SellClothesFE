@@ -35,6 +35,8 @@ import Address from './component/Page/Client/Profile/Address';
 import VoucherClient from './component/Page/Client/VoucherClient/VoucherClient';
 import VoucherUser from './component/Page/Client/Profile/VoucherUser';
 import ChangPassword from './component/Page/Client/Profile/ChangPassword';
+import HistoryOrder from './component/Page/Client/Profile/historyOrder';
+import DetailHistoryOrder from './component/Page/Client/Profile/detailHistoryOrder';
 function App() {
     const token = localStorage.getItem('token');
     const router = createBrowserRouter([
@@ -185,6 +187,16 @@ function App() {
                         {
                             path: 'Voucher',
                             element: <VoucherUser />,
+                            errorElement: <NotFound type={'notAccess'} />,
+                        },
+                        {
+                            path: 'historyOrder',
+                            element: <HistoryOrder />,
+                            errorElement: <NotFound type={'notAccess'} />,
+                        },
+                        {
+                            path: 'detailOrder/:id',
+                            element: <DetailHistoryOrder />,
                             errorElement: <NotFound type={'notAccess'} />,
                         },
                     ],

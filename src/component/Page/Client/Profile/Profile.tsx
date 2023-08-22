@@ -23,7 +23,7 @@ function getItem(label: React.ReactNode, key: React.Key, icon?: React.ReactNode,
 }
 const items: MenuItem[] = [
     getItem('Tài khoản của tôi', '/Profile', <UserOutlined className="iconSidebarCss" />),
-    getItem('Đơn hàng của tôi', '/Profile/Order', <BsClockHistory className="iconSidebarCss" />),
+    getItem('Đơn hàng của tôi', '/Profile/historyOrder', <BsClockHistory className="iconSidebarCss" />),
     getItem('Voucher hiện có', '/Profile/Voucher', <BsTicketPerforated className="iconSidebarCss" />),
     getItem('Địa chỉ', '/Profile/Address', <GiPositionMarker className="iconSidebarCss" />),
 ];

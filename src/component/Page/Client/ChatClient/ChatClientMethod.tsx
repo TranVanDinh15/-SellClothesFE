@@ -1,4 +1,4 @@
-import { createRoomMessage, getMessageByRoom, getRooms, getUserRoleId } from '../../../utils/Api/Api';
+import { createRoomMessage, getAdmin, getMessageByRoom, getRooms, getUserRoleId } from '../../../utils/Api/Api';
 import { message } from 'antd';
 import { ListRooms, adminAppIf } from './ChatClient';
 import { promises } from 'dns';
@@ -22,9 +22,14 @@ export const handleGetadminApp = async (
         message.error('Đã có lỗi xảy ra');
     }
 };
-export const handleCreateRoom = async (data: { userTwoId: number }): Promise<void> => {
+export const handleCreateRoom = async (
+    data: { userTwoId: number },
+    setListRoomChat: React.Dispatch<React.SetStateAction<ListRooms[] | undefined>>,
+): Promise<void> => {
     const response = await createRoomMessage(data);
+    console.log(response);
     if (response && response.status == 201) {
+        handleGetRoom(setListRoomChat);
     } else {
         message.error('Đã có lỗi xảy ra');
     }
@@ -42,12 +47,22 @@ export const handleGetRoom = async (
 // }
 export const handleGetMess = async (
     id: number,
-    setMessageByRoom: React.Dispatch<React.SetStateAction<any>>,
+    setMessageByRoom: React.Dispatch<React.SetStateAction<adminAppIf[] | null>>,
 ): Promise<void> => {
     const response = await getMessageByRoom(id);
     if (response && response.status == 200) {
     }
 };
-// export const sendMessage= async()=>{
-
-// }
+export const handleGetAdmin = async (setListAdmin: React.Dispatch<React.SetStateAction<any>>) => {
+    const response = await getAdmin();
+    if (response && response.status == 200) {
+        console.log(response);
+        const mapData = await response?.data?.data.map((item: any) => {
+            return {
+                value: item?.id,
+                label: item?.fullName,
+            };
+        });
+        setListAdmin(mapData);
+    }
+};

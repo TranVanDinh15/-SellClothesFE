@@ -7,6 +7,7 @@ export interface dataCategoryProduct {
     madeBy?: string;
     sold: number;
     view: number;
+    rating: number;
     detail: {
         color: {
             value: string;

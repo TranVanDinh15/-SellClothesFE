@@ -1,11 +1,12 @@
 import React from 'react';
 import { useAppDispatch } from '../../../../Redux/app.hook/app.hook';
 import { Link, useNavigate } from 'react-router-dom';
-import { Button, Checkbox, Col, Form, Input, Row } from 'antd';
+import { Button, Checkbox, Col, Form, Input, Row, message } from 'antd';
 import './LoginClient.css';
 import { loginClientActions } from '../../../../Redux/Actions/Actions.auth';
 import { useSelector } from 'react-redux';
 import { reduxIterface } from './Login.Interface';
+import { sendMailChangePassord } from '../../../utils/Api/Api';
 export default function LoginClient() {
     const isLoading = useSelector((state: reduxIterface) => state.reduxAuth.isLoading);
     console.log(isLoading);
@@ -67,7 +68,16 @@ export default function LoginClient() {
                 >
                     <Col>
                         <Form.Item className="footerFormLoginClient">
-                            <Link to={'/'}>Quên mật khẩu</Link>
+                            <Button
+                                type="link"
+                                onClick={async () => {
+                                    const response = await sendMailChangePassord();
+                                    console.log(response);
+                                    response && response.status == 201 && message.success('Vui lòng kiểm tra email  ');
+                                }}
+                            >
+                                Quên mật khẩu
+                            </Button>
                         </Form.Item>
                     </Col>
                     <Col>

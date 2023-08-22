@@ -1,6 +1,7 @@
 import { message } from 'antd';
 import {
     createAddress,
+    detailOrderById,
     getAddress,
     getDistrict,
     getProfile,
@@ -8,6 +9,7 @@ import {
     getVoucherUser,
     getWard,
     getWardById,
+    historyOrder,
     updateAddress,
     verifyApi,
     verifyMail,
@@ -15,6 +17,8 @@ import {
 import { profileIF } from './Account';
 import { AddressIF, DistrictIF, WardIF, provincesIF } from './Address';
 import { listVoucherIF } from '../VoucherClient/VoucherClient';
+import { orderInterface } from './historyOrder';
+import { detailOrderbyId } from './detailHistoryOrder';
 
 export const handleGetProfile = async (
     setProfileUser: React.Dispatch<React.SetStateAction<profileIF | null>>,
@@ -203,5 +207,29 @@ export const handleGetVoucherUser = async (
         console.log(response);
         setDataVoucher(response.data?.data);
         setTotal(response.data?.meta?.totalItems);
+    }
+};
+export const handleHistoryOrder = async (
+    id: number,
+    currentPage: number,
+    pageSize: number,
+    setListOrderHistory: React.Dispatch<React.SetStateAction<orderInterface[] | null>>,
+    setTotal: React.Dispatch<React.SetStateAction<number | undefined>>,
+): Promise<void> => {
+    const response = await historyOrder(id, currentPage, pageSize);
+    console.log(response);
+    if (response && response.status == 200) {
+        console.log(response);
+        setListOrderHistory(response.data?.data);
+        setTotal(response.data?.meta?.totalItems);
+    }
+};
+export const handleGetDetailOrderById = async (
+    id: number,
+    setDetailOrder: React.Dispatch<React.SetStateAction<detailOrderbyId | null>>,
+): Promise<void> => {
+    const response = await detailOrderById(id);
+    if (response && response.status == 200) {
+        setDetailOrder(response.data);
     }
 };

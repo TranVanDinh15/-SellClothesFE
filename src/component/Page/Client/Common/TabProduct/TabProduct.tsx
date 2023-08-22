@@ -20,6 +20,7 @@ interface cardProps {
         madeBy?: string;
         sold: number;
         view: number;
+        rating: number;
         detail: {
             color: {
                 value: string;

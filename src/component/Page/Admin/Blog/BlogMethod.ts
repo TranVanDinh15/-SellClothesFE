@@ -118,6 +118,6 @@ export const handleUpdateImageBlog = async (
             message.success('Đã lưu ');
         }
     } else {
-        message.error('Đã có lỗi xảy ra');
+        message.error('Vui lòng điền đầy đủ thông tin');
     }
 };

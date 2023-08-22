@@ -41,7 +41,13 @@ export default function Cart({ cartData }: Cartprops) {
                                     <span>{item.productDetailSize.productDetail.name}</span>
                                 </div>
                                 <div className="IsCartContainer__ProductPrice">
-                                    <span>{convertVND(item.productDetailSize.productDetail.discountPrice)}</span>
+                                    <span>
+                                        {convertVND(
+                                            item.productDetailSize.productDetail.discountPrice
+                                                ? item.productDetailSize.productDetail.discountPrice
+                                                : item.productDetailSize.productDetail.originalPrice,
+                                        )}
+                                    </span>
                                 </div>
                             </div>
                         );

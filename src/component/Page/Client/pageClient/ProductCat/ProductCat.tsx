@@ -366,6 +366,7 @@ export default function ProductCat() {
                                   madeBy: item.madeBy,
                                   sold: item.sold,
                                   view: item.view,
+                                  rating: item?.rating,
                                   detail: [...item.detail],
                               };
                           })

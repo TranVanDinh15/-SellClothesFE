@@ -2,7 +2,7 @@ import { DownOutlined, MessageOutlined, SendOutlined, UserOutlined } from '@ant-
 import { Button, Popover, Badge, Input, Row, Col, Avatar, Image, Empty } from 'antd';
 import React, { useEffect, useRef, useState } from 'react';
 import './ChatClient.scss';
-import { handleCreateRoom, handleGetMess, handleGetRoom, handleGetadminApp } from './ChatClientMethod';
+import { handleCreateRoom, handleGetAdmin, handleGetMess, handleGetRoom, handleGetadminApp } from './ChatClientMethod';
 import SelectCustomer from '../../Admin/common/Select/Select';
 import { socket } from '../../Admin/common/Socket/SocketConfig';
 import { useSelector } from 'react-redux';
@@ -34,6 +34,28 @@ export interface useRedux {
         isfail: boolean;
     };
 }
+export interface adminList {
+    roleId: string;
+    id: number;
+    firstName: string;
+    lastName: string;
+    password: string;
+    email: string;
+    genderId: string;
+    phoneNumber: number;
+    image: string;
+    dob: string;
+    statusId: string;
+    token: any;
+    isActiveEmail: boolean;
+    createdAt: string;
+    updatedAt: string;
+    status: {
+        value: string;
+        code: string;
+    };
+    fullName: string;
+}
 interface messageIF {
     createdAt: string;
     id: number;
@@ -59,6 +81,7 @@ interface messageIF {
     };
     userId: number;
 }
+
 export default function ChatClient() {
     const containerRef = useRef<HTMLDivElement>(null);
     const messagesEndRef = useRef<HTMLDivElement | null>(null);
@@ -67,7 +90,7 @@ export default function ChatClient() {
     const curentUser = useSelector((state: useRedux) => state.reduxAuth.user);
     // Quản lý Input nhập tin nhắn
     const [message, setMessage] = useState<string>('');
-    const [adminApp, setAdminApp] = useState<adminAppIf[] | undefined>();
+    const [adminApp, setAdminApp] = useState<adminAppIf[] | null>(null);
     const [listRoomChat, setListRoomChat] = useState<ListRooms[] | undefined>();
     const [getMessageByRoom, setMessageByRoom] = useState<messageIF[]>([]);
     const [currentRoomId, setCurrentRoomId] = useState<number>(0);
@@ -79,6 +102,7 @@ export default function ChatClient() {
     const [isFlagReadvsUnRead, setIsFlagReadvsUnRead] = useState<any>();
     const [isNewMessage, setIsNewMessage] = useState<boolean>(false);
     const [isDownEndPage, setIsDownEndPage] = useState<boolean>(false);
+    const [isDisPlayMessage, setIsDisplayMessage] = useState<boolean>(false);
     const checkScrollPosition = () => {
         if (containerRef.current) {
             const { scrollTop, clientHeight, scrollHeight } = containerRef.current;
@@ -89,6 +113,10 @@ export default function ChatClient() {
             }
         }
     };
+    useEffect(() => {
+        handleGetAdmin(setAdminApp);
+    }, []);
+    console.log(adminApp);
     const contentMessage = (
         <div className="ChatClienContent">
             <Row gutter={16}>
@@ -106,7 +134,7 @@ export default function ChatClient() {
                                         const data = {
                                             userTwoId: value,
                                         };
-                                        handleCreateRoom(data);
+                                        handleCreateRoom(data, setListRoomChat);
                                     }}
                                     onSearch={(value: any) => {
                                         // onChangeProductSelect(value, setProductDetailApp);
@@ -138,6 +166,7 @@ export default function ChatClient() {
                                                               setCurrentRoomId(item.id);
                                                               setUserReceiveId(item?.userTwoId);
                                                               setNumberRoom(item?.id);
+                                                              setIsDisplayMessage(true);
                                                           }}
                                                       >
                                                           <Badge
@@ -158,7 +187,7 @@ export default function ChatClient() {
                     </div>
                 </Col>
                 <Col span={18}>
-                    {getMessageByRoom && getMessageByRoom.length > 0 ? (
+                    {getMessageByRoom && isDisPlayMessage ? (
                         <div className="ChatClienContent__BoxChat">
                             <div className="titleName">
                                 <Badge status="success" text={`Phòng ${numberRoom ? numberRoom : ''}`} />
@@ -324,6 +353,7 @@ export default function ChatClient() {
     useEffect(() => {}, []);
     useEffect(() => {
         socket.on('roomMessages', (data) => {
+            console.log(data);
             if (data) {
                 setMessageByRoom(data);
                 setTimeout(() => {

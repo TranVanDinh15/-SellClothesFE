@@ -343,6 +343,11 @@ export const getMessageByRoom = (id: number) => {
 export const getRoomsAdmin = () => {
     return AxiosInstance.get(`/room-messages/rooms-admin`);
 };
+// Get admin by role
+export const getAdmin = () => {
+    return AxiosInstance.get(`/user?roleId=Admin`);
+};
+
 // Get type voucher
 export const getTypeVoucher = (currentPage: number, pageSize: number) => {
     return AxiosInstance.get(`/voucher/type-voucher?page=${pageSize}&size=${currentPage}&updatedAt=DESC`);
@@ -459,7 +464,15 @@ export const getPayment = () => {
 export const createOrder = (data: { addressUserId: number; typeShipId: number; type: string }) => {
     return AxiosInstance.post(`/order`, data);
 };
+// Get Detail Order
+export const detailOrderById = (id: number) => {
+    return AxiosInstance.get(`/order/${id}`);
+};
 // use Voucher Price
 export const VoucherUseApi = (data: { voucherCode: string }) => {
     return AxiosInstance.put(`/cart`, data);
+};
+// history Order
+export const historyOrder = (id: number, currentPage: number, size: number) => {
+    return AxiosInstance.get(`/order?userId=${id}&page=${currentPage}&size=${size}`);
 };

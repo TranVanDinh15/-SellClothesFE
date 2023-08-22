@@ -71,7 +71,7 @@ type cart = {
 export type dataCart = {
     cart: cart;
     totalPrice: number;
-    typeShipId: 1;
-    useVoucherPrice: 299010;
-    voucherId: null;
+    typeShipId: number;
+    useVoucherPrice: number;
+    voucherId: any;
 };

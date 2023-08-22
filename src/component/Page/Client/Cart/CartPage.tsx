@@ -113,16 +113,7 @@ export default function CartPage() {
                     }}
                     className="pageCartName"
                 >
-                    <Image
-                        style={
-                            {
-                                // flexBasis: '50%',
-                            }
-                        }
-                        width={70}
-                        src={`${process.env.REACT_APP_IMAGE_PRODUCT}${record.image}`}
-                        preview={false}
-                    />
+                    <Image width={50} src={`${process.env.REACT_APP_IMAGE_PRODUCT}${record.image}`} preview={false} />
                     <span>{record.name}</span>
                 </div>
             ),
@@ -153,16 +144,20 @@ export default function CartPage() {
                             color: 'red',
                         }}
                     >
-                        {convertVND(record.discountPrice)}
+                        {convertVND(record.originalPrice ? record.originalPrice : record?.originalPrice)}
                     </span>
-                    <span
-                        style={{
-                            textDecoration: 'line-through',
-                            color: '#8a8a8f',
-                        }}
-                    >
-                        {convertVND(record.originalPrice)}
-                    </span>
+                    {record?.discountPrice ? (
+                        <span
+                            style={{
+                                textDecoration: 'line-through',
+                                color: '#8a8a8f',
+                            }}
+                        >
+                            {convertVND(record.originalPrice)}
+                        </span>
+                    ) : (
+                        ''
+                    )}
                 </div>
             ),
         },
@@ -181,7 +176,12 @@ export default function CartPage() {
         {
             title: 'Tổng tiền',
             render: (value, record) => (
-                <span onClick={() => {}}>{convertVND(Number(record.discountPrice) * Number(record.quantity))}</span>
+                <span onClick={() => {}}>
+                    {convertVND(
+                        Number(record.discountPrice ? record.discountPrice : record.originalPrice) *
+                            Number(record.quantity),
+                    )}
+                </span>
             ),
         },
         // {

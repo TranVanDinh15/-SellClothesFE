@@ -14,6 +14,7 @@ import {
     Radio,
     RadioChangeEvent,
     message,
+    Form,
 } from 'antd';
 import { CiLocationOn } from 'react-icons/ci';
 import { BsTicketPerforated } from 'react-icons/bs';
@@ -21,8 +22,16 @@ import { Tag } from '@chakra-ui/react';
 import { ColumnsType } from 'antd/es/table';
 import { convertVND } from '../../../Admin/common/method/method';
 import { useSelector } from 'react-redux';
-import { AddressIF } from '../../Profile/Address';
-import { handleGetAddress, handleGetVoucherUser } from '../../Profile/ProfileMethod';
+import { AddressIF, DistrictIF, WardIF, formAddAddress, provincesIF } from '../../Profile/Address';
+import {
+    handleCreateAddress,
+    handleGetAddress,
+    handleGetProvinces,
+    handleGetVoucherUser,
+    onChangeDistrictSelect,
+    onChangeProvincesSelect,
+    onChangeWardSelect,
+} from '../../Profile/ProfileMethod';
 import { listVoucherIF } from '../../VoucherClient/VoucherClient';
 import images from '../../../../../asset';
 import DeleteCustom from '../../../Admin/common/Delete/DeleteCustom';
@@ -30,6 +39,10 @@ import { handleGetPayment, handleGetTypeShip, handleOrderProduct, handleuseVouch
 import { cartRedux, dataTableCart } from '../../Cart/CartPage';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
+import ModalCustomer from '../../../Admin/common/Modal/ModalCustomer';
+import { useForm } from 'antd/es/form/Form';
+import SelectCustomer from '../../../Admin/common/Select/Select';
+import { deleteAddress } from '../../../../utils/Api/Api';
 export interface useRedux {
     reduxAuth: {
         isAuthenticate: boolean;
@@ -69,6 +82,7 @@ interface contentAddress {
     addressUser: AddressIF[] | null;
     setCurrentAddress: React.Dispatch<React.SetStateAction<AddressIF | null>>;
     currenrAddress: AddressIF | null;
+    setIsLoadAddress: React.Dispatch<React.SetStateAction<boolean>>;
 }
 interface typeshipProps {
     TypeShip?: typeShip[] | null;
@@ -82,12 +96,43 @@ interface payMentProps {
     currentPayMent: payMent | null;
 }
 const { Search } = Input;
-const ContentAddress = ({ addressUser, setCurrentAddress, currenrAddress }: contentAddress) => {
+const ContentAddress = ({ addressUser, setCurrentAddress, currenrAddress, setIsLoadAddress }: contentAddress) => {
+    const [isModalAddOpen, setIsModalAddOpen] = useState<boolean>(false);
+    const [formAdd] = useForm<formAddAddress>();
+    // Tên tỉnh thành phố
+    const [provincesName, setProvincesName] = useState<string>('');
+    // Tên quận , huyện
+    const [DistrictName, setDistrictName] = useState<string>('');
+    // Tên thị trấn, xã
+    const [WardName, setWardName] = useState<string>('');
+    const [listProvinces, setListProvinces] = useState<provincesIF[] | null>(null);
+    const [listDistrict, setListDistrict] = useState<DistrictIF[] | null>(null);
+    const [listWard, setListWard] = useState<WardIF[] | null>(null);
+    // Id của địa chỉ , dùng để update
+    const [idAddress, setIdAddress] = useState<number | null>(null);
+    useEffect(() => {
+        handleGetProvinces(setListProvinces);
+    }, []);
     return (
         <div className="ContentAddress">
             <div className="ContentAddress__ListAddress">
                 {addressUser && addressUser.length > 0 ? (
                     <>
+                        {/* <div className="ContentAddress__BtnAdd"> */}
+                        <div className="AddresAddCheckOut">
+                            <Button
+                                type="primary"
+                                style={{
+                                    marginBottom: '20px',
+                                }}
+                                onClick={() => {
+                                    setIsModalAddOpen(true);
+                                }}
+                            >
+                                Thêm địa chỉ
+                            </Button>
+                        </div>
+                        {/* </div> */}
                         <Radio.Group
                             onChange={(event) => {
                                 console.log(event.target.value);
@@ -107,7 +152,9 @@ const ContentAddress = ({ addressUser, setCurrentAddress, currenrAddress }: cont
                                         <Radio value={item}>
                                             <div className="ContentAddress__Infor__Top">
                                                 <Descriptions column={1} className="ContentAddress__Infor__Item">
-                                                    <Descriptions.Item label="Họ tên">Trần Văn Định</Descriptions.Item>
+                                                    <Descriptions.Item label="Họ tên">
+                                                        {item?.shipName}
+                                                    </Descriptions.Item>
                                                     <Descriptions.Item label="Địa chỉ">
                                                         {item?.shipAddress}
                                                     </Descriptions.Item>
@@ -117,32 +164,18 @@ const ContentAddress = ({ addressUser, setCurrentAddress, currenrAddress }: cont
                                                 </Descriptions>
                                             </div>
                                         </Radio>
+
                                         <div>
-                                            <Button
-                                                type="link"
-                                                onClick={() => {
-                                                    //   setIsModalUpdateOpen(true);
-                                                    //   formUpdate.setFieldsValue({
-                                                    //       shipName: item?.shipName,
-                                                    //       shipPhoneNumber: item?.shipPhoneNumber,
-                                                    //       shipEmail: item?.shipEmail,
-                                                    //       shipAddress: item?.shipAddress,
-                                                    //   });
-                                                    //   setIdAddress(Number(item?.id));
-                                                }}
-                                            >
-                                                Sửa
-                                            </Button>
                                             <DeleteCustom
                                                 title="Xóa địa chỉ"
                                                 description="Bạn chắc chắn muốn xóa?"
                                                 confirm={async (e: any) => {
-                                                    //   if (idAddress) {
-                                                    //       const respone = await deleteAddress(Number(idAddress));
-                                                    //       respone &&
-                                                    //           respone.status == 200 &&
-                                                    //           setIsLoadAddress((isLoadAddress) => !isLoadAddress);
-                                                    //   }
+                                                    if (idAddress) {
+                                                        const respone = await deleteAddress(Number(idAddress));
+                                                        respone &&
+                                                            respone.status == 200 &&
+                                                            setIsLoadAddress((isLoadAddress) => !isLoadAddress);
+                                                    }
                                                 }}
                                                 cancel={() => {}}
                                                 placement={'topLeft'}
@@ -150,7 +183,7 @@ const ContentAddress = ({ addressUser, setCurrentAddress, currenrAddress }: cont
                                                 <Button
                                                     type="link"
                                                     onClick={() => {
-                                                        //   setIdAddress(item?.id);
+                                                        setIdAddress(item?.id);
                                                     }}
                                                 >
                                                     Xóa
@@ -161,17 +194,164 @@ const ContentAddress = ({ addressUser, setCurrentAddress, currenrAddress }: cont
                                 );
                             })}
                         </Radio.Group>
-                        <div className="ContentAddress__BtnAdd__Container">
+
+                        {/* <div className="ContentAddress__BtnAdd__Container">
                             <Button className="ContentAddress__BtnCancel">Hủy</Button>
                             <Button className="ContentAddress__BtnAdd">Xác nhận</Button>
-                        </div>
+                        </div> */}
                     </>
                 ) : (
-                    <div className="ContentAddress__BtnAdd">
-                        <Button>Thêm địa chỉ</Button>
+                    <div
+                        className="ContentAddress__BtnAdd"
+                        onClick={() => {
+                            setIsModalAddOpen(true);
+                        }}
+                    >
+                        <Button>Thêm địa chỉ </Button>
                     </div>
                 )}
             </div>
+            <ModalCustomer
+                isModalOpen={isModalAddOpen}
+                handleOk={() => {}}
+                handleCancel={() => {
+                    setIsModalAddOpen(false);
+                }}
+                title={'Thêm địa chỉ'}
+                footer={true}
+                showModal={() => {
+                    setIsModalAddOpen(true);
+                }}
+            >
+                <Form
+                    form={formAdd}
+                    name="basic"
+                    labelCol={{ span: 24 }}
+                    style={{ maxWidth: 600 }}
+                    initialValues={{ remember: true }}
+                    onFinish={(value) => {
+                        const data = {
+                            shipName: value.shipName,
+                            shipPhoneNumber: value.shipPhoneNumber,
+                            shipEmail: value.shipEmail,
+                            shipAddress: value.shipAddress,
+                            addressDetail: `${WardName}, ${DistrictName}, ${provincesName}`,
+                        };
+                        handleCreateAddress(data, setIsModalAddOpen, formAdd, setIsLoadAddress);
+                    }}
+                    // onFinishFailed={onFinishFailed}
+                >
+                    <Row
+                        gutter={20}
+                        style={{
+                            display: 'flex',
+                            justifyContent: 'space-between',
+                        }}
+                    >
+                        <Col span={12}>
+                            <Form.Item
+                                label="Tên"
+                                name="shipName"
+                                rules={[{ required: true, message: 'Vui lòng điền đầy đủ thông tin!' }]}
+                            >
+                                <Input placeholder="Họ tên" />
+                            </Form.Item>
+                        </Col>
+
+                        <Col span={12}>
+                            <Form.Item
+                                label="Địa chỉ nhà, cơ quan"
+                                name="shipAddress"
+                                rules={[{ required: true, message: 'Vui lòng điền đầy đủ thông tin!' }]}
+                            >
+                                <Input placeholder="Địa chỉ" />
+                            </Form.Item>
+                        </Col>
+                        <Col span={12}>
+                            <Form.Item
+                                label="Số điện thoại"
+                                name="shipPhoneNumber"
+                                rules={[{ required: true, message: 'Vui lòng điền đầy đủ thông tin!' }]}
+                            >
+                                <Input placeholder="Số điện thoại" />
+                            </Form.Item>
+                        </Col>
+                        <Col span={12}>
+                            <Form.Item
+                                label="Email"
+                                name="shipEmail"
+                                rules={[{ required: true, message: 'Vui lòng điền đầy đủ thông tin!' }]}
+                            >
+                                <Input placeholder="Email" />
+                            </Form.Item>
+                        </Col>
+                        <Col span={12}>
+                            <Form.Item
+                                label="Tỉnh"
+                                name="provinces"
+                                rules={[{ required: true, message: 'Vui lòng điền đầy đủ thông tin!' }]}
+                            >
+                                <SelectCustomer
+                                    mode=""
+                                    option={listProvinces ? [...listProvinces] : []}
+                                    onChange={(value: any) => {
+                                        onChangeProvincesSelect(value, setListDistrict, setProvincesName);
+                                    }}
+                                    onSearch={(value: any) => {
+                                        onChangeProvincesSelect(value, setListDistrict, setProvincesName);
+                                    }}
+                                />
+                            </Form.Item>
+                        </Col>
+                        <Col span={12}>
+                            <Form.Item
+                                label="Quận, huyện"
+                                name="district"
+                                rules={[{ required: true, message: 'Vui lòng điền đầy đủ thông tin!' }]}
+                            >
+                                <SelectCustomer
+                                    mode=""
+                                    option={listDistrict ? [...listDistrict] : []}
+                                    onChange={(value: any) => {
+                                        onChangeDistrictSelect(value, setListWard, setDistrictName);
+                                    }}
+                                    onSearch={(value: any) => {
+                                        onChangeDistrictSelect(value, setListWard, setDistrictName);
+                                    }}
+                                    disable={listDistrict ? false : true}
+                                />
+                            </Form.Item>
+                        </Col>
+                        <Col span={12}>
+                            <Form.Item
+                                label="Phường, thị xã, thị trấn"
+                                name="ward"
+                                rules={[{ required: true, message: 'Vui lòng điền đầy đủ thông tin!' }]}
+                            >
+                                <SelectCustomer
+                                    mode=""
+                                    option={listWard ? [...listWard] : []}
+                                    onChange={(value: any) => {
+                                        onChangeWardSelect(value, setWardName);
+                                    }}
+                                    onSearch={(value: any) => {}}
+                                    disable={listWard ? false : true}
+                                />
+                            </Form.Item>
+                        </Col>
+                    </Row>
+                    <Form.Item
+                        style={{
+                            display: 'flex',
+                            justifyContent: 'center',
+                        }}
+                    >
+                        <Button type="primary" htmlType="submit">
+                            Thêm
+                        </Button>
+                    </Form.Item>
+                </Form>
+            </ModalCustomer>
         </div>
     );
 };
@@ -264,7 +444,7 @@ export default function CheckOut() {
     // Lấy địa chỉ hiện có
     const [addressUser, setAddressUser] = useState<AddressIF[] | null>(null);
     const [currenrAddress, setCurrentAddress] = useState<AddressIF | null>(null);
-    const [value, setValue] = useState(1);
+    const [value, setValue] = useState<any>(1);
     const [dataTableCart, setDatatableCart] = useState<dataTableCart[]>([]);
     const [totalPrice, setTotalPrice] = useState<number | null>(null);
     const [typeShip, setTypeShip] = useState<typeShip[] | null>(null);
@@ -272,6 +452,8 @@ export default function CheckOut() {
     const [payMent, setPayment] = useState<payMent[] | null>(null);
     const [currentPayMent, setCurrentPayment] = useState<payMent | null>(null);
     const [voucherCode, setVoucherCode] = useState<string>('');
+    const [isLoadAddress, setIsLoadAddress] = useState<boolean>(false);
+
     console.log(getCartRedux);
     // console.log(typeShipCurrent);
     interface DataType {
@@ -315,11 +497,15 @@ export default function CheckOut() {
 
     const onChange = (e: RadioChangeEvent) => {
         console.log('radio checked', e.target.value);
-        setValue(e.target.value);
-        // handleuseVoucher(dispatch, {
-        //     voucherCode:
-        // })
-        setVoucherCode(e.target.value);
+        console.log(value);
+        if (e.target.value === value) {
+            // Nếu Radio đang được chọn được nhấp, hãy đặt giá trị về null
+            setValue(null);
+            setVoucherCode('');
+        } else {
+            setValue(e.target.value);
+            setVoucherCode(e.target.value);
+        }
     };
     const contentVoucher = (
         <div className="contentVoucherWrapper">
@@ -352,7 +538,7 @@ export default function CheckOut() {
                                                                   </div>
                                                                   <div className="CheckOut__smallText">
                                                                       <span>
-                                                                          Giảm tối đa{' '}
+                                                                          Đơn tối đa{' '}
                                                                           {convertVND(
                                                                               Number(item?.typeVoucher.maxValue),
                                                                           )}
@@ -370,7 +556,18 @@ export default function CheckOut() {
                                                           Sử dụng
                                                       </Button> */}
                                                           </div>
-                                                          <Radio value={item?.codeVoucher}></Radio>
+                                                          <Radio
+                                                              value={item?.codeVoucher}
+                                                              onClick={(event) => {
+                                                                  if (item?.codeVoucher === value) {
+                                                                      setValue(null);
+                                                                      setVoucherCode('');
+                                                                  } else {
+                                                                      setValue(item?.codeVoucher);
+                                                                      setVoucherCode(item?.codeVoucher);
+                                                                  }
+                                                              }}
+                                                          ></Radio>
                                                       </div>
                                                   </Badge.Ribbon>
                                               </Col>
@@ -391,7 +588,7 @@ export default function CheckOut() {
                                                                   </div>
                                                                   <div className="VoucherClient__smallText">
                                                                       <span>
-                                                                          Giảm tối đa{' '}
+                                                                          Đơn tối đa{' '}
                                                                           {convertVND(
                                                                               Number(item?.typeVoucher.maxValue),
                                                                           )}
@@ -403,7 +600,18 @@ export default function CheckOut() {
                                                               </div>
                                                           </div>
 
-                                                          <Radio value={item?.codeVoucher}></Radio>
+                                                          <Radio
+                                                              value={item?.codeVoucher}
+                                                              onClick={(event) => {
+                                                                  if (item?.codeVoucher === value) {
+                                                                      setValue(null);
+                                                                      setVoucherCode('');
+                                                                  } else {
+                                                                      setValue(item?.codeVoucher);
+                                                                      setVoucherCode(item?.codeVoucher);
+                                                                  }
+                                                              }}
+                                                          ></Radio>
                                                       </div>
                                                   </Badge.Ribbon>
                                               </Col>
@@ -518,7 +726,7 @@ export default function CheckOut() {
     }, []);
     useEffect(() => {
         handleGetAddress(setAddressUser);
-    }, []);
+    }, [isLoadAddress]);
     useEffect(() => {
         addressUser && addressUser.length > 0 && setCurrentAddress(addressUser[0]);
     }, [addressUser]);
@@ -581,6 +789,7 @@ export default function CheckOut() {
                                             addressUser={addressUser}
                                             setCurrentAddress={setCurrentAddress}
                                             currenrAddress={currenrAddress}
+                                            setIsLoadAddress={setIsLoadAddress}
                                         />
                                     }
                                     trigger="click"
