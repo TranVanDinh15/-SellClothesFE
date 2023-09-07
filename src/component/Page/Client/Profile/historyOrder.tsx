@@ -29,6 +29,7 @@ export interface orderInterface {
         updatedAt: string;
     };
 }
+
 export default function HistoryOrder() {
     const navigate = useNavigate();
     const dataSource = [
@@ -108,6 +109,7 @@ export default function HistoryOrder() {
     return (
         <div>
             <Table
+                title={() => <span className="titleTableHOrder">Đơn hàng của bạn</span>}
                 dataSource={listHistoryOrder ? listHistoryOrder : []}
                 columns={columns}
                 pagination={paginationConfig}

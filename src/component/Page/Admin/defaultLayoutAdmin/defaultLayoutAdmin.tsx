@@ -15,6 +15,8 @@ import { Avatar } from 'antd';
 import './defaultLayoutAdmin.css';
 import images from '../../../../asset';
 import ChatAdmin from '../ChatAdmin/ChatAdmin';
+import { AiOutlinePayCircle } from 'react-icons/ai';
+import { GiConfirmed } from 'react-icons/gi';
 const { Search } = Input;
 const { Header, Content, Footer, Sider } = Layout;
 type MenuItem = Required<MenuProps>['items'][number];
@@ -48,6 +50,7 @@ const items: MenuItem[] = [
         getItem('Danh sách Voucher', '/Admin/Voucher'),
         getItem('Các kiểu Voucher', '/Admin/kieu-voucher'),
     ]),
+    getItem('Quản lý đặt hàng', '/Admin/Order', <GiConfirmed className="iconSidebarCss" />),
 ];
 const onSearch = (value: string) => console.log(value);
 export default function DefaultLayoutAdmin() {

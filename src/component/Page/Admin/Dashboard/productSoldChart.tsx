@@ -1,24 +1,57 @@
 import React, { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom';
-import { Bar } from '@ant-design/plots';
-export default function ProductSoldChart() {
-    const data = [
-        { year: '1991', value: 3 },
-        { year: '1992', value: 4 },
-        { year: '1993', value: 3.5 },
-        { year: '1994', value: 5 },
-        { year: '1995', value: 6 },
-        { year: '1996', value: 10 },
-        { year: '1997', value: 60 },
-
-        // more data...
-    ];
+import { Pie } from '@ant-design/plots';
+export interface productSoldDto {
+    data: {
+        type: string;
+        value: any;
+    }[];
+}
+export default function ProductSoldChart({ data }: productSoldDto) {
+    // const data = [
+    //     {
+    //         type: '分类一',
+    //         value: 27,
+    //     },
+    //     {
+    //         type: '分类二',
+    //         value: 25,
+    //     },
+    //     {
+    //         type: '分类三',
+    //         value: 18,
+    //     },
+    //     {
+    //         type: '分类四',
+    //         value: 15,
+    //     },
+    //     {
+    //         type: '分类五',
+    //         value: 10,
+    //     },
+    //     {
+    //         type: '其他',
+    //         value: 5,
+    //     },
+    // ];
     const config = {
+        appendPadding: 10,
         data,
-        xField: 'year',
-        yField: 'value',
-        seriesField: 'year',
-        // legend: { position: 'top-left' },
+        angleField: 'value',
+        colorField: 'type',
+        radius: 0.8,
+        label: {
+            type: 'outer',
+            content: '{name} {percentage}',
+        },
+        interactions: [
+            {
+                type: 'pie-legend-active',
+            },
+            {
+                type: 'element-active',
+            },
+        ],
     };
-    return <Bar {...config} />;
+    return <Pie {...config} />;
 }

@@ -56,7 +56,7 @@ export default function ReceiptDetail() {
     // quản lý Size Detail khi nhập hàng
     const [productDetailSizeApp, setProductDetailSizeApp] = useState<productdefine[] | null>(null);
     const [isDelete, setIsDelete] = useState<boolean>(false);
-    console.log(isDelete);
+    console.log(productApp);
     const TitleTable = () => {
         return (
             <div className="titleTable">
@@ -155,7 +155,7 @@ export default function ReceiptDetail() {
                                     <Col span={12}>
                                         <Form.Item
                                             label="Sản phẩm"
-                                            name="categoryId"
+                                            name="productApp"
                                             rules={[{ required: true, message: 'Vui lòng điền đầy đủ thông tin!' }]}
                                         >
                                             <SelectCustomer
@@ -185,7 +185,7 @@ export default function ReceiptDetail() {
                                     <Col span={12}>
                                         <Form.Item
                                             label="Chi tiết"
-                                            name="categoryId"
+                                            name="detailApp"
                                             rules={[{ required: true, message: 'Vui lòng điền đầy đủ thông tin!' }]}
                                         >
                                             <SelectCustomer

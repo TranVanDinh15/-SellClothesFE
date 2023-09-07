@@ -113,6 +113,7 @@ export default function DetailProductCreate() {
     const [isDelete, setIsDelete] = useState<boolean>(false);
     const [isModalViewDes, setIsModalViewDes] = useState<boolean>(false);
     const [viewDetailProduct, setViewDetailProduct] = useState<string>('');
+    console.log(saveItemDp);
     console.log(GetDetailP);
     const titileSizeDp = () => {
         return <span></span>;
@@ -439,7 +440,7 @@ export default function DetailProductCreate() {
                                 width: '100px',
                             }}
                         >
-                            cập nhật
+                            Thêm
                         </Button>
                     </Form.Item>
                 </Form>
@@ -647,12 +648,24 @@ export default function DetailProductCreate() {
                         <Descriptions.Item label="Giá giảm giá">
                             {convertVND(saveItemDp.discountPrice)}
                         </Descriptions.Item>
-                        <Descriptions.Item label="Thương hiệu">{saveItemDp.brandId}</Descriptions.Item>
-                        <Descriptions.Item label="Danh mục sp">{saveItemDp.categoryId}</Descriptions.Item>
-                        <Descriptions.Item label="Chất liệu">{saveItemDp.material}</Descriptions.Item>
-                        <Descriptions.Item label="Màu">{saveItemDp.color}</Descriptions.Item>
-                        <Descriptions.Item label="size">empty</Descriptions.Item>
-                        <Descriptions.Item label="Trạng thái">{saveItemDp.statusId}</Descriptions.Item>
+                        {/* <Descriptions.Item label="Chất liệu">{saveItemDp.material}</Descriptions.Item> */}
+                        <Descriptions.Item label="Màu">{saveItemDp.colorId}</Descriptions.Item>
+                        <Descriptions.Item label="size">
+                            {saveItemDp?.size &&
+                                saveItemDp?.size?.map((item: any, index: any) => {
+                                    return (
+                                        <Button
+                                            key={index}
+                                            style={{
+                                                marginRight: '10px',
+                                            }}
+                                        >
+                                            {item?.name}
+                                        </Button>
+                                    );
+                                })}
+                        </Descriptions.Item>
+                        {/* <Descriptions.Item label="Trạng thái">{saveItemDp.statusId}</Descriptions.Item> */}
                         <Descriptions.Item label="Ảnh">
                             <div>
                                 {saveItemDp?.images.map((item: string) => {

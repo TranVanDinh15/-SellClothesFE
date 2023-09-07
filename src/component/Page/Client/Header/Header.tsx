@@ -100,6 +100,7 @@ export default function HeaderClient() {
     const navigate = useNavigate();
     // Get User Hiện tại
     const curentUser = useSelector((state: useRedux) => state.reduxAuth.user);
+    const token = localStorage.getItem('token');
     // Chứa dữ liệu Cart
     const [cartData, setCartData] = useState<dataCart>();
     const { setItemCategory, setUrlCustomer, isLoadCart, setIsLoadSearch }: any = GetContext();
@@ -124,8 +125,8 @@ export default function HeaderClient() {
     const [blogOrProduct, setBlogOrProduct] = useState<string>('product');
     const [pageSize, setPageSize] = useState<number>(5);
     const [currentPage, setCurrentPage] = useState<number>(1);
-    console.log(resultBlog);
     const { Option } = Select;
+    console.log(token);
     const selectBefore = (
         <Select
             defaultValue="product"
@@ -543,7 +544,7 @@ export default function HeaderClient() {
                             </Badge>
                         </Popover>
                     </div>
-                    {tokenLocal ? (
+                    {token && curentUser ? (
                         <Button className="boxUserAlreadyLogin" type="ghost">
                             <Popover content={subNavItemUser(manageUser)} placement="bottomLeft" arrow={false}>
                                 <div className="boxUserAlreadyLogin__AvatarAndName">
@@ -558,7 +559,9 @@ export default function HeaderClient() {
                         </Button>
                     ) : (
                         <div className="headerClientAbove__LoginOut">
-                            <Button type="text">Đăng Ký</Button>
+                            <Link to={'/signUp'}>
+                                <Button type="text">Đăng Ký</Button>
+                            </Link>
                             <span>\</span>
                             <Link to={'/signIn'}>
                                 <Button type="text" className="btnLoginClick">

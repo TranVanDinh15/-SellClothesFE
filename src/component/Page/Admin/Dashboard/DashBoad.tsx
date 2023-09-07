@@ -1,16 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import Content from '../common/Content/Content';
-import { Button, Col, DatePicker, DatePickerProps, Row, Statistic } from 'antd';
+import { Button, Col, DatePicker, DatePickerProps, Row, Select, Statistic } from 'antd';
 import { RangePickerProps } from 'antd/es/date-picker';
 import { handleGetTotalUser, handleGetUserOnline } from './DashBoadMethod';
 import './Dashboad.scss';
-import { getAmountOrder, getProductSold, getTotalUserTime } from '../../../utils/Api/Api';
+import { getAmountOrder, getProductSold, getRevenue, getTotalUserTime } from '../../../utils/Api/Api';
 import dayjs, { Dayjs } from 'dayjs';
 import PieChartDashBoad from './PieChartDashBoad';
-import ProductSoldChart from './productSoldChart';
+import ProductSoldChart, { productSoldDto } from './productSoldChart';
+import RevenueChar from './Revenue';
 interface dataPie {
     type: string;
     value: number;
+}
+interface revenNueDto {
+    year: string;
+    value: any;
 }
 export default function DashBoadCustom() {
     const now = dayjs().format('YYYY-MM-DD');
@@ -22,7 +27,11 @@ export default function DashBoadCustom() {
     const [amountUserRegisterTime, setAmountUserRegisterTime] = useState<number>();
     const [amountOrder, setAmountOrder] = useState<dataPie[]>([]);
     const [productSold, setProductSold] = useState<number>();
-    console.log(amountOrder);
+    const [RevenueState, setRevenueState] = useState<revenNueDto[]>([]);
+    const [RevenueDatePicker, setRevenueDatePicker] = useState<[Dayjs, Dayjs]>([dayjs(), dayjs().add(1, 'day')]);
+    const [ProductSoldState, setproductSoldState] = useState<dataPie[]>([]);
+
+    console.log(RevenueState);
     const onChange = async (
         value: RangePickerProps['value'],
         dateString?: [string, string] | string,
@@ -41,6 +50,7 @@ export default function DashBoadCustom() {
         dateString?: [string, string] | string,
     ): Promise<void> => {
         if (value) {
+            console.log(value);
             const respone = await getAmountOrder(value[0], value[1]);
             console.log(respone);
             if (respone && respone.status == 200) {
@@ -51,10 +61,45 @@ export default function DashBoadCustom() {
                             type: respone?.data?.WAIT_FOR_COMFIRMATION ? 'Chờ xác nhận' : '',
                             value: respone.data?.WAIT_FOR_COMFIRMATION,
                         },
+                        {
+                            type: respone?.data?.CANCEL ? 'Đã hủy' : '',
+                            value: respone.data?.CANCEL,
+                        },
+                        {
+                            type: respone?.data?.DELIVERING ? 'Đang vận chuyển' : '',
+                            value: respone.data?.DELIVERING,
+                        },
+                        {
+                            type: respone?.data?.WAIT_FOR_PAYMENT ? 'Chờ thanh toán' : '',
+                            value: respone.data?.WAIT_FOR_PAYMENT,
+                        },
                     ];
                     setAmountOrder(dataPie);
                 }
                 // setAmountUserRegisterTime(respone.data);
+            }
+        }
+    };
+    const onChangeRevenue = async (
+        value: RangePickerProps['value'],
+        dateString?: [string, string] | string,
+    ): Promise<void> => {
+        if (value) {
+            const respone = await getRevenue(value[0], value[1], 'week');
+            console.log(respone);
+            if (respone && respone.status == 200) {
+                if (respone.data) {
+                    // setProductSold(respone.data);
+                    const transformedData = Object.entries(respone.data).map(([year, value]) => ({
+                        year,
+                        value,
+                    }));
+                    setRevenueState(transformedData);
+                    if (value[0] && value[1]) {
+                        const ChoiceValue: [Dayjs, Dayjs] = [value[0], value[1]];
+                        setRevenueDatePicker(ChoiceValue);
+                    }
+                }
             }
         }
     };
@@ -66,10 +111,41 @@ export default function DashBoadCustom() {
             const respone = await getProductSold(value[0], value[1]);
             console.log(respone);
             if (respone && respone.status == 200) {
-                if (respone.data) {
-                    setProductSold(respone.data);
-                }
+                console.log(respone);
+                const mapData = respone.data.map((item: any, index: number) => {
+                    return {
+                        type: item?.productName,
+                        value: item?.salesCount,
+                    };
+                });
+                setproductSoldState(mapData);
+                console.log(mapData);
             }
+        }
+    };
+    const handleChangeSelectRevenue = (value: string) => {
+        console.log(`selected ${value}`);
+        if (value == 'week') {
+            const startOfWeek = dayjs().startOf('week'); // Thứ Hai
+            const endOfWeek = dayjs().endOf('week'); // Chủ Nhật
+            const weekvalue: [Dayjs, Dayjs] = [startOfWeek, endOfWeek];
+            setRevenueDatePicker(weekvalue);
+            onChangeRevenue(weekvalue);
+        } else if (value == 'month') {
+            const startOfMonth: Dayjs = dayjs().startOf('month');
+            const endOfMonth: Dayjs = dayjs().endOf('month');
+            const monthValue: [Dayjs, Dayjs] = [startOfMonth, endOfMonth];
+            setRevenueDatePicker(monthValue);
+            onChangeRevenue(monthValue);
+        } else if (value == 'year') {
+            const startOfYear: Dayjs = dayjs().startOf('year');
+            const endOfYear: Dayjs = dayjs().endOf('year');
+            const yearValue: [Dayjs, Dayjs] = [startOfYear, endOfYear];
+            setRevenueDatePicker(yearValue);
+            onChangeRevenue(yearValue);
+        } else if (value == 'day') {
+            setRevenueDatePicker(defaultValue);
+            onChangeRevenue(defaultValue);
         }
     };
     const onOk = async (value: RangePickerProps['value']): Promise<void> => {
@@ -81,6 +157,7 @@ export default function DashBoadCustom() {
         onChange(defaultValue);
         onChangeAmountOrder(defaultValue);
         onChangeProductSold(defaultValue);
+        onChangeRevenue(defaultValue);
     }, []);
     return (
         <Content title={'Thống kê'}>
@@ -124,11 +201,12 @@ export default function DashBoadCustom() {
                             onOk={onOk}
                             placement="bottomLeft"
                             style={{
-                                width: '150px',
+                                // width: '150px',
                                 marginTop: '10px',
                             }}
                             // defaultValue={[now, tomorrow]}
                             defaultValue={defaultValue}
+                            // value={}
                         />
                     </Col>
                 </Row>
@@ -143,23 +221,40 @@ export default function DashBoadCustom() {
                     <Col span={14} className="dashBoad__StatisticCol">
                         <div>
                             <div>
-                                <span>Số lượng Order</span>
+                                <span>Doanh thu</span>
                             </div>
-                            <RangePicker
-                                // showTime={{ format: 'HH:mm' }}
-                                format="YYYY-MM-DD"
-                                onChange={onChangeAmountOrder}
-                                onOk={onOk}
-                                placement="bottomLeft"
-                                style={{
-                                    width: '150px',
-                                    marginTop: '10px',
-                                    marginBottom: '20px',
-                                }}
-                                defaultValue={defaultValue}
-                            />
+                            <div className="dashBoad__StatisticCol__SelectCss">
+                                <RangePicker
+                                    // showTime={{ format: 'HH:mm' }}
+                                    format="YYYY-MM-DD"
+                                    onChange={onChangeRevenue}
+                                    onOk={onOk}
+                                    placement="bottomLeft"
+                                    style={{
+                                        // width: '150px',
+                                        marginTop: '10px',
+                                        marginBottom: '20px',
+                                    }}
+                                    defaultValue={defaultValue}
+                                    value={RevenueDatePicker}
+                                />
+                                <Select
+                                    defaultValue="day"
+                                    style={{ width: 120, borderRadius: '4px' }}
+                                    onChange={(value) => {
+                                        handleChangeSelectRevenue(value);
+                                    }}
+                                    options={[
+                                        { value: 'day', label: 'Theo ngày' },
+                                        { value: 'week', label: 'Theo tuần' },
+                                        { value: 'month', label: 'Theo tháng' },
+                                        { value: 'year', label: 'Theo năm' },
+                                    ]}
+                                />
+                            </div>
+
                             <div style={{ width: '340px', height: 'auto' }}>
-                                <ProductSoldChart />
+                                <RevenueChar data={RevenueState} />
                             </div>
                         </div>
                     </Col>
@@ -175,7 +270,7 @@ export default function DashBoadCustom() {
                                 onOk={onOk}
                                 placement="bottomLeft"
                                 style={{
-                                    width: '150px',
+                                    // width: '300px',
                                     marginTop: '10px',
                                     marginBottom: '40px',
                                 }}
@@ -183,6 +278,42 @@ export default function DashBoadCustom() {
                             />
                             <div style={{ width: '340px', height: '300px' }}>
                                 <PieChartDashBoad data={amountOrder} />
+                            </div>
+                        </div>
+                    </Col>
+                </Row>
+                <Row
+                    gutter={16}
+                    style={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        marginTop: '20px',
+                    }}
+                >
+                    <Col span={14} className="dashBoad__StatisticCol">
+                        <div>
+                            <div>
+                                <span>Sản phẩm đã bán</span>
+                            </div>
+                            <div className="dashBoad__StatisticCol__SelectCss">
+                                <RangePicker
+                                    // showTime={{ format: 'HH:mm' }}
+                                    format="YYYY-MM-DD"
+                                    onChange={onChangeProductSold}
+                                    onOk={onOk}
+                                    placement="bottomLeft"
+                                    style={{
+                                        // width: '150px',
+                                        marginTop: '10px',
+                                        marginBottom: '20px',
+                                    }}
+                                    defaultValue={defaultValue}
+                                    // value={RevenueDatePicker}
+                                />
+                            </div>
+
+                            <div style={{ width: '340px', height: 'auto' }}>
+                                <ProductSoldChart data={ProductSoldState} />
                             </div>
                         </div>
                     </Col>

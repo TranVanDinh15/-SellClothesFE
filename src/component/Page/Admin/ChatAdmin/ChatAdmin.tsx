@@ -257,7 +257,7 @@ export default function ChatAdmin() {
                                 <Input
                                     placeholder="Nhập nội dung tin nhắn"
                                     spellCheck={false}
-                                    // value={message}
+                                    value={message}
                                     onChange={(value) => {
                                         setMessage(String(value.target.value));
                                     }}
@@ -287,6 +287,7 @@ export default function ChatAdmin() {
                                                 text: message,
                                                 userIdReceive: userReceiveId,
                                             });
+                                            setMessage('');
                                         }
                                     }}
                                 />

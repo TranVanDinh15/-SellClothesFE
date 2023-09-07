@@ -53,3 +53,12 @@ export interface createTypeVoucherIF {
     minValue: number;
     maxValue: number;
 }
+export interface signUpInterface {
+    firstName: string;
+    lastName: string;
+    email: string;
+    password: string;
+    // role: string,
+    genderId: string;
+    phoneNumber: number;
+}

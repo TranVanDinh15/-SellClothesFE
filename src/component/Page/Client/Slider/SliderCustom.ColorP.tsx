@@ -59,14 +59,15 @@ export default function SliderCustomColorP({ items, setCurrentDetail }: dataProp
         speed: 300,
         slidesToShow: items.detail.length < limitShow ? items.detail.length : limitShow,
         slidesToScroll: 4,
-        prevArrow: <CustomPrevArrow />,
-        nextArrow: <CustomNextArrow />,
+        // prevArrow: <CustomPrevArrow />,
+        // nextArrow: <CustomNextArrow />,
     };
     return (
         <div
             style={{
                 padding: '10px 0px 0 0px',
             }}
+            className="SliderImageColorWrapper"
         >
             <Slider {...settings}>
                 {items.detail.map((item, index) => {

@@ -84,7 +84,13 @@ export default function Profile() {
                     </Sider>
                     <Layout className="LayoutProfile">
                         <Content style={{ margin: '24px 16px 0', backgroundColor: '#fff' }}>
-                            <div style={{ padding: 40, minHeight: 360, background: colorBgContainer }}>
+                            <div
+                                style={{
+                                    padding: 40,
+                                    minHeight: 360,
+                                    background: colorBgContainer,
+                                }}
+                            >
                                 <Outlet />
                             </div>
                         </Content>

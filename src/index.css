@@ -6,7 +6,7 @@ html {
 }
 body {
     background-color: #fff !important;
-    height: 2000vh;
+    min-height: 100vh;
 }
 * {
     color: '#11006f';

@@ -10,6 +10,7 @@ export interface DataTypeProductDetail {
     colorId: any;
     images: any;
     productId: number;
+    size: any;
 }
 export interface DataTypeSizeProductDetail {
     key: React.Key;
@@ -149,6 +150,29 @@ export interface voucherIF {
         maxValue: number;
         minValue: number;
         statusId: string;
+        createdAt: string;
+        updatedAt: string;
+    };
+}
+export interface orderAdminIF {
+    id: number;
+    addressUserId: number;
+    statusId: string;
+    typeShipId: number;
+    voucherId: number;
+    totalPrice: number;
+    note: any;
+    isPaymentOnline: boolean;
+    createdAt: string;
+    updatedAt: string;
+    addressUser: {
+        id: number;
+        userId: number;
+        shipName: string;
+        statusId: string;
+        shipAddress: string;
+        shipPhoneNumber: number;
+        shipEmail: string;
         createdAt: string;
         updatedAt: string;
     };

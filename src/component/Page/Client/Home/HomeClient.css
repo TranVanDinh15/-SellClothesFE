@@ -10,15 +10,11 @@
     margin-bottom: 40px;
 }
 .HomeClientSaleProduct__title span {
-    font-size: 20px;
-    font-weight: 500;
+    font-size: 16px;
+    text-transform: uppercase;
+    font-weight: 600;
 }
-.HomeClientSaleProduct__listItem {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    justify-content: space-between;
-}
+
 .HomeClientSaleBanner__Static {
     margin-right: 10px;
 }
@@ -37,3 +33,10 @@
 }
 /* .HomeClientWrapper__slider {
 } */
+
+.HomeClientSaleProduct__listItem .slick-slider {
+    position: relative;
+}
+.slick-slide div {
+    padding-bottom: 2px;
+}

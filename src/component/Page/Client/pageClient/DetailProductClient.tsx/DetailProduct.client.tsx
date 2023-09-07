@@ -348,10 +348,10 @@ export default function DetailProductClient() {
                             title: <Link to={'/'}>Trang chủ</Link>,
                         },
                         {
-                            title: <a href="">Application Center</a>,
+                            title: <a href="">Chi tiết sản phẩm</a>,
                         },
                         {
-                            title: <a href="">Application List</a>,
+                            title: <a href="">Áo Polo Nam Pique Mắt Chim Basic Co Giãn Thoáng Khí</a>,
                         },
                     ]}
                 />

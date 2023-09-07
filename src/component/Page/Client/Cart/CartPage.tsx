@@ -144,7 +144,7 @@ export default function CartPage() {
                             color: 'red',
                         }}
                     >
-                        {convertVND(record.originalPrice ? record.originalPrice : record?.originalPrice)}
+                        {convertVND(record.discountPrice ? record.discountPrice : record?.originalPrice)}
                     </span>
                     {record?.discountPrice ? (
                         <span
@@ -193,6 +193,7 @@ export default function CartPage() {
         //     ),
         // },
     ];
+    console.log(getCartRedux);
     useEffect(() => {
         if (getCartRedux) {
             const maptableCart = getCartRedux.cart.detail.map((item) => {
@@ -228,7 +229,7 @@ export default function CartPage() {
                 >
                     <div className="CartPagetitle">
                         <span>Giỏ hàng</span>
-                        <span>(2) Sản phẩm</span>
+                        <span>({getCartRedux?.cart?.detail.length}) Sản phẩm</span>
                     </div>
                     <Table dataSource={dataTableCart} columns={columns} pagination={false}></Table>
                 </Col>

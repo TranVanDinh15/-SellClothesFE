@@ -295,7 +295,7 @@ export default function ChatClient() {
                                 <Input
                                     placeholder="Nhập nội dung tin nhắn"
                                     spellCheck={false}
-                                    // value={message}
+                                    value={message}
                                     onFocus={() => {
                                         socket.emit('typing', {
                                             userId: curentUser?.id,
@@ -324,6 +324,7 @@ export default function ChatClient() {
                                                 text: message,
                                                 userIdReceive: userReceiveId,
                                             });
+                                            setMessage('');
                                             // setIsFlagReadvsUnRead('');
                                         }
                                     }}

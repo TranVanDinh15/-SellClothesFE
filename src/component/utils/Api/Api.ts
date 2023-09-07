@@ -6,6 +6,7 @@ import {
     reqProductSize,
     reqUpdateDetailP,
     reqUpdateSize,
+    signUpInterface,
 } from './ApiInterFace';
 import AxiosInstance from './Axios-custom';
 // get thương hiệu
@@ -31,6 +32,10 @@ export const deleteBrand = (id: any) => {
 // Login Admin
 export const loginAdmin = (data: any) => {
     return AxiosInstance.post('/auth/login', data);
+};
+// SignUp
+export const signUp = (data: signUpInterface) => {
+    return AxiosInstance.post('/user', data);
 };
 // LogOut
 export const LogOut = () => {
@@ -67,6 +72,9 @@ export const getProductByCategory = (categoryId: string) => {
 };
 export const getProductById = (id: string) => {
     return AxiosInstance.get(`/product/${id}`);
+};
+export const getProductByQuery = (query: string) => {
+    return AxiosInstance.get(`/product?${query}`);
 };
 // create new Prodcut
 export const createNewProduct = (data: any) => {
@@ -323,6 +331,10 @@ export const getAmountOrder = (startDate: any, endDate: any) => {
 export const getProductSold = (startDate: any, endDate: any) => {
     return AxiosInstance.get(`/dashboard/product-sold?startDate=${startDate}&endDate=${endDate}`);
 };
+// get Revenue
+export const getRevenue = (startDate: any, endDate: any, interval: string) => {
+    return AxiosInstance.get(`/dashboard/order?startDate=${startDate}&endDate=${endDate}&interval=${interval}`);
+};
 // Get User Role Id
 export const getUserRoleId = (id: string) => {
     return AxiosInstance.get(`/user?roleId=${id}`);
@@ -475,4 +487,21 @@ export const VoucherUseApi = (data: { voucherCode: string }) => {
 // history Order
 export const historyOrder = (id: number, currentPage: number, size: number) => {
     return AxiosInstance.get(`/order?userId=${id}&page=${currentPage}&size=${size}`);
+};
+// Get All Order
+export const getAllOrder = (currentPage: number, size: number, code: string) => {
+    return AxiosInstance.get(`/order?page=${currentPage}&size=${size}&statusId=${code}&updatedAt=DESC`);
+};
+// Get All Order
+export const getStatusOrder = () => {
+    return AxiosInstance.get(`/all-code/STATUS_ORDER`);
+};
+// update Order Admin
+export const updateStatusOrder = (
+    id: number,
+    data: {
+        statusId: string;
+    },
+) => {
+    return AxiosInstance.patch(`/order/change-status/${id}`, data);
 };

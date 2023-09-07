@@ -25,8 +25,9 @@ interface props {
         }[];
     };
     clickCard: () => void;
+    width?: number;
 }
-export default function CardCustomer({ item, clickCard }: props) {
+export default function CardCustomer({ item, clickCard, width }: props) {
     const [currentDetail, setCurrentDetail] = useState<any>();
     useEffect(() => {
         if (item) {
@@ -39,7 +40,7 @@ export default function CardCustomer({ item, clickCard }: props) {
             {currentDetail?.discountPrice ? (
                 <Card
                     hoverable
-                    style={{ width: '220px' }}
+                    style={{ width: width ? width : '220px' }}
                     cover={
                         <div
                             className="tabProductWrapper"
@@ -124,7 +125,7 @@ export default function CardCustomer({ item, clickCard }: props) {
             ) : (
                 <Card
                     hoverable
-                    style={{ width: '220px' }}
+                    style={{ width: width ? width : '220px' }}
                     cover={
                         <div
                             className="tabProductWrapper"

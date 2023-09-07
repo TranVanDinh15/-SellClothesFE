@@ -37,6 +37,8 @@ import VoucherUser from './component/Page/Client/Profile/VoucherUser';
 import ChangPassword from './component/Page/Client/Profile/ChangPassword';
 import HistoryOrder from './component/Page/Client/Profile/historyOrder';
 import DetailHistoryOrder from './component/Page/Client/Profile/detailHistoryOrder';
+import OrderAdmin from './component/Page/Admin/OrderAdmin/OrderAdmin';
+import RegisterClient from './component/Page/Client/Register/Register';
 function App() {
     const token = localStorage.getItem('token');
     const router = createBrowserRouter([
@@ -111,6 +113,11 @@ function App() {
                 {
                     path: 'kieu-voucher',
                     element: <TypeVoucher />,
+                    errorElement: <NotFound type={'notRole'} />,
+                },
+                {
+                    path: 'Order',
+                    element: <OrderAdmin />,
                     errorElement: <NotFound type={'notRole'} />,
                 },
             ],
@@ -206,8 +213,19 @@ function App() {
                     element: <VoucherClient />,
                     errorElement: <NotFound type={'notAccess'} />,
                 },
+                {
+                    path: '/signIn',
+                    element: <LoginClient />,
+                    errorElement: <NotFound type={'notRole'} />,
+                },
+                {
+                    path: '/signUp',
+                    element: <RegisterClient />,
+                    errorElement: <NotFound type={'notRole'} />,
+                },
             ],
         },
+
         {
             path: '/verify/:token',
             element: <VerifyMail />,
@@ -218,12 +236,8 @@ function App() {
             element: <ChangPassword />,
             errorElement: <NotFound type={'notAccess'} />,
         },
-        {
-            path: '/signIn',
-            element: <LoginClient />,
-            errorElement: <NotFound type={'notRole'} />,
-        },
     ]);
+
     return (
         <ChakraProvider>
             <div className="App">

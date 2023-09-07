@@ -27,6 +27,7 @@ import {
     DatatypeDetailReceipt,
     DatatypeReceipt,
     DatatypeSupplier,
+    orderAdminIF,
     typeVoucher,
     voucherIF,
 } from './TableInterface';
@@ -68,7 +69,7 @@ interface DataTypeProduct {
 
 interface PropsTable {
     name: string;
-    title: () => ReactNode;
+    title?: () => ReactNode;
     dataSource: [];
     paginationConfig?: TablePaginationConfig;
     showModalUpdate: () => void;
@@ -1097,6 +1098,57 @@ const CustomTable = ({
             ),
         },
     ];
+    // Collums Order
+    const CollumsOrder: ColumnType<orderAdminIF>[] = [
+        {
+            title: 'Mã HD',
+            dataIndex: 'id',
+            render: (value) => (
+                <Button
+                    type="link"
+                    onClick={() => {
+                        navigate(`/Profile/detailOrder/${value}`);
+                    }}
+                >
+                    #{value}
+                </Button>
+            ),
+        },
+
+        {
+            title: 'Tổng tiền',
+            render: (value, record) => <Button type="text">{convertVND(record?.totalPrice)}</Button>,
+        },
+        {
+            title: 'PTTT',
+            render: (value, record) => (
+                <Button type="text">{record?.isPaymentOnline ? 'Online' : 'Thanh toán khi nhận hàng'}</Button>
+            ),
+        },
+        {
+            title: 'Trạng thái',
+            render: (value, record) => <Button type="text">{record?.statusId}</Button>,
+        },
+        {
+            title: 'Thời gian',
+            render: (value, record) => <Button type="text">{covertCreateAt(record?.createdAt)}</Button>,
+        },
+        {
+            title: 'Actions',
+            render: (value, record) => (
+                <div>
+                    <Button
+                        icon={<HiOutlinePencilSquare />}
+                        type="text"
+                        onClick={() => {
+                            showModalUpdate();
+                            setDataUpdate(record);
+                        }}
+                    ></Button>
+                </div>
+            ),
+        },
+    ];
     return (
         <React.Fragment>
             {name == 'Users' ? <Table columns={columns} dataSource={data} onChange={onChange} title={title} /> : ''}
@@ -1177,6 +1229,11 @@ const CustomTable = ({
             )}
             {name == 'CollumsVoucher' ? (
                 <Table columns={CollumsVoucher} dataSource={dataSource} title={title} pagination={paginationConfig} />
+            ) : (
+                ''
+            )}
+            {name == 'CollumsOrder' ? (
+                <Table columns={CollumsOrder} dataSource={dataSource} title={title} pagination={paginationConfig} />
             ) : (
                 ''
             )}

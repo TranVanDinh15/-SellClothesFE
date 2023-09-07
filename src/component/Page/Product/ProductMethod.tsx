@@ -174,6 +174,7 @@ export const getProductDetail = async (
                     originalPrice: item?.originalPrice,
                     productId: item?.productId,
                     updatedAt: item?.updatedAt,
+                    size: item?.size,
                 };
             });
             setGetDetailP(result);

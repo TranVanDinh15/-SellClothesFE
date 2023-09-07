@@ -4,6 +4,8 @@ import { handleGetDetailBlog } from './BlogClientMethod';
 import { Col, Row, Image, Breadcrumb, Button } from 'antd';
 import './BlogClient.scss';
 import { ClockCircleOutlined, EyeOutlined, StarOutlined } from '@ant-design/icons';
+import MarkdownEditor from '@uiw/react-markdown-editor';
+import ReactMarkdown from 'react-markdown';
 export interface detailBlog {
     id: number;
     shortDescription: number;
@@ -26,6 +28,50 @@ export interface detailBlog {
         code: string;
     };
 }
+const markdownContent = `
+## Mục Lục
+
+- [Tiêu đề 1](#tiêu-đề-1)
+- [Tiêu đề 2](#tiêu-đề-2)
+- [Tiêu đề 5](#tiêu-đề-5)
+
+## Tiêu đề 1
+
+Đây là nội dung cho tiêu đề 1.
+
+## Tiêu đề 2
+
+Đây là nội dung cho tiêu đề 2.
+## Tiêu đề 1
+
+Đây là nội dung cho tiêu đề 1.
+
+## Tiêu đề 2
+
+Đây là nội dung cho tiêu đề 2.
+## Tiêu đề 1
+
+Đây là nội dung cho tiêu đề 1.
+
+## Tiêu đề 2
+
+Đây là nội dung cho tiêu đề 2.
+## Tiêu đề 1
+
+Đây là nội dung cho tiêu đề 1.
+
+## Tiêu đề 2
+
+Đây là nội dung cho tiêu đề 2.
+## Tiêu đề 1
+
+Đây là nội dung cho tiêu đề 1.
+
+## Tiêu đề 5
+
+Đây là nội dung cho tiêu đề 2.
+
+`;
 export default function BlogClientItem() {
     const param = useParams();
     const [dataDetailBlog, setDataDetailBlog] = useState<detailBlog | undefined>();
@@ -35,6 +81,7 @@ export default function BlogClientItem() {
             handleGetDetailBlog(Number(param?.id), setDataDetailBlog);
         }
     }, []);
+
     return (
         <div className="DetailBlogWrapper">
             <Row gutter={16}>
@@ -49,7 +96,7 @@ export default function BlogClientItem() {
                                     />
                                 </div>
                                 <div className="DetalBlogName">
-                                    <span>Tóc highlight là gì? 35 kiểu tóc highlight đẹp thu hút nhất 2023</span>
+                                    <span>{dataDetailBlog?.title    }</span>
                                 </div>
                                 <div className="DetalBlogStart__Breadcrumb">
                                     <Breadcrumb

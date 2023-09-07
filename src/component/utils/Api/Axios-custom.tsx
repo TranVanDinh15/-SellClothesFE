@@ -1,7 +1,5 @@
 import { message } from 'antd';
 import axios from 'axios';
-import { useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
 const BASE__URL = process.env.REACT_APP_BASE_URL;
 const AxiosInstance = axios.create({
     baseURL: BASE__URL,
