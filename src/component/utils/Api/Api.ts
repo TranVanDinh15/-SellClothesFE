@@ -48,7 +48,7 @@ export const getAllCategory = (page: any, pagesize: any) => {
 
 // get category
 export const getCategory = () => {
-    return AxiosInstance.get(`/all-code/CATEGORY`);
+    return AxiosInstance.get(`/all-code/CATEGORY?page=1&size=1000`);
 };
 // Tạo category
 export const createCategory = (data: any) => {
