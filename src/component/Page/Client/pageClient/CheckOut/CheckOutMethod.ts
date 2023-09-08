@@ -37,7 +37,7 @@ export const handleOrderProduct = async (
         const response = await createOrder(data);
         console.log(response);
         if (response && response.status == 201) {
-            window.location.href = `http://localhost:8080/payments/create_payment_url?orderId=${response?.data?.id}`;
+            window.location.href = `${process.env.REACT_APP_BASE_URL}/payments/create_payment_url?orderId=${response?.data?.id}`;
         }
     }
 };
