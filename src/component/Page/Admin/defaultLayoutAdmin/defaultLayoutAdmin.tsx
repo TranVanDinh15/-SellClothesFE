@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { PieChartOutlined } from '@ant-design/icons';
 import { RiProductHuntLine } from 'react-icons/ri';
 import { BiImport, BiUser } from 'react-icons/bi';
@@ -7,16 +7,19 @@ import { TbBrandCake } from 'react-icons/tb';
 import { HiOutlineUsers } from 'react-icons/hi';
 import { TbBrandBlogger } from 'react-icons/tb';
 import type { MenuProps } from 'antd';
-import { Image, Layout, Menu, theme } from 'antd';
-import { Outlet, useLocation, useNavigate } from 'react-router-dom';
+import { Image, Layout, Menu, theme, Popover, Button } from 'antd';
+import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { Input } from 'antd';
 import { AntDesignOutlined } from '@ant-design/icons';
 import { Avatar } from 'antd';
 import './defaultLayoutAdmin.css';
 import images from '../../../../asset';
-import ChatAdmin from '../ChatAdmin/ChatAdmin';
+import ChatAdmin, { useRedux } from '../ChatAdmin/ChatAdmin';
 import { AiOutlinePayCircle } from 'react-icons/ai';
 import { GiConfirmed } from 'react-icons/gi';
+import { useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
+import { logoutActions } from '../../../../Redux/Actions/Actions.auth';
 const { Search } = Input;
 const { Header, Content, Footer, Sider } = Layout;
 type MenuItem = Required<MenuProps>['items'][number];
@@ -54,16 +57,42 @@ const items: MenuItem[] = [
 ];
 const onSearch = (value: string) => console.log(value);
 export default function DefaultLayoutAdmin() {
+    const dispatch = useDispatch();
     const location = useLocation();
     const navigate = useNavigate();
     const [collapsed, setCollapsed] = useState(false);
+    const [isLoadToken, setIsLoadToken] = useState<boolean>(false);
+    const [tokenLocal, setTokenLocal] = useState<string>('');
+
+    // Get User Hiện tại
+    const curentUser = useSelector((state: useRedux) => state.reduxAuth.user);
+
     const {
         token: { colorBgContainer },
     } = theme.useToken();
+    const content = (
+        <div>
+            <Button
+                type="text"
+                style={{
+                    width: '100%',
+                }}
+                onClick={() => {
+                    dispatch(logoutActions(setIsLoadToken));
+                }}
+            >
+                Đăng xuất
+            </Button>
+        </div>
+    );
     const onClick: MenuProps['onClick'] = (e) => {
         console.log(e.key);
         navigate(e.key);
     };
+    useEffect(() => {
+        const token = localStorage.getItem('token');
+        token ? setTokenLocal(token) : setTokenLocal('');
+    }, [isLoadToken]);
     return (
         <Layout style={{ minHeight: '100vh' }}>
             <Sider
@@ -79,9 +108,13 @@ export default function DefaultLayoutAdmin() {
                         margin: '8px 0px',
                         display: 'flex',
                         justifyContent: 'center',
+                        cursor: 'pointer',
+                    }}
+                    onClick={() => {
+                        navigate('/Admin');
                     }}
                 >
-                    <Image src={images.logo} width={90} />
+                    <Image src={images.logo} width={100} preview={false} />
                 </div>
                 <div className="OptionManager">
                     <Menu
@@ -97,28 +130,31 @@ export default function DefaultLayoutAdmin() {
                 <Header
                     style={{ padding: '0 40px', display: 'flex', justifyContent: 'right', backgroundColor: '#fff' }}
                 >
-                    <div className="SearchAdminContainer">
-                        <Search
-                            placeholder="input search text"
-                            allowClear
-                            enterButton="Search"
-                            size="middle"
-                            onSearch={onSearch}
-                        />
-                    </div>
                     <div className="userAdmin">
-                        <Avatar
-                            size={{ xs: 24, sm: 32, md: 40, lg: 40, xl: 40, xxl: 40 }}
-                            icon={<AntDesignOutlined />}
-                        />
+                        {tokenLocal && curentUser ? (
+                            <Popover content={content} title="Mục">
+                                <Avatar
+                                    size={{ xs: 24, sm: 32, md: 40, lg: 40, xl: 40, xxl: 40 }}
+                                    icon={<AntDesignOutlined />}
+                                    src={`${process.env.REACT_APP_IMAGE_AVATAR_URL}${curentUser?.image}`}
+                                />
+                            </Popover>
+                        ) : (
+                            <div className="headerClientAbove__LoginOut">
+                                <Link to={'/Login-Admin'}>
+                                    <Button type="text" className="btnLoginClick">
+                                        Đăng Nhập
+                                    </Button>
+                                </Link>
+                            </div>
+                        )}
                     </div>
                 </Header>
                 <Content style={{ height: '100vh' }}>
                     <Outlet />
                 </Content>
-                {/* <Footer style={{ textAlign: 'center' }}>Ant Design ©2023 Created by Ant UED</Footer> */}
             </Layout>
-            <ChatAdmin />
+            {curentUser && curentUser?.roleId == 'ADMIN' ? <ChatAdmin /> : ''}
         </Layout>
     );
 }

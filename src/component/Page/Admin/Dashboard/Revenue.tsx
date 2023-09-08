@@ -1,43 +1,41 @@
 import React, { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom';
-import { Bar } from '@ant-design/plots';
+import { Column } from '@ant-design/plots';
+import { convertVND } from '../common/method/method';
+
 interface dataRevenue {
     data: {
-        year: string;
-        value: any;
+        type: string;
+        sales: any;
     }[];
 }
+
 export default function RevenueChar({ data }: dataRevenue) {
-    // const data = [
-    //     {
-    //         year: '1951 年',
-    //         value: 38,
-    //     },
-    //     {
-    //         year: '1952 年',
-    //         value: 52,
-    //     },
-    //     {
-    //         year: '1956 年',
-    //         value: 61,
-    //     },
-    //     {
-    //         year: '1957 年',
-    //         value: 145,
-    //     },
-    //     {
-    //         year: '1958 年',
-    //         value: 48,
-    //     },
-    // ];
     const config = {
         data,
-        xField: 'value',
-        yField: 'year',
-        seriesField: 'year',
-        // legend: {
-        //   position: 'top-left',
-        // },
+        xField: 'type',
+        yField: 'sales',
+        columnWidthRatio: 0.8,
+        xAxis: {
+            label: {
+                autoHide: true,
+                autoRotate: false,
+            },
+        },
+        yAxis: {
+            label: {
+                // Tùy chỉnh định dạng label của trục y
+                formatter: (v: any) => `${convertVND(Number(v))}`,
+            },
+        },
+        meta: {
+            type: {
+                alias: 'Doanh thu',
+            },
+            sales: {
+                alias: 'Doanh thu',
+            },
+        },
     };
-    return <Bar {...config} />;
+    return <Column {...config} />;
 }

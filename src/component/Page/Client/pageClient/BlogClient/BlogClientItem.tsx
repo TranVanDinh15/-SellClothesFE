@@ -6,6 +6,7 @@ import './BlogClient.scss';
 import { ClockCircleOutlined, EyeOutlined, StarOutlined } from '@ant-design/icons';
 import MarkdownEditor from '@uiw/react-markdown-editor';
 import ReactMarkdown from 'react-markdown';
+import { covertCreateAt } from '../../../Admin/common/method/method';
 export interface detailBlog {
     id: number;
     shortDescription: number;
@@ -85,7 +86,7 @@ export default function BlogClientItem() {
     return (
         <div className="DetailBlogWrapper">
             <Row gutter={16}>
-                <Col span={16}>
+                <Col span={24}>
                     {dataDetailBlog ? (
                         <>
                             <div className="DetalBlogStart">
@@ -93,10 +94,11 @@ export default function BlogClientItem() {
                                     <Image
                                         src={`${process.env.REACT_APP_IMAGE_BLOGS_URL}${dataDetailBlog.images[0]}`}
                                         preview={false}
+                                        height={500}
                                     />
                                 </div>
                                 <div className="DetalBlogName">
-                                    <span>{dataDetailBlog?.title    }</span>
+                                    <span>{dataDetailBlog?.title}</span>
                                 </div>
                                 <div className="DetalBlogStart__Breadcrumb">
                                     <Breadcrumb
@@ -105,23 +107,20 @@ export default function BlogClientItem() {
                                                 title: 'Home',
                                             },
                                             {
-                                                title: <a href="">Application Center</a>,
+                                                title: 'Bài viết',
                                             },
                                             {
-                                                title: <a href="">Application List</a>,
-                                            },
-                                            {
-                                                title: 'An Application',
+                                                title: `${dataDetailBlog?.subject.value}`,
                                             },
                                         ]}
                                     />
                                 </div>
                                 <div className='className="DetalBlogStart__TimeAdnView'>
                                     <Button type="ghost" icon={<ClockCircleOutlined />}>
-                                        15/03/2001
+                                        {covertCreateAt(dataDetailBlog.createdAt)}
                                     </Button>
                                     <Button type="ghost" icon={<EyeOutlined />}>
-                                        {'0'} lượt xem
+                                        {`${dataDetailBlog?.view}`} lượt xem
                                     </Button>
                                 </div>
                             </div>
@@ -140,7 +139,7 @@ export default function BlogClientItem() {
                         ''
                     )}
                 </Col>
-                <Col span={8}>
+                {/* <Col span={8}>
                     <div className="newsBlog">
                         <div className="newsBlog_title">
                             <Button icon={<StarOutlined />} type="ghost">
@@ -202,7 +201,7 @@ export default function BlogClientItem() {
                             </Row>
                         </div>
                     </div>
-                </Col>
+                </Col> */}
             </Row>
         </div>
     );

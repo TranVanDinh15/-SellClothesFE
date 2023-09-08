@@ -14,12 +14,20 @@ const AuthReducers = (state = initialState, action: any) => {
                 ...state,
                 isLoading: false,
                 user: action.payLoad.user,
+                isAuthenticate: true,
             };
         case authConstant.LOGIN__FAILUE:
             return {
                 ...state,
                 isLoading: false,
                 isfail: action.payload,
+            };
+        case authConstant.LOGOUT__SUCCESS:
+            return {
+                isLoading: false,
+                isfail: action.payload,
+                isAuthenticate: false,
+                user: null,
             };
         default:
             return state;

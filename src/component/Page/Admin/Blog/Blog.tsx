@@ -59,9 +59,7 @@ export default function Blog() {
     // Quản lý giá trị của Markdown editor
     const [value, setValue] = useState<any>('**Hello world!!!**');
     const [text, setText] = useState<any>('**Hello world!!!**');
-    console.log(text, value);
     const [dataTable, setDataTable] = useState<[]>([]);
-    console.log(dataTable);
     const [total, setTotal] = useState<number>(0);
     const [pageSize, setPageSize] = useState<any>(5);
     const [page, setPage] = useState<any>(1);
@@ -75,12 +73,10 @@ export default function Blog() {
     const [statusSelect, setStatusSelect] = useState<selectBlog[] | undefined>();
     // dữ liệu cập nhật Blog
     const [dataUpdateBlog, setDataUpdateBlog] = useState<dataUpdate>();
-    console.log(dataUpdateBlog);
     // isUpdateImage
     const [isupdateImage, setIsUpdateImage] = useState<boolean>(false);
     const [imageUpdate, setImageUpdate] = useState<any>();
     const [open, setOpen] = useState(false);
-    console.log(imageUpdate);
     const showDrawer = () => {
         setOpen(true);
     };
@@ -187,10 +183,8 @@ export default function Blog() {
     function handleEditorChange({ html, text }: markdownProps) {
         setText(text);
         setValue(html);
-        console.log(html);
     }
     useEffect(() => {
-        console.log('load');
         handleGetBlog(page, pageSize, setDataTable, setTotal);
     }, [isLoadBlog, pageSize, page]);
     useEffect(() => {
@@ -245,7 +239,6 @@ export default function Blog() {
                     name="basic"
                     labelCol={{ span: 24 }}
                     onFinish={(values) => {
-                        console.log(value);
                         if (dataUpdateBlog) {
                             handleUpdateBlog(
                                 dataUpdateBlog?.id,
@@ -377,7 +370,6 @@ export default function Blog() {
                                             setImagesUploadMultiple,
                                             setImageDp,
                                         );
-                                        console.log(data);
                                     }
                                 }}
                             >
@@ -402,14 +394,10 @@ export default function Blog() {
                                       <Button
                                           icon={<CloseOutlined />}
                                           onClick={() => {
-                                              console.log(item);
-                                              console.log(item[index]);
-                                              //   const spliceImage = imageUpdate.splice(item, 1);
                                               const filter = imageUpdate.filter((itemImage: any) => {
                                                   return itemImage != item;
                                               });
                                               setImageUpdate(filter);
-                                              console.log(filter);
                                           }}
                                       ></Button>
                                   </div>

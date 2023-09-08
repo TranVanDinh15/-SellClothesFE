@@ -1,5 +1,5 @@
 import { Action, Dispatch } from 'redux';
-import { loginAdmin } from '../../component/utils/Api/Api';
+import { LogOut, loginAdmin } from '../../component/utils/Api/Api';
 import { AppDispatch } from '../../store';
 import { authConstant } from './Actions.constant';
 import { dataLogin } from './ActionCreator/ActionCreator';
@@ -72,6 +72,23 @@ export const loginClientActions: any = (dataLogin: any, navigate: any) => {
             }
         } else {
             message.error('thông tin tài khoản không chính xác!!');
+        }
+    };
+};
+export const logoutActions: any = (setIsLoadToken: React.Dispatch<React.SetStateAction<boolean>>) => {
+    return async (dispatch: Dispatch) => {
+        const response = await LogOut();
+        console.log(response);
+        if (response && response.status == 200) {
+            message.success('Đã đăng xuất tài khoản');
+            localStorage.removeItem('token');
+            setIsLoadToken((isLoadToken) => !isLoadToken);
+            dispatch({
+                type: authConstant.LOGOUT__SUCCESS,
+                payLoad: {
+                    user: null,
+                },
+            });
         }
     };
 };

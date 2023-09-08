@@ -5,6 +5,8 @@ import { Footer } from 'antd/es/layout/layout';
 import HeaderClient from '../Header/Header';
 import { Outlet } from 'react-router-dom';
 import ChatClient from '../ChatClient/ChatClient';
+import { useSelector } from 'react-redux';
+import { useRedux } from '../Cart/Cart';
 
 const contentStyle: React.CSSProperties = {
     textAlign: 'center',
@@ -19,6 +21,8 @@ const footerStyle: React.CSSProperties = {
     backgroundColor: '#7dbcea',
 };
 export default function DefaultLayoutClient() {
+    // Get User Hiện tại
+    const curentUser = useSelector((state: useRedux) => state.reduxAuth.user);
     return (
         <Layout>
             {/* <Header style={headerStyle}>Header</Header> */}
@@ -26,7 +30,7 @@ export default function DefaultLayoutClient() {
             {/* <Content style={contentStyle}>Content</Content> */}
             <Outlet />
             {/* <Footer style={footerStyle}>Footer</Footer> */}
-            <ChatClient />
+            {curentUser && curentUser?.roleId == 'USER' ? <ChatClient /> : ''}
         </Layout>
     );
 }

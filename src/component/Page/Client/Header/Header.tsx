@@ -26,6 +26,7 @@ import { LogOut, searchBlog, searchProduct } from '../../../utils/Api/Api';
 import { json } from 'stream/consumers';
 import { debounce } from '../Common/debound/debound';
 import { convertVND } from '../../Admin/common/method/method';
+import { logoutActions } from '../../../../Redux/Actions/Actions.auth';
 const headerStyle: React.CSSProperties = {
     color: '#fff',
     minHeight: '90px',
@@ -197,10 +198,11 @@ export default function HeaderClient() {
                             onClick={async () => {
                                 item.id === 0 && navigate('/Profile');
                                 if (item.id === 3) {
-                                    await LogOut();
-                                    message.success('Đã đăng xuất tài khoản');
-                                    localStorage.removeItem('token');
-                                    setIsLoadToken((isLoadToken) => !isLoadToken);
+                                    // await LogOut();
+                                    // message.success('Đã đăng xuất tài khoản');
+                                    // localStorage.removeItem('token');
+                                    // setIsLoadToken((isLoadToken) => !isLoadToken);
+                                    dispatch(logoutActions(setIsLoadToken));
                                 }
                             }}
                         >

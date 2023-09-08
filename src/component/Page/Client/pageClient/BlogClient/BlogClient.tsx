@@ -49,69 +49,6 @@ export default function BlogClient() {
             handleGetBlogById(param?.subjectId, currentPage, pageSizeBlog, setListBlog, setTotalItemPage);
         }
     }, [param]);
-    const news = (
-        <Col span={8}>
-            <div className="newsBlog">
-                <div className="newsBlog_title">
-                    <Button icon={<StarOutlined />} type="ghost">
-                        Tin nổi bật
-                    </Button>
-                </div>
-                <div className="newsBlog__Content">
-                    <Row gutter={[16, 16]} className="newsBlog__Content__Row">
-                        <Col span={12} className="newsBlog__Content__Col">
-                            <Image
-                                src="https://bizweb.dktcdn.net/thumb/medium/100/438/408/articles/phan-biet-fanpage-gia-mao-4.jpg?v=1685151128577"
-                                preview={false}
-                                // height={110}
-                                width={'90%'}
-                            />
-                        </Col>
-                        <Col span={12} className="newsBlog__Content__Col">
-                            <div className="newsBlog__Content__title">
-                                <span>CÔNG CỤ PHÂN BIỆT FANPAGE GIẢ MẠO YODY TRÊN MẠNG XÃ HỘI</span>
-                            </div>
-                            <div className="newsBlog__Content__Description">
-                                <span>
-                                    rong thời gian vừa qua với sự phát triển vượt trội của thương hiệu thời trang YODY,
-                                    đã có không ít các Fanpage và Website giả mạo YODY xuất hiện tràn lan trên mạng xã
-                                    hội. Chúng được tạo ra nhằm lừa đảo khách hàng, lấy danh nghĩa YODY để bán những mặt
-                                    hàng kém chất lượng với giá rẻ. Bài viết này sẽ giúp nhận diện các chiêu trò lừa đảo
-                                    phổ biến cũng nhưng cung cấp công cụ để khách hàng có thể xác định ngay các trang
-                                    Fanpage giả mạo thương hiệu YODY trên mạng xã hội.
-                                </span>
-                            </div>
-                        </Col>
-                    </Row>
-                    <Row gutter={[16, 16]} className="newsBlog__Content__Row">
-                        <Col span={12} className="newsBlog__Content__Col">
-                            <Image
-                                src="https://bizweb.dktcdn.net/thumb/medium/100/438/408/articles/phan-biet-fanpage-gia-mao-4.jpg?v=1685151128577"
-                                preview={false}
-                                // height={110}
-                                width={'90%'}
-                            />
-                        </Col>
-                        <Col span={12} className="newsBlog__Content__Col">
-                            <div className="newsBlog__Content__title">
-                                <span>CÔNG CỤ PHÂN BIỆT FANPAGE GIẢ MẠO YODY TRÊN MẠNG XÃ HỘI</span>
-                            </div>
-                            <div className="newsBlog__Content__Description">
-                                <span>
-                                    rong thời gian vừa qua với sự phát triển vượt trội của thương hiệu thời trang YODY,
-                                    đã có không ít các Fanpage và Website giả mạo YODY xuất hiện tràn lan trên mạng xã
-                                    hội. Chúng được tạo ra nhằm lừa đảo khách hàng, lấy danh nghĩa YODY để bán những mặt
-                                    hàng kém chất lượng với giá rẻ. Bài viết này sẽ giúp nhận diện các chiêu trò lừa đảo
-                                    phổ biến cũng nhưng cung cấp công cụ để khách hàng có thể xác định ngay các trang
-                                    Fanpage giả mạo thương hiệu YODY trên mạng xã hội.
-                                </span>
-                            </div>
-                        </Col>
-                    </Row>
-                </div>
-            </div>
-        </Col>
-    );
 
     return (
         <div className="BlogClientWarrapper">
@@ -139,7 +76,6 @@ export default function BlogClient() {
                                       <>
                                           {index == 2 ? (
                                               <>
-                                                  {news}
                                                   <Col span={8}>
                                                       <Card
                                                           hoverable

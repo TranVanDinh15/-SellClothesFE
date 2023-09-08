@@ -39,6 +39,7 @@ import HistoryOrder from './component/Page/Client/Profile/historyOrder';
 import DetailHistoryOrder from './component/Page/Client/Profile/detailHistoryOrder';
 import OrderAdmin from './component/Page/Admin/OrderAdmin/OrderAdmin';
 import RegisterClient from './component/Page/Client/Register/Register';
+import ProtectedRoute from './component/ProtectedRoute/ProtectedRoute';
 function App() {
     const token = localStorage.getItem('token');
     const router = createBrowserRouter([
@@ -50,74 +51,130 @@ function App() {
             children: [
                 {
                     index: true,
-                    element: <DashBoadCustom />,
+                    element: (
+                        <ProtectedRoute>
+                            <DashBoadCustom />
+                        </ProtectedRoute>
+                    ),
                     errorElement: <NotFound type={'notRole'} />,
                     // loader: teamLoader,
                 },
                 {
                     path: 'Blog/listBlog',
-                    element: <Blog />,
+                    element: (
+                        <ProtectedRoute>
+                            <Blog />
+                        </ProtectedRoute>
+                    ),
                     errorElement: <NotFound type={'notRole'} />,
                 },
 
                 {
                     path: 'User/listUser',
-                    element: <ListUser />,
+                    element: (
+                        <ProtectedRoute>
+                            <ListUser />
+                        </ProtectedRoute>
+                    ),
                     errorElement: <NotFound type={'notRole'} />,
                 },
                 {
                     path: 'TradeMark',
-                    element: <TrademarkManage />,
+                    element: (
+                        <ProtectedRoute>
+                            <TrademarkManage />
+                        </ProtectedRoute>
+                    ),
                     errorElement: <NotFound type={'notRole'} />,
                 },
                 {
                     path: 'Product',
-                    element: <Product />,
+                    element: (
+                        <ProtectedRoute>
+                            <Product />
+                        </ProtectedRoute>
+                    ),
                     errorElement: <NotFound type={'notRole'} />,
                 },
                 {
                     path: 'Product/DetailProduct/:id',
-                    element: <DetailProductCreate />,
+                    element: (
+                        <ProtectedRoute>
+                            <DetailProductCreate />
+                        </ProtectedRoute>
+                    ),
                     errorElement: <NotFound type={'notRole'} />,
                 },
                 {
                     path: 'Product/Category',
-                    element: <ProductCategory />,
+                    element: (
+                        <ProtectedRoute>
+                            <ProductCategory />
+                        </ProtectedRoute>
+                    ),
                     errorElement: <NotFound type={'notRole'} />,
                 },
                 {
                     path: 'Supplier',
-                    element: <Supplier />,
+                    element: (
+                        <ProtectedRoute>
+                            <Supplier />
+                        </ProtectedRoute>
+                    ),
                     errorElement: <NotFound type={'notRole'} />,
                 },
                 {
                     path: 'ImportFoods',
-                    element: <Receipt />,
+                    element: (
+                        <ProtectedRoute>
+                            <Receipt />
+                        </ProtectedRoute>
+                    ),
                     errorElement: <NotFound type={'notRole'} />,
                 },
                 {
                     path: 'ImportFoods/:id',
-                    element: <ReceiptDetail />,
+                    element: (
+                        <ProtectedRoute>
+                            <ReceiptDetail />
+                        </ProtectedRoute>
+                    ),
                     errorElement: <NotFound type={'notRole'} />,
                 },
                 {
                     path: 'Banner',
-                    element: <Banner />,
+                    element: (
+                        <ProtectedRoute>
+                            <Banner />
+                        </ProtectedRoute>
+                    ),
                     errorElement: <NotFound type={'notRole'} />,
                 },
                 {
                     path: 'Voucher',
-                    element: <VoucherAdmin />,
+                    element: (
+                        <ProtectedRoute>
+                            <VoucherAdmin />
+                        </ProtectedRoute>
+                    ),
                     errorElement: <NotFound type={'notRole'} />,
                 },
                 {
                     path: 'kieu-voucher',
-                    element: <TypeVoucher />,
+                    element: (
+                        <ProtectedRoute>
+                            <TypeVoucher />
+                        </ProtectedRoute>
+                    ),
                     errorElement: <NotFound type={'notRole'} />,
                 },
                 {
                     path: 'Order',
-                    element: <OrderAdmin />,
+                    element: (
+                        <ProtectedRoute>
+                            <OrderAdmin />
+                        </ProtectedRoute>
+                    ),
                     errorElement: <NotFound type={'notRole'} />,
                 },
             ],

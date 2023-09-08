@@ -14,8 +14,8 @@ interface dataPie {
     value: number;
 }
 interface revenNueDto {
-    year: string;
-    value: any;
+    type: string;
+    sales: any;
 }
 export default function DashBoadCustom() {
     const now = dayjs().format('YYYY-MM-DD');
@@ -30,8 +30,8 @@ export default function DashBoadCustom() {
     const [RevenueState, setRevenueState] = useState<revenNueDto[]>([]);
     const [RevenueDatePicker, setRevenueDatePicker] = useState<[Dayjs, Dayjs]>([dayjs(), dayjs().add(1, 'day')]);
     const [ProductSoldState, setproductSoldState] = useState<dataPie[]>([]);
-
-    console.log(RevenueState);
+    const [dayRevenueState, setDayRevenueState] = useState<string>('day');
+    // console.log();
     const onChange = async (
         value: RangePickerProps['value'],
         dateString?: [string, string] | string,
@@ -82,17 +82,18 @@ export default function DashBoadCustom() {
     };
     const onChangeRevenue = async (
         value: RangePickerProps['value'],
+        interval: string,
         dateString?: [string, string] | string,
     ): Promise<void> => {
         if (value) {
-            const respone = await getRevenue(value[0], value[1], 'week');
+            const respone = await getRevenue(value[0], value[1], interval);
             console.log(respone);
             if (respone && respone.status == 200) {
                 if (respone.data) {
                     // setProductSold(respone.data);
-                    const transformedData = Object.entries(respone.data).map(([year, value]) => ({
-                        year,
-                        value,
+                    const transformedData = Object.entries(respone.data).map(([type, sales]) => ({
+                        type,
+                        sales,
                     }));
                     setRevenueState(transformedData);
                     if (value[0] && value[1]) {
@@ -130,22 +131,25 @@ export default function DashBoadCustom() {
             const endOfWeek = dayjs().endOf('week'); // Chủ Nhật
             const weekvalue: [Dayjs, Dayjs] = [startOfWeek, endOfWeek];
             setRevenueDatePicker(weekvalue);
-            onChangeRevenue(weekvalue);
+            onChangeRevenue(weekvalue, value);
         } else if (value == 'month') {
             const startOfMonth: Dayjs = dayjs().startOf('month');
             const endOfMonth: Dayjs = dayjs().endOf('month');
             const monthValue: [Dayjs, Dayjs] = [startOfMonth, endOfMonth];
             setRevenueDatePicker(monthValue);
-            onChangeRevenue(monthValue);
+            // onChangeRevenue(monthValue, value);
+            setDayRevenueState(value);
+            onChangeRevenue(monthValue, value);
         } else if (value == 'year') {
             const startOfYear: Dayjs = dayjs().startOf('year');
             const endOfYear: Dayjs = dayjs().endOf('year');
             const yearValue: [Dayjs, Dayjs] = [startOfYear, endOfYear];
             setRevenueDatePicker(yearValue);
-            onChangeRevenue(yearValue);
+            setDayRevenueState(value);
+            onChangeRevenue(yearValue, value);
         } else if (value == 'day') {
             setRevenueDatePicker(defaultValue);
-            onChangeRevenue(defaultValue);
+            setDayRevenueState(value);
         }
     };
     const onOk = async (value: RangePickerProps['value']): Promise<void> => {
@@ -157,8 +161,11 @@ export default function DashBoadCustom() {
         onChange(defaultValue);
         onChangeAmountOrder(defaultValue);
         onChangeProductSold(defaultValue);
-        onChangeRevenue(defaultValue);
+        onChangeRevenue(defaultValue, dayRevenueState);
     }, []);
+    useEffect(() => {
+        onChangeRevenue(defaultValue, dayRevenueState);
+    }, [dayRevenueState]);
     return (
         <Content title={'Thống kê'}>
             <div className="DashboardWrapper">
@@ -227,7 +234,9 @@ export default function DashBoadCustom() {
                                 <RangePicker
                                     // showTime={{ format: 'HH:mm' }}
                                     format="YYYY-MM-DD"
-                                    onChange={onChangeRevenue}
+                                    onChange={(value) => {
+                                        onChangeRevenue(value, dayRevenueState);
+                                    }}
                                     onOk={onOk}
                                     placement="bottomLeft"
                                     style={{
