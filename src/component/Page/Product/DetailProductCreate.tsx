@@ -61,11 +61,20 @@ import {
     showModalAddDp,
 } from './ProductMethod';
 import MdEditor from 'react-markdown-editor-lite';
+import { useForm } from 'antd/es/form/Form';
 var MarkdownIt = require('markdown-it');
 const mdParser = new MarkdownIt(/* Markdown-it options */);
 interface markdownProps {
     html: any;
     text: any;
+}
+interface formAddDto {
+    name: string;
+    images: string[];
+    discountPrice: string;
+    originalPrice: string;
+    description: string;
+    colorId: string;
 }
 export default function DetailProductCreate() {
     const { id } = useParams();
@@ -100,6 +109,7 @@ export default function DetailProductCreate() {
         saveIdDetailProduct,
         setSaveIdDetailProduct,
     }: any = GetContext();
+    const [formAdd] = useForm<formAddDto>();
     // Quản lý giá trị của Markdown editor
     const [value, setValue] = useState<any>('**Hello world!!!**');
     const [text, setText] = useState<any>('**Hello world!!!**');
@@ -334,10 +344,19 @@ export default function DetailProductCreate() {
                 handleOk={handleOkAddDp}
                 handleCancel={() => {
                     handleCancelDp(setIsModalAddDpOpen, setImagesUploadMultiple);
+                    formAdd.setFieldsValue({
+                        name: '',
+                        originalPrice: '',
+                        discountPrice: '',
+                        colorId: '',
+                    });
+                    setImagesUploadMultiple([]);
+                    setImageDp([]);
                 }}
                 title={'Thêm chi tiết sản phẩm'}
             >
                 <Form
+                    form={formAdd}
                     name="basic"
                     labelCol={{ span: 24 }}
                     // style={{ width: 700 }}
@@ -351,6 +370,8 @@ export default function DetailProductCreate() {
                             isFetchDp,
                             setIsFetchDp,
                             setImagesUploadMultiple,
+                            formAdd,
+                            setImageDp,
                         );
                     }}
                     onFinishFailed={onFailAdd}

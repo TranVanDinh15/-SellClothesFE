@@ -54,6 +54,7 @@ import UploadImageCustomer from '../../../Admin/common/UploadImage/UploadImage';
 import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
 import { ShoppingCartOutlined } from '@ant-design/icons';
+import { socket } from '../../../Admin/common/Socket/SocketConfig';
 export interface useRedux {
     reduxAuth: {
         isAuthenticate: boolean;
@@ -155,6 +156,7 @@ export default function DetailProductClient() {
     // Lấy query từ URL
     const urlSearchParams = new URLSearchParams(window.location.search);
     const queryParams = Object.fromEntries(urlSearchParams.entries());
+    console.log(queryParams);
     const { imagesUploadMultiple, setImagesUploadMultiple, setIsLoadCart }: any = GetContext();
     // Quản lý dữ liệu Product hiện tại
     const [productData, setProductData] = useState<any>();
@@ -204,6 +206,7 @@ export default function DetailProductClient() {
     const [idSize, setIdSize] = useState<number | undefined>();
     // Lưu số lượng khách hàng cần mua
     const [amountInstance, setAmountInstance] = useState<number>(1);
+    const [isLoadProduct, setIsLoadProduct] = useState<boolean>(false);
     const chooseSliderSize = (
         <div className="sliderChooseSize">
             <div className="sliderChooseSize__Item">
@@ -266,7 +269,7 @@ export default function DetailProductClient() {
             )}
         </div>
     );
-
+    console.log(currentDetailProduct);
     const items: CollapseProps['items'] = [
         {
             key: '1',
@@ -319,7 +322,7 @@ export default function DetailProductClient() {
         if (queryParams?.id) {
             getProductByIdFun(queryParams?.id, setProductData, setCurrentDetailProduct, setIsLoading);
         }
-    }, [isGetCommentLoad]);
+    }, [isGetCommentLoad, isLoadProduct]);
     useEffect(() => {
         handleGetCommentProduct(
             Number(queryParams?.id),
@@ -339,6 +342,16 @@ export default function DetailProductClient() {
     useEffect(() => {
         window.scrollTo(0, 0);
     }, []);
+    useEffect(() => {
+        socket.on('productUpdated', (data) => {
+            console.log(data);
+            if (queryParams && queryParams?.id && Number(queryParams?.id) == Number(data?.productId)) {
+                console.log(data);
+                setIsLoadProduct((isLoadProduct) => !isLoadProduct);
+            }
+        });
+    }, []);
+
     return (
         <div className="DetailProductClient">
             <div className="DetailProductClient__container">
@@ -381,14 +394,7 @@ export default function DetailProductClient() {
                                         <span>Đặc tính nổi bật</span>
                                     </div>
                                     <div className="descriptionDetailProduct__content">
-                                        <p>
-                                            Chất liệu: 100% Cotton Cotton bền vững: Góp phần bảo vệ môi trường sống Loại
-                                            sợi chất lượng cao được sử dụng trên trang phục chất lượng cao với độ mảnh
-                                            và khả năng nhuộm ưu việt Thấm hút mồ hôi tốt, thoáng mát, rất thích hợp với
-                                            thời tiết nóng ẩm việt Nam Thiết kế cổ tròn cơ bản cùng dáng suông giúp tạo
-                                            sự thoải mái cử động cho người mặc Đa dạng màu sắc dễ dàng kết hợp cùng quần
-                                            shorts hoặc quần jeans YODY - Look good. Feel good
-                                        </p>
+                                        <p>{currentDetailProduct?.description}</p>
                                     </div>
                                 </div>
                                 <Collapse
@@ -415,7 +421,7 @@ export default function DetailProductClient() {
                                     <div className="RattingVsComment__Box">
                                         <div className="RattingVsComment__Box__Star">
                                             <div className="RattingVsComment__Box__Star__Text">
-                                                <span>{productData?.rating} / 5</span>
+                                                <span>{Math.floor(productData?.rating)} / 5</span>
                                             </div>
                                             <div className="RattingVsComment__Box__Star__Rate">
                                                 <Rate
@@ -1052,14 +1058,20 @@ export default function DetailProductClient() {
                                             />
                                         </div>
                                     </div>
-                                    <div className="DetailProductClient__content__Infor__Price">
-                                        <div className="DetailProductClient__content__Infor__Price__original">
-                                            <span>{convertVND(currentDetailProduct?.discountPrice)}</span>
+                                    {currentDetailProduct && currentDetailProduct?.discountPrice ? (
+                                        <div className="DetailProductClient__content__Infor__Price">
+                                            <div className="DetailProductClient__content__Infor__Price__original">
+                                                <span>{convertVND(currentDetailProduct?.discountPrice)}</span>
+                                            </div>
+                                            <div className="DetailProductClient__content__Infor__Price__discount">
+                                                <span>{convertVND(currentDetailProduct?.originalPrice)}</span>
+                                            </div>
                                         </div>
-                                        <div className="DetailProductClient__content__Infor__Price__discount">
+                                    ) : (
+                                        <div className="DetailProductClient__content__Infor__Price__discount originalPricehave">
                                             <span>{convertVND(currentDetailProduct?.originalPrice)}</span>
                                         </div>
-                                    </div>
+                                    )}
                                     <div className="DetailProductClient__content__Infor__ListCorlor">
                                         <div className="ListColor__title">
                                             <span>

@@ -23,6 +23,7 @@ export interface formAddDetailReceipt {
     productDetailSizeId: number;
     quantity: number;
     price: number;
+    categoryId: any;
 }
 export interface formUpdateDetailReceipt {
     quantity: number;
@@ -83,6 +84,11 @@ export default function ReceiptDetail() {
                             setProductApp(null);
                             setProductDetailApp(null);
                             setProductDetailSizeApp(null);
+                            formAdd.setFieldsValue({
+                                quantity: undefined,
+                                price: undefined,
+                                categoryId: undefined,
+                            });
                         }}
                         title={'Nhập hàng'}
                         footer={true}
@@ -302,7 +308,7 @@ export default function ReceiptDetail() {
             formUpdate.setFieldsValue({
                 quantity: dataDetailReceipt?.quantity,
                 price: dataDetailReceipt?.price,
-                categoryId: dataDetailReceipt?.productDetailSize?.productDetail?.product?.categoryId,
+                categoryId: undefined,
             });
         }
     }, [dataDetailReceipt]);
@@ -331,7 +337,7 @@ export default function ReceiptDetail() {
                     setProductDetailApp(null);
                     setProductDetailSizeApp(null);
                 }}
-                title={'Nhập hàng'}
+                title={'Cập nhật nhập hàng'}
                 footer={true}
                 showModal={() => {
                     setIsOpenUpdateDetailReceipt(true);
@@ -371,7 +377,11 @@ export default function ReceiptDetail() {
                         }}
                     >
                         <Col span={12}>
-                            <Form.Item label="Danh mục" name="categoryId">
+                            <Form.Item
+                                label="Danh mục"
+                                name="categoryId"
+                                rules={[{ required: true, message: 'Vui lòng điền đầy đủ thông tin!' }]}
+                            >
                                 <SelectCustomer
                                     mode=""
                                     option={CategoryApp ? [...CategoryApp] : []}
@@ -398,7 +408,7 @@ export default function ReceiptDetail() {
                             <Col span={12}>
                                 <Form.Item
                                     label="Sản phẩm"
-                                    name="categoryId"
+                                    name="productApp"
                                     rules={[{ required: true, message: 'Vui lòng điền đầy đủ thông tin!' }]}
                                 >
                                     <SelectCustomer
@@ -428,7 +438,7 @@ export default function ReceiptDetail() {
                             <Col span={12}>
                                 <Form.Item
                                     label="Chi tiết"
-                                    name="categoryId"
+                                    name="detailApp"
                                     rules={[{ required: true, message: 'Vui lòng điền đầy đủ thông tin!' }]}
                                 >
                                     <SelectCustomer
@@ -506,9 +516,15 @@ export default function ReceiptDetail() {
                             </Form.Item>
                         </Col>
                     </Row>
-                    <Form.Item wrapperCol={{ offset: 9, span: 16 }}>
-                        <Button type="primary" htmlType="submit">
-                            Nhập hàng
+                    <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
+                        <Button
+                            type="primary"
+                            htmlType="submit"
+                            style={{
+                                marginTop: '20px',
+                            }}
+                        >
+                            Cập nhật nhập hàng
                         </Button>
                     </Form.Item>
                 </Form>

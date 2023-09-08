@@ -62,6 +62,7 @@
             line-height: 22px;
         }
     }
+
     .DetailProductClient__content__Infor__Price__discount {
         span {
             font-weight: 500;
@@ -70,6 +71,14 @@
             color: #d2d2d2;
             line-height: 22px;
         }
+    }
+}
+.originalPricehave {
+    span {
+        font-weight: 600;
+        font-size: 20px;
+        color: #cd151c;
+        line-height: 22px;
     }
 }
 .DetailProductClient__content__Infor__ListCorlor {

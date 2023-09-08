@@ -245,6 +245,7 @@ export const HandleAddDetailReceipt = async (
             formAdd.setFieldsValue({
                 quantity: undefined,
                 price: undefined,
+                categoryId: undefined,
             });
             setProductApp(null);
             setProductDetailApp(null);

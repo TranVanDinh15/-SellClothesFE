@@ -47,6 +47,7 @@ export const handleCancelDp = (
     setImagesUploadMultiple: React.Dispatch<React.SetStateAction<any>>,
 ) => {
     setIsModalAddDpOpen(false);
+    setImagesUploadMultiple([]);
 };
 
 export const handleOkUpdate = () => {};
@@ -125,6 +126,8 @@ export const onFinishAdd = async (
     isFetchDp: boolean,
     setIsFetchDp: React.Dispatch<React.SetStateAction<boolean>>,
     setImagesUploadMultiple: React.Dispatch<React.SetStateAction<any>>,
+    form: any,
+    setImageDp: React.Dispatch<React.SetStateAction<any>>,
 ) => {
     // setIsLoading(true);
     if (id) {
@@ -144,6 +147,14 @@ export const onFinishAdd = async (
             message.success('Tạo thành công');
             handleCancelDp(setIsModalAddDpOpen, setImagesUploadMultiple);
             setIsFetchDp((prevIsFetchDp) => !prevIsFetchDp);
+            form.setFieldsValue({
+                name: '',
+                originalPrice: '',
+                discountPrice: '',
+                colorId: '',
+            });
+            setImagesUploadMultiple([]);
+            setImageDp([]);
         }
     } else {
         message.error('Đã có vấn đề trong lúc tạo !!');

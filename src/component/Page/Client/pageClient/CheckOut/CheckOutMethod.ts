@@ -1,3 +1,4 @@
+import { message } from 'antd';
 import { updateCartAction } from '../../../../../Redux/Actions/Action.cart';
 import { VoucherUseApi, createOrder, getPayment, getTypeShip } from '../../../../utils/Api/Api';
 import { dataCart } from '../../Cart/CartInterFace';
@@ -45,6 +46,8 @@ export const handleuseVoucher = async (dispatch: any, data: { voucherCode: strin
         const response = await VoucherUseApi(data);
         if (response && response.status == 200) {
             dispatch(updateCartAction(response?.data));
+        } else {
+            message.error(response.data?.message);
         }
         console.log(response);
     } catch (error) {
