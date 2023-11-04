@@ -41,36 +41,50 @@ AxiosInstance.interceptors.response.use(
         return response;
     },
     async function (error) {
-        if (
-            error?.config &&
-            error?.response &&
-            error?.response?.status === 401 &&
-            error.config.url === '/auth/refresh' &&
-            !error.config.headers[NO_RETRY_HEADER]
-        ) {
-            console.log(error);
-            message.info('Hết thời gian chờ, Đăng nhập lại để tiếp tục !!');
-            window.location.href = '/signIn';
-        }
+        const originalRequest = error.config;
+        // if (
+        //     error?.config &&
+        //     error?.response &&
+        //     error?.response?.status === 401 &&
+        //     error.config.url === '/auth/refresh' &&
+        //     !error.config.headers[NO_RETRY_HEADER]
+        // ) {
+        //     message.info('Hết thời gian chờ, Đăng nhập lại để tiếp tục !!');
+        //     window.location.href = '/signIn';
+        // }
         if (
             error.config &&
             error.response &&
             error.response.status === 401 &&
-            !error.config.headers[NO_RETRY_HEADER] &&
+            !originalRequest._retry &&
             error.config.url != '/auth/refresh'
         ) {
+            originalRequest._retry = true;
             const accessTokenLocal = localStorage.getItem('token');
             if (accessTokenLocal) {
-                console.log(error.config.url);
-                error.config.headers[NO_RETRY_HEADER] = 'true';
                 const access_token = await handleRefreshToken();
-                console.log(access_token);
                 if (access_token) {
                     error.config.headers['Authorization'] = `Bearer ${access_token}`;
                     localStorage.setItem('token', access_token);
                     return AxiosInstance.request(error.config);
                 } else {
-                    return error.response;
+                    if (error.response.status === 401 || error.response.status === 403) {
+                        // Giả sử rằng refreshToken hết hạn hoặc không hợp lệ trả về lỗi 401 hoặc 403
+                        // Chuyển hướng người dùng đến trang đăng nhập
+                        localStorage.removeItem('token');
+
+                        if (window.location.pathname == '/Admin') {
+                            message.info('Hết thời gian chờ, Đăng nhập lại để tiếp tục !!');
+                            window.location.href = '/Login-Admin';
+                        } else {
+                            message.info('Hết thời gian chờ, Đăng nhập lại để tiếp tục !!');
+                            setTimeout(() => {
+                                window.location.reload();
+                            }, 2000);
+                        }
+                        localStorage.clear();
+                    }
+                    // return Promise.reject(error);
                 }
             }
             return error.response;

@@ -2,7 +2,7 @@ import { Header } from 'antd/es/layout/layout';
 import React, { useEffect, useState } from 'react';
 import './HeaderClient.css';
 import { Link, useNavigate } from 'react-router-dom';
-import { Avatar, Badge, Button, Drawer, Input, Menu, Popover, Select, message } from 'antd';
+import { Avatar, Badge, Button, Drawer, Input, Menu, Popover, Select, Tooltip, message } from 'antd';
 import { PhoneOutlined, SearchOutlined, ShoppingCartOutlined, ShoppingOutlined, UserOutlined } from '@ant-design/icons';
 import {
     getListCategoryFun,
@@ -27,18 +27,23 @@ import { json } from 'stream/consumers';
 import { debounce } from '../Common/debound/debound';
 import { convertVND } from '../../Admin/common/method/method';
 import { logoutActions } from '../../../../Redux/Actions/Actions.auth';
+import { BsFacebook } from 'react-icons/bs';
+import { click } from '@testing-library/user-event/dist/click';
+var slug = require('slug');
 const headerStyle: React.CSSProperties = {
     color: '#fff',
-    minHeight: '90px',
+    minHeight: '100px',
     display: 'flex',
     flexWrap: 'wrap',
     boxShadow: '0 6px 12px 0 rgba(0,0,0,0.05)',
-    backgroundColor: '#fff',
+    backgroundColor: 'var(--promary-color)',
     position: 'fixed',
     top: 0,
     right: 0,
     left: 0,
     zIndex: '1000',
+    alignItems: 'center',
+    padding: 0,
 };
 const itemsMenu = [
     {
@@ -81,15 +86,7 @@ const itemsMenu = [
 const manageUser = [
     {
         id: 0,
-        name: 'Profile',
-    },
-    {
-        id: 1,
-        name: 'Cập nhật người dùng',
-    },
-    {
-        id: 2,
-        name: 'Lịch sử mua hàng',
+        name: 'Tài khoản',
     },
     {
         id: 3,
@@ -126,8 +123,10 @@ export default function HeaderClient() {
     const [blogOrProduct, setBlogOrProduct] = useState<string>('product');
     const [pageSize, setPageSize] = useState<number>(5);
     const [currentPage, setCurrentPage] = useState<number>(1);
+    const [visible, setVisible] = useState<boolean>(false);
+    const [activePopoverIndex, setActivePopoverIndex] = useState<number | null>(null);
+
     const { Option } = Select;
-    console.log(token);
     const selectBefore = (
         <Select
             defaultValue="product"
@@ -173,7 +172,13 @@ export default function HeaderClient() {
                     <ul>
                         {categoryBlog.map((item: { value: string; code: string; id: number }, index: number) => {
                             return (
-                                <li className="subnavCategory" key={index}>
+                                <li
+                                    className="subnavCategory"
+                                    key={index}
+                                    onClick={() => {
+                                        setActivePopoverIndex(null);
+                                    }}
+                                >
                                     <Link to={`/blog/${item.code}`}>
                                         <span>{item.value}</span>
                                     </Link>
@@ -198,10 +203,6 @@ export default function HeaderClient() {
                             onClick={async () => {
                                 item.id === 0 && navigate('/Profile');
                                 if (item.id === 3) {
-                                    // await LogOut();
-                                    // message.success('Đã đăng xuất tài khoản');
-                                    // localStorage.removeItem('token');
-                                    // setIsLoadToken((isLoadToken) => !isLoadToken);
                                     dispatch(logoutActions(setIsLoadToken));
                                 }
                             }}
@@ -270,29 +271,132 @@ export default function HeaderClient() {
     }, [isLoadToken]);
     return (
         <Header style={headerStyle}>
+            <header className="headerInforStore">
+                <div className="headerInforStore__Item">
+                    <div className="headerInforStore__Item__Social">
+                        <Tooltip title={'Theo dõi facebook của chúng tôi'}>
+                            <BsFacebook
+                                style={{
+                                    cursor: 'pointer',
+                                }}
+                            />
+                        </Tooltip>
+                    </div>
+                    <div className="headerInforStore__Item__Social">
+                        <p>
+                            HOTLINE:
+                            <a href="tel:0123456789">0123456789</a>
+                        </p>
+                    </div>
+                </div>
+                <div className="headerInforStore__Item">
+                    <div className="headerInforStore__Item__Social">
+                        <p>
+                            <a href="tel:0123456789">Chăm sóc khách hàng</a>
+                        </p>
+                    </div>
+                    <div className="headerInforStore__Item__Social">
+                        <p>
+                            <a href="tel:0123456789">Tin tức</a>
+                        </p>
+                    </div>
+                </div>
+            </header>
             <header className="headerClientAbove">
                 <div className="headerClientAbove__Logo">
                     <Link to={'/'}>
                         <img src={images.logo}></img>
                     </Link>
                 </div>
-
                 <ul className="headerClientbelow__listMenu">
                     {headerCategory.length > 0 &&
                         headerCategory.map((item: any, index: number) => {
                             return (
                                 <li key={index}>
-                                    <div
-                                        className={dataCategory.length > 0 ? 'bigChildrenTab' : ''}
-                                        onMouseMove={(event) => {
-                                            setSaveCodeCategory(item.code);
+                                    <Popover
+                                        content={() => (
+                                            <div className="subNavCategory__Wrapper">
+                                                {dataCategory && dataCategory.length > 0 ? (
+                                                    <div className="subNavCategory__container">
+                                                        {dataCategory.map((item: dataCategoy, index: number) => {
+                                                            return (
+                                                                <div className="subNavCategory__item" key={index}>
+                                                                    <div
+                                                                        className="subNavCategory__heading"
+                                                                        onClick={() => {
+                                                                            setItemCategory(item);
+                                                                            setUrlCustomer(
+                                                                                `/${item.code}?categoryId=${item.code}&page=1&size=20`,
+                                                                            );
+                                                                            navigate(
+                                                                                `/${item.code}?categoryId=${item.code}&page=1&size=20`,
+                                                                            );
+                                                                            setActivePopoverIndex(null);
+                                                                        }}
+                                                                    >
+                                                                        <span>{item?.value}</span>
+                                                                    </div>
+                                                                    <ul className="subNavCategory__listItems">
+                                                                        {item.children.length > 0
+                                                                            ? item?.children.map(
+                                                                                  (item: any, index: number) => {
+                                                                                      return (
+                                                                                          <li
+                                                                                              key={index}
+                                                                                              onClick={() => {
+                                                                                                  setItemCategory(item);
+                                                                                                  setUrlCustomer(
+                                                                                                      `/${item.code}?categoryId=${item.code}&page=1&size=20`,
+                                                                                                  );
+                                                                                                  setActivePopoverIndex(
+                                                                                                      null,
+                                                                                                  );
+                                                                                              }}
+                                                                                          >
+                                                                                              <Link
+                                                                                                  to={`/${item.code}?categoryId=${item.code}&page=1&size=20`}
+                                                                                              >
+                                                                                                  <span>
+                                                                                                      {item?.value}
+                                                                                                  </span>
+                                                                                              </Link>
+                                                                                          </li>
+                                                                                      );
+                                                                                  },
+                                                                              )
+                                                                            : ''}
+                                                                    </ul>
+                                                                </div>
+                                                            );
+                                                        })}
+                                                    </div>
+                                                ) : (
+                                                    ''
+                                                )}
+                                            </div>
+                                        )}
+                                        // title="Title"
+                                        visible={activePopoverIndex === index}
+                                        onVisibleChange={(visible) => {
+                                            if (visible) {
+                                                setActivePopoverIndex(index);
+                                            } else {
+                                                setActivePopoverIndex(null);
+                                            }
                                         }}
+                                        arrow={false}
                                     >
-                                        <Button type="text" className="ListHeaderCat" onClick={() => {}}>
-                                            {item.value}
-                                        </Button>
+                                        <div
+                                            className={dataCategory.length > 0 ? 'bigChildrenTab' : ''}
+                                            onMouseMove={(event) => {
+                                                setSaveCodeCategory(item.code);
+                                            }}
+                                        >
+                                            <Button type="ghost" className="ListHeaderCat" onClick={() => {}}>
+                                                {item.value}
+                                            </Button>
 
-                                        <div className="subNavCategory">
+                                            {/* <div className="subNavCategory">
                                             {dataCategory && dataCategory.length > 0 ? (
                                                 <div className="subNavCategory__container">
                                                     {dataCategory.map((item: dataCategoy, index: number) => {
@@ -344,8 +448,9 @@ export default function HeaderClient() {
                                             ) : (
                                                 ''
                                             )}
+                                        </div> */}
                                         </div>
-                                    </div>
+                                    </Popover>
                                 </li>
                             );
                         })}
@@ -357,15 +462,23 @@ export default function HeaderClient() {
                                         content={item?.id == 1 ? subNavItemBlog() : subNavItemHeader(item.children)}
                                         placement="bottomLeft"
                                         arrow={false}
+                                        visible={activePopoverIndex === item?.name}
+                                        onVisibleChange={(visible) => {
+                                            if (visible) {
+                                                setActivePopoverIndex(item?.name);
+                                            } else {
+                                                setActivePopoverIndex(null);
+                                            }
+                                        }}
                                     >
-                                        <Button type="text" className="ListHeaderCat ">
+                                        <Button type="ghost" className="ListHeaderCat menuItemCss">
                                             {item.name}
                                         </Button>
                                     </Popover>
                                 ) : (
                                     <Button
-                                        type="text"
-                                        className="ListHeaderCat "
+                                        type="ghost"
+                                        className="ListHeaderCat menuItemCss"
                                         onClick={() => {
                                             item?.id == 0 && navigate('/Giam-gia');
                                         }}
@@ -456,7 +569,14 @@ export default function HeaderClient() {
                                 {resultSearch && resultSearch.length > 0
                                     ? resultSearch.map((item, index) => {
                                           return (
-                                              <div className="searchResultInput__Item" key={index}>
+                                              <div
+                                                  className="searchResultInput__Item"
+                                                  key={index}
+                                                  onClick={() => {
+                                                      navigate(`/chi-tiet-san-pham/${slug(item?.name)}?id=${item?.id}`);
+                                                      window.location.reload();
+                                                  }}
+                                              >
                                                   <div className="searchResultInput__Item__image">
                                                       <Image
                                                           src={`${process.env.REACT_APP_IMAGE_PRODUCT}${item?.detail[0]?.images[0]}`}
@@ -483,7 +603,14 @@ export default function HeaderClient() {
                                 {resultBlog && resultBlog.length > 0
                                     ? resultBlog.map((item, index) => {
                                           return (
-                                              <div className="searchResultInput__Item" key={index}>
+                                              <div
+                                                  className="searchResultInput__Item"
+                                                  key={index}
+                                                  onClick={() => {
+                                                      navigate(`/${slug(item?.subjectId)}/${item?.id}`);
+                                                      window.location.reload();
+                                                  }}
+                                              >
                                                   <div className="searchResultInput__Item__image">
                                                       <Image
                                                           src={`${process.env.REACT_APP_IMAGE_BLOGS_URL}${
@@ -527,7 +654,7 @@ export default function HeaderClient() {
                     <div className="headerClientAbove__Cart">
                         <Popover
                             content={<Cart cartData={cartData} />}
-                            arrow={true}
+                            arrow={false}
                             title={'Sản phẩm mới thêm'}
                             placement="bottomLeft"
                             className="headerClientAbove__Cart__Popover"

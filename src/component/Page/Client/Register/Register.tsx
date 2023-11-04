@@ -52,9 +52,9 @@ export default function RegisterClient() {
                 autoComplete="off"
                 className="LoginClientForm"
             >
-                <div className="LoginClient__logo">
+                {/* <div className="LoginClient__logo">
                     <Image src={images.logo} preview={false} width={120} />
-                </div>
+                </div> */}
                 <div className="LoginClient__title">
                     <h3>ĐĂNG KÝ</h3>
                 </div>

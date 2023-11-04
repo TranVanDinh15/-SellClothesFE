@@ -439,15 +439,22 @@ export default function ChatClient() {
                     trigger="click"
                     className="PopoverChat"
                 >
-                    <Badge count={unreadMark ? unreadMark : 0}>
+                    <Badge
+                        count={unreadMark ? unreadMark : 0}
+                        className="BadgeCss"
+                        style={{
+                            transform: 'translate(10px, -25px)',
+                        }}
+                    >
                         <Button
                             type="ghost"
                             icon={<MessageOutlined />}
                             onClick={() => {
                                 handleGetRoom(setListRoomChat);
                             }}
+                            className="custom-button"
                         >
-                            Chat
+                            {/* Chat */}
                         </Button>
                     </Badge>
                 </Popover>

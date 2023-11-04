@@ -29,7 +29,8 @@ export default function Account() {
     const [profileUser, setProfileUser] = useState<profileIF | null>(null);
     // reload Get Profile
     const [isLoadAccount, setIsLoadAccount] = useState<boolean>(false);
-
+    const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [isLoadingPassword, setIsLoadingPassword] = useState<boolean>(false);
     // console.log(curentUser);
     useEffect(() => {
         handleGetProfile(setProfileUser);
@@ -70,9 +71,10 @@ export default function Account() {
                             }}
                             onClick={() => {
                                 if (profileUser) {
-                                    handleVerifyMail(setIsLoadAccount);
+                                    handleVerifyMail(setIsLoadAccount, setIsLoading);
                                 }
                             }}
+                            loading={isLoading}
                         >
                             Xác thực mail
                         </Button>
@@ -85,10 +87,15 @@ export default function Account() {
                             minWidth: '150px',
                         }}
                         onClick={async () => {
+                            setIsLoadingPassword(true);
                             const response = await sendMailChangePassord();
                             console.log(response);
-                            response && response.status == 201 && message.success('Vui lòng kiểm tra email  ');
+                            if (response && response.status == 201) {
+                                message.success('Vui lòng kiểm tra email');
+                                setIsLoadingPassword(false);
+                            }
                         }}
+                        loading={isLoadingPassword}
                     >
                         Đổi mật khẩu
                     </Button>

@@ -37,6 +37,7 @@ export default function SliderCustom({ data }: dataSlider) {
                     showPlayButton={false}
                     slideOnThumbnailOver={true}
                     autoPlay={true}
+                    
                     items={data.map(
                         (
                             item: {

@@ -31,10 +31,13 @@ export const handleGetProfile = async (
 };
 export const handleVerifyMail = async (
     setIsLoadAccount: React.Dispatch<React.SetStateAction<boolean>>,
+    setIsLoading: React.Dispatch<React.SetStateAction<boolean>>,
 ): Promise<void> => {
+    setIsLoading(true);
     const response = await verifyMail();
     if (response && response.status == 201) {
         message.success('Vui lòng kiểm tra email của bạn ');
+        setIsLoading(false);
     }
 };
 export const handleVerifyApi = async (data: { token: string }, navigate: any): Promise<void> => {
@@ -215,8 +218,9 @@ export const handleHistoryOrder = async (
     pageSize: number,
     setListOrderHistory: React.Dispatch<React.SetStateAction<orderInterface[] | null>>,
     setTotal: React.Dispatch<React.SetStateAction<number | undefined>>,
+    code: string,
 ): Promise<void> => {
-    const response = await historyOrder(id, currentPage, pageSize);
+    const response = await historyOrder(id, currentPage, pageSize, code);
     console.log(response);
     if (response && response.status == 200) {
         console.log(response);

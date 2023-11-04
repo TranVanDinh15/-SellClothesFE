@@ -93,10 +93,10 @@ export default function ChatAdmin() {
             <Row gutter={16}>
                 <Col span={6}>
                     <div className="ListAdminMessage">
-                        <div className="ListAdminMessage__title">
-                            <span>Danh sách Admin</span>
-                        </div>
-                        <div className="ListAdminMessage__Parent">
+                        {/* <div className="ListAdminMessage__title">
+                            <span>Danh sách User</span>
+                        </div> */}
+                        {/* <div className="ListAdminMessage__Parent">
                             <div className="ListAdminMessage__Item">
                                 <SelectCustomer
                                     mode=""
@@ -112,7 +112,7 @@ export default function ChatAdmin() {
                                     }}
                                 />
                             </div>
-                        </div>
+                        </div> */}
                         <div className="ListRoomMessage">
                             <div className="ListRoomMessage__title">
                                 <span>Phòng</span>
@@ -124,6 +124,9 @@ export default function ChatAdmin() {
                                               return (
                                                   <Badge count={item?.unreadCount}>
                                                       <Button
+                                                          style={{
+                                                              marginBottom: '10px',
+                                                          }}
                                                           type="text"
                                                           key={index}
                                                           onClick={() => {
@@ -407,10 +410,19 @@ export default function ChatAdmin() {
                     trigger="click"
                     className="PopoverChat"
                 >
-                    <Badge count={unreadMark ? unreadMark : 0}>
-                        <Button type="ghost" icon={<MessageOutlined />} onClick={() => {}}>
-                            Chat
-                        </Button>
+                    <Badge
+                        count={unreadMark ? unreadMark : 0}
+                        className="BadgeCss"
+                        style={{
+                            transform: 'translate(10px, -20px)',
+                        }}
+                    >
+                        <Button
+                            type="ghost"
+                            icon={<MessageOutlined />}
+                            onClick={() => {}}
+                            className="custom-button"
+                        ></Button>
                     </Badge>
                 </Popover>
             </div>

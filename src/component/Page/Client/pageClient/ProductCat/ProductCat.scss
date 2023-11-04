@@ -1,7 +1,7 @@
 .ProductCatWrapper {
-    height: 2000px;
+    // height: 2000px;
     padding: 40px 20px;
-    margin-top: 90px;
+    margin-top: 80px;
 }
 .ProductCatTitle {
     display: flex;
@@ -100,6 +100,9 @@
         font-size: 16px;
         margin-bottom: 10px;
         font-weight: 600;
+        span {
+            color: #222529;
+        }
     }
 }
 
@@ -139,4 +142,37 @@
 .ant-select-selector {
     border-radius: inherit !important;
     border: 1px solid #ccc !important;
+}
+.containerProductCat {
+    background-image: url(https://moren.la-studioweb.com/wp-content/uploads/2020/12/blog-page-header.jpg);
+    background-color: #f9f9f9;
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.page-title {
+    font-size: 32px;
+    color: #fff;
+}
+.site-breadcrumbs {
+    p {
+        a {
+            color: #fff;
+            font-size: 16px;
+        }
+    }
+    .separator {
+        color: #fff;
+        font-size: 16px;
+    }
+    .last {
+        color: #fff;
+        font-size: 16px;
+    }
+}
+.ant-checkbox-wrapper {
 }

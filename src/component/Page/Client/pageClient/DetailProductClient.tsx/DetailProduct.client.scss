@@ -1,5 +1,5 @@
 .DetailProductClient {
-    height: 100vh;
+    min-height: 100vh;
     margin-top: 100px;
 }
 .DetailProductClient__container {
@@ -8,14 +8,14 @@
     background-color: #fff;
 }
 .DetailProductClient__content {
-    height: 100vh;
-    margin-top: 20px;
-    padding: 30px 0px;
+    // height: 100vh;
+    padding: 20px 0px;
     .DetailProductClient__content__listImage {
         .image-gallery-slide {
             img {
                 width: 100%;
                 height: 400px;
+                object-fit: contain;
             }
         }
     }
@@ -34,12 +34,12 @@
     padding: 15px 50px;
 }
 .DetailProductClient__content__Infor__Name span {
-    font-style: normal;
-    font-weight: 600;
-    font-size: 20px;
-    line-height: 32px;
-    text-transform: capitalize;
-    color: #17191c;
+    font-size: 1.875rem;
+    line-height: 1.2;
+    color: var(--porto-heading-color);
+    letter-spacing: -0.01em;
+    font-weight: 700;
+    margin-bottom: 2px;
 }
 .DetailProductClient__content__Infor__productTop {
     font-size: 14px;
@@ -86,13 +86,13 @@
     .ListColor__title {
         margin-bottom: 10px;
         span {
-            font-weight: 500;
+            font-weight: 600;
             font-size: 14px;
             line-height: 16px;
             // padding: 16px 0 12px;
             margin: 0;
             width: 100%;
-            color: #17191d;
+            color: #777777;
         }
     }
 }
@@ -139,17 +139,17 @@
     }
 }
 .colorProduct {
-    border: 2px solid #000;
+    border: 2px solid var(--promary-color);
 }
 .image-gallery-thumbnail.active,
 .image-gallery-thumbnail:focus {
-    border: 3px solid rgb(0, 191, 255);
+    border: 3px solid var(--promary-color);
 }
 .image-gallery-thumbnail {
     transition: 0.2s;
 }
 .image-gallery-thumbnail:hover {
-    border: 3px solid #00bfff;
+    border: 3px solid var(--promary-color);
 }
 .sliderChooseSize__ResultHelpSize {
     span {
@@ -204,7 +204,7 @@
 }
 .sendComment {
     button {
-        background-color: rgb(0, 191, 255);
+        background-color: #222529;
         border-radius: initial;
         color: #fff;
     }
@@ -297,7 +297,7 @@
     button {
         width: 200px;
         height: 40px;
-        background-color: rgb(0, 191, 255);
+        background-color: #222529;
         color: #fff;
     }
 }
@@ -341,7 +341,7 @@
     justify-content: center;
 }
 .filterCmtChoose {
-    background-color: rgb(0, 191, 255);
+    background-color: #222529;
     color: #fff;
     border-radius: initial;
 }
@@ -349,5 +349,12 @@
     transition-duration: 0s;
     &:hover {
         background-color: initial !important;
+    }
+}
+.productTop__Sold {
+    span {
+        color: #777777;
+        font-size: 16px;
+        font-weight: 600;
     }
 }

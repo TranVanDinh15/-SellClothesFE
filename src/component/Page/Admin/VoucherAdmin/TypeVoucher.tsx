@@ -37,7 +37,6 @@ export default function TypeVoucher() {
     const [pageSize, setPageSize] = useState<any>(5);
     const [page, setPage] = useState<any>(1);
     const [typeVoucherCode, setTypeVoucherCode] = useState<StatusSelect[] | null>(null);
-    console.log(typeVoucherCode);
     // Quản lý đóng mở update Biên lai nhập hàng
     const [isOpenUpdateBanner, setIsOpenUpdateBanner] = useState<boolean>(false);
     // Quản lý status Banner khi thêm banner
@@ -208,125 +207,7 @@ export default function TypeVoucher() {
                     setIsDelete={setIsDelete}
                 />
             </div>
-            {/* Modal Custom Update */}
-            {/* <ModalCustomer
-                isModalOpen={isOpenUpdateBanner}
-                handleOk={() => {}}
-                handleCancel={() => {
-                    setIsOpenUpdateBanner(false);
-                    setImage('');
-                    setImagesUploadMultiple([]);
-                    setImageDp([]);
-                    setDataBannerUpdate('');
-                }}
-                title={'Cập nhật Banner'}
-                footer={true}
-                showModal={() => {
-                    setIsModalAddOpen(true);
-                }}
-            >
-                <Form
-                    form={formUpdate}
-                    name="basic"
-                    labelCol={{ span: 24 }}
-                    style={{ maxWidth: 600 }}
-                    initialValues={{ remember: true }}
-                    onFinish={(value) => {
-                        if (dataBannerUpdate) {
-                            console.log('ok');
-                            // HandleUpdateBanner(
-                            //     dataBannerUpdate?.id,
-                            //     value,
-                            //     image ? image : dataBannerUpdate?.image,
-                            //     isLoadVoucher,
-                            //    setIsLoadTypeVoucher,
-                            //     setIsOpenUpdateBanner,
-                            //     formUpdate,
-                            //     setImage,
-                            //     setImagesUploadMultiple,
-                            //     setImageDp,
-                            //     setDataBannerUpdate,
-                            // );
-                        }
-                    }}
-                    // onFinishFailed={onFinishFailed}
-
-                    autoComplete="off"
-                >
-                    <Row
-                        gutter={20}
-                        style={{
-                            display: 'flex',
-                            justifyContent: 'space-between',
-                        }}
-                    >
-                        <Col span={12}>
-                            <Form.Item
-                                label="Tên Banner"
-                                name="name"
-                                rules={[{ required: true, message: 'Vui lòng điền đầy đủ thông tin!' }]}
-                            >
-                                <Input />
-                            </Form.Item>
-                        </Col>
-                        <Col span={12}>
-                            <Form.Item
-                                label="Mô tả ngắn"
-                                name="description"
-                                rules={[{ required: true, message: 'Vui lòng điền đầy đủ thông tin!' }]}
-                            >
-                                <Input />
-                            </Form.Item>
-                        </Col>
-                        <Col span={12}>
-                            <Form.Item
-                                label="Ảnh (1 ảnh)"
-                                // name="description"
-                            >
-                                <UploadImageCustomer multilple={true} />
-                            </Form.Item>
-                        </Col>
-                        <Col span={12}>
-                            <Form.Item
-                                label="Trạng thái"
-                                name="statusId"
-                                rules={[{ required: true, message: 'Vui lòng điền đầy đủ thông tin!' }]}
-                            >
-                                <SelectCustomer
-                                    mode=""
-                                    option={statusSelect ? [...statusSelect] : []}
-                                    onChange={(value: any) => {
-                                        // onChangeCategorySelect(
-                                        //     value,
-                                        //     setProductApp,
-                                        //     setProductDetailApp,
-                                        //     setProductDetailSizeApp,
-                                        // );
-                                    }}
-                                    onSearch={(value: any) => {
-                                        // onChangeCategorySelect(
-                                        //     value,
-                                        //     setProductApp,
-                                        //     setProductDetailApp,
-                                        //     setProductDetailSizeApp,
-                                        // );
-                                    }}
-                                />
-                            </Form.Item>
-                        </Col>
-                    </Row>
-                    <Form.Item
-                        style={{
-                            display: 'flex',
-                            justifyContent: 'center',
-                        }}
-                    >
-                        <Button type="primary" htmlType="submit">
-                            Cập nhật Banner
-                        </Button>
-                    </Form.Item>
-                </Form>
-            </ModalCustomer> */}
+          
         </Content>
     );
 }

@@ -25,7 +25,8 @@ export default function RevenueChar({ data }: dataRevenue) {
         yAxis: {
             label: {
                 // Tùy chỉnh định dạng label của trục y
-                formatter: (v: any) => `${convertVND(Number(v))}`,
+                formatter: (v: any) => `${convertVND(Number(v)) ? convertVND(Number(v)) : '0'}`,
+                // formatter: (v: any) => `${v}`,
             },
         },
         meta: {

@@ -5,6 +5,7 @@ import {
     Button,
     Checkbox,
     Col,
+    Empty,
     Layout,
     Menu,
     MenuProps,
@@ -176,6 +177,7 @@ export default function ProductCat() {
     const materialCustom = useSelector((state: reduxIterface) => state.UrlReducer.material);
     const { itemCategory, urlCustomer, setUrlCustomer }: any = GetContext();
     const [listData, setListData] = useState<dataCategoryProduct[]>([]);
+    console.log(listData);
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [valueSelect, setvalueSelect] = useState<string>('default');
     const [checkedItems, setCheckedItems] = useState([]);
@@ -186,7 +188,7 @@ export default function ProductCat() {
     const [valuesCheckBox, setvaluesCheckBox] = useState<string[]>([]);
     const [checkedValuesPrev, setCheckedValuesPrev] = useState<string[]>([]);
     const [currentPage, setCurrentPage] = useState<number>(1);
-    const [pageSize, setPageSize] = useState<number>(10);
+    const [pageSize, setPageSize] = useState<number>(20);
     const [totalPage, setTotalPage] = useState<number>(100);
     const [materialFilter, setMaterialFilter] = useState<any>();
     // Quản lý filter màu sắc có boder hoặc không
@@ -352,6 +354,7 @@ export default function ProductCat() {
             const queryCustom = customQuery(queryAfterCustom);
             //
             const response = await getProductByCat(`${queryCustom.toString()}`);
+            console.log(response);
             if (response && response.status == 200) {
                 const data = response?.data?.data;
                 const resultData =
@@ -413,7 +416,7 @@ export default function ProductCat() {
                           })
                           .join(',')}`
                     : ''
-            }${currentPage && pageSize ? `&page=${currentPage}&size=${pageSize}` : ''}&statusId=ACTIVE
+            }${currentPage && pageSize ? `&page=${currentPage}&size=${pageSize}` : ''}
             `);
         }
     }, [
@@ -449,38 +452,18 @@ export default function ProductCat() {
     }, []);
     return (
         <div className="ProductCatWrapper">
-            {!itemCategory ? (
-                <div className="ProductCatSpinner">
-                    <ScaleLoader color="orangered" />
+            <div className="containerProductCat">
+                <div className="page-header-inner">
+                    <h1 className="page-title">Shop</h1>
+                    <nav aria-label="breadcrumbs" className="site-breadcrumbs">
+                        <p>
+                            <a href="https://moren.la-studioweb.com">Home</a>
+                            <span className="separator"> &gt; </span>
+                            <span className="last">Shop</span>
+                        </p>
+                    </nav>{' '}
                 </div>
-            ) : (
-                <div className="ProductCatTitle">
-                    <div className="ProductCatTitle__Breadcrumb">
-                        <Breadcrumb
-                            items={[
-                                {
-                                    title: 'Trang chủ',
-                                },
-                                {
-                                    title: itemCategory?.value,
-                                },
-                            ]}
-                        />
-                    </div>
-                    <div className="ProductCatTitle__Heading">
-                        <h1>Áo Polo Nam</h1>
-                    </div>
-                    <div className="ProductCatTitle__option">
-                        {items.map((item: { id: number; name: string }, index: number) => {
-                            return (
-                                <Button type="ghost" key={index}>
-                                    {item.name}
-                                </Button>
-                            );
-                        })}
-                    </div>
-                </div>
-            )}
+            </div>
             <div className="ProductCatContent">
                 <Layout style={{ padding: '24px 0', background: colorBgContainer }}>
                     <Sider
@@ -773,32 +756,44 @@ export default function ProductCat() {
                             </div>
                         </div>
                         {listData.length > 0 ? (
-                            <Space className="ProductCatContent__ListCard" wrap={true} size={'small'} align="center">
-                                <TabProductCustomer width={210} listData={listData} />
-                            </Space>
+                            <>
+                                <Space
+                                    className="ProductCatContent__ListCard"
+                                    wrap={true}
+                                    size={'small'}
+                                    align="center"
+                                >
+                                    <TabProductCustomer width={210} listData={listData} />
+                                </Space>
+                                <div className="PageCustomerPC">
+                                    <Pagination
+                                        defaultCurrent={
+                                            queryParams?.page ? Number(queryParams?.page) : Number(currentPage)
+                                        }
+                                        current={queryParams?.page ? Number(queryParams?.page) : Number(currentPage)}
+                                        pageSize={queryParams?.size ? Number(queryParams?.size) : Number(pageSize)}
+                                        total={Number(totalPage)}
+                                        onChange={onChangePage}
+                                        showSizeChanger
+                                        pageSizeOptions={[10, 20, 30, 50]}
+                                    />
+                                </div>
+                            </>
                         ) : (
                             <Space
                                 style={{
                                     marginTop: '40px',
+                                    display: 'flex',
+                                    justifyContent: 'center',
                                 }}
                             >
+                                {/* <SekeletonCardCustomer />
                                 <SekeletonCardCustomer />
                                 <SekeletonCardCustomer />
-                                <SekeletonCardCustomer />
-                                <SekeletonCardCustomer />
+                                <SekeletonCardCustomer />    */}
+                                <Empty description={'Không có sản phẩm phù hợp'} />
                             </Space>
                         )}
-                        <div className="PageCustomerPC">
-                            <Pagination
-                                defaultCurrent={queryParams?.page ? Number(queryParams?.page) : Number(currentPage)}
-                                current={queryParams?.page ? Number(queryParams?.page) : Number(currentPage)}
-                                pageSize={queryParams?.size ? Number(queryParams?.size) : Number(pageSize)}
-                                total={Number(totalPage)}
-                                onChange={onChangePage}
-                                showSizeChanger
-                                pageSizeOptions={[10, 20, 30, 50]}
-                            />
-                        </div>
                     </Content>
                 </Layout>
             </div>

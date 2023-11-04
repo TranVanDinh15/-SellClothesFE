@@ -446,6 +446,7 @@ export default function CheckOut() {
     const [currenrAddress, setCurrentAddress] = useState<AddressIF | null>(null);
     const [value, setValue] = useState<any>(1);
     const [dataTableCart, setDatatableCart] = useState<dataTableCart[]>([]);
+    console.log(dataTableCart);
     const [totalPrice, setTotalPrice] = useState<number | null>(null);
     const [typeShip, setTypeShip] = useState<typeShip[] | null>(null);
     const [typeShipCurrent, setTypeshipCurrent] = useState<typeShip | null>(null);
@@ -453,7 +454,7 @@ export default function CheckOut() {
     const [currentPayMent, setCurrentPayment] = useState<payMent | null>(null);
     const [voucherCode, setVoucherCode] = useState<string>('');
     const [isLoadAddress, setIsLoadAddress] = useState<boolean>(false);
-
+    const [isLoading, setIsLoading] = useState<boolean>(false);
     console.log(getCartRedux);
     // console.log(typeShipCurrent);
     interface DataType {
@@ -487,11 +488,42 @@ export default function CheckOut() {
         },
         {
             title: 'Đơn giá',
-            render: (text, record) => <span>{convertVND(record.discountPrice)}</span>,
+            render: (text, record) => (
+                <span
+                    style={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                    }}
+                >
+                    {record.discountPrice ? convertVND(record.discountPrice) : convertVND(record.originalPrice)}
+                    {record?.discountPrice ? (
+                        <span
+                            style={{
+                                textDecoration: 'line-through',
+                                color: '#ccc',
+                            }}
+                        >
+                            {convertVND(record.originalPrice)}
+                        </span>
+                    ) : (
+                        ''
+                    )}
+                </span>
+            ),
         },
         {
             title: 'Thành tiền',
-            render: (text, record) => <span>{convertVND(record.total)}</span>,
+            render: (text, record) => (
+                <span>
+                    {record.total
+                        ? convertVND(record.total)
+                        : convertVND(
+                              record.discountPrice
+                                  ? record.discountPrice * record.quantity
+                                  : record.originalPrice * record.quantity,
+                          )}
+                </span>
+            ),
         },
     ];
 
@@ -711,10 +743,9 @@ export default function CheckOut() {
                         height: '40px',
                     }}
                     onClick={() => {
-                        //   handleAddVoucherinList(item?.codeVoucher);
-                        console.log(voucherCode);
-                        handleuseVoucher(dispatch, { voucherCode: voucherCode });
+                        handleuseVoucher(dispatch, { voucherCode: voucherCode }, setIsLoading);
                     }}
+                    loading={isLoading}
                 >
                     Sử dụng
                 </Button>
@@ -862,9 +893,18 @@ export default function CheckOut() {
                                 <div className="TotalPrice__CheckOut__Text">
                                     <span>{`Tổng số tiền (1 sản phẩm)`}</span>
                                 </div>
-                                <div className="TotalPrice__CheckOut__result">
-                                    <span>{convertVND(totalPrice ? totalPrice : 0)}</span>
-                                </div>
+                                {getCartRedux?.useVoucherPrice != getCartRedux?.totalPrice ? (
+                                    <div className="TotalPrice__CheckOut__result">
+                                        <span className="originalPriceHaveVoucher">
+                                            {convertVND(getCartRedux?.totalPrice ? getCartRedux?.totalPrice : 0)}
+                                        </span>
+                                        <span>{convertVND(totalPrice ? totalPrice : 0)}</span>
+                                    </div>
+                                ) : (
+                                    <div className="TotalPrice__CheckOut__result">
+                                        <span>{convertVND(totalPrice ? totalPrice : 0)}</span>
+                                    </div>
+                                )}
                             </div>
                         </div>
                     </div>
@@ -932,6 +972,7 @@ export default function CheckOut() {
                         <div className="TotalPriceResult__Btn">
                             <Button
                                 onClick={() => {
+                                    console.log('ok', currenrAddress?.id, typeShipCurrent?.id, currentPayMent?.code);
                                     if (
                                         currenrAddress?.id != undefined &&
                                         typeShipCurrent?.id != undefined &&
@@ -943,6 +984,7 @@ export default function CheckOut() {
                                             type: 'PAYMENT',
                                             voucherCode: voucherCode,
                                         };
+                                        console.log(data);
                                         handleOrderProduct(data, currentPayMent?.code, navigate);
                                     } else {
                                         !currentPayMent && message.warning('Vui lòng chọn phương thức thanh toán');

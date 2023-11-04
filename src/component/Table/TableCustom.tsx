@@ -1130,6 +1130,12 @@ const CustomTable = ({
             render: (value, record) => <Button type="text">{record?.statusId}</Button>,
         },
         {
+            title: 'Trạng thái thanh toán',
+            render: (value, record) => (
+                <Button type="text">{record?.isPaymentOnline ? 'Đã thanh toán' : 'Chưa thanh toán'}</Button>
+            ),
+        },
+        {
             title: 'Thời gian',
             render: (value, record) => <Button type="text">{covertCreateAt(record?.createdAt)}</Button>,
         },

@@ -9,6 +9,7 @@ import dayjs, { Dayjs } from 'dayjs';
 import PieChartDashBoad from './PieChartDashBoad';
 import ProductSoldChart, { productSoldDto } from './productSoldChart';
 import RevenueChar from './Revenue';
+import { Console } from 'console';
 interface dataPie {
     type: string;
     value: number;
@@ -90,11 +91,13 @@ export default function DashBoadCustom() {
             console.log(respone);
             if (respone && respone.status == 200) {
                 if (respone.data) {
+                    console.log(respone.data);
                     // setProductSold(respone.data);
                     const transformedData = Object.entries(respone.data).map(([type, sales]) => ({
                         type,
                         sales,
                     }));
+                    console.log(transformedData);
                     setRevenueState(transformedData);
                     if (value[0] && value[1]) {
                         const ChoiceValue: [Dayjs, Dayjs] = [value[0], value[1]];
@@ -262,14 +265,18 @@ export default function DashBoadCustom() {
                                 />
                             </div>
 
-                            <div style={{ width: '340px', height: 'auto' }}>
+                            <div style={{ height: 'auto' }}>
                                 <RevenueChar data={RevenueState} />
                             </div>
                         </div>
                     </Col>
                     <Col span={9} className="dashBoad__StatisticCol">
                         <div>
-                            <div>
+                            <div
+                                style={{
+                                    marginLeft: '20px',
+                                }}
+                            >
                                 <span>Số lượng Order</span>
                             </div>
                             <RangePicker
@@ -282,10 +289,11 @@ export default function DashBoadCustom() {
                                     // width: '300px',
                                     marginTop: '10px',
                                     marginBottom: '40px',
+                                    marginLeft: '20px',
                                 }}
                                 defaultValue={defaultValue}
                             />
-                            <div style={{ width: '340px', height: '300px' }}>
+                            <div style={{ height: '300px' }}>
                                 <PieChartDashBoad data={amountOrder} />
                             </div>
                         </div>
@@ -300,7 +308,11 @@ export default function DashBoadCustom() {
                     }}
                 >
                     <Col span={14} className="dashBoad__StatisticCol">
-                        <div>
+                        <div
+                            style={{
+                                marginLeft: '20px',
+                            }}
+                        >
                             <div>
                                 <span>Sản phẩm đã bán</span>
                             </div>

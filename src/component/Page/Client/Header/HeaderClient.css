@@ -1,3 +1,11 @@
+.headerInforStore {
+    height: 30px;
+    width: 100%;
+    background-color: #222222;
+    padding: 0 43px;
+    display: flex;
+    justify-content: space-between;
+}
 .headerClientAbove__Logo {
     line-height: 120px;
     display: flex;
@@ -5,15 +13,18 @@
     gap: 20px;
 }
 .headerClientAbove__Logo a img {
-    width: 120px;
-    height: 90px;
+    width: 140px;
+    height: 70px;
     object-fit: contain;
+    margin-top: 11px;
 }
 .headerClientAbove {
     display: flex;
     align-items: center;
     justify-content: space-between;
     width: 100%;
+    height: 70px;
+    padding: 0 20px;
 }
 .ant-input-affix-wrapper-lg {
     height: 40px;
@@ -44,17 +55,26 @@
     font-size: 24px;
     color: #5b5b5b;
 }
+.headerClientAbove__search button span span svg {
+    color: #ffffffcc;
+    font-size: 30px;
+}
+.headerClientAbove__Cart span button span span svg {
+    color: #ffffffcc;
+    font-size: 25px;
+}
 .headerClientAbove__LoginOutCart {
     display: flex;
     align-items: center;
     gap: 20px;
-    height: 100px;
+    /* height: 100px; */
 }
 .headerClientbelow {
     width: 100%;
 }
 .headerClientbelow__listMenu {
     display: flex;
+    gap: 10px;
 }
 
 .headerClientbelow__listMenu a button {
@@ -79,6 +99,7 @@
 
 .bigChildrenTab {
     position: relative;
+    cursor: pointer;
 }
 
 .bigChildrenTab::after {
@@ -99,7 +120,7 @@
     height: 40px;
     font-size: 16px;
     color: #111;
-    font-weight: 500;
+    font-weight: 600;
     cursor: pointer;
 }
 .subNavCategory__heading span {
@@ -116,20 +137,59 @@
     gap: 100px;
     flex-wrap: wrap;
 }
+.subNavCategory__heading:hover span {
+    color: red;
+}
+.subNavCategory__listItems li:hover a span {
+    color: red;
+}
 .ListHeaderCat {
     font-size: 16px;
     text-transform: uppercase;
-    color: #333;
-    font-weight: 500;
+    color: #ffffffcc;
+    font-weight: 600;
+    border-radius: inherit;
+    transition: all 0.2s;
+}
+.bigChildrenTab::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 2.5px;
+    background-color: red;
+    top: 74%;
+    transition: all 0.4s;
+}
+.menuItemCss::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background-color: red;
+    top: 108%;
+    transition: all 0.4s;
+}
+.menuItemCss:hover::after {
+    width: 100%;
+}
+.bigChildrenTab:hover::after {
+    width: 100%;
 }
 .subnavCategory {
     width: 200px;
-    padding: 10px 4px;
+    padding: 10px 10px;
     cursor: pointer;
 }
 .subnavCategory a {
     /* color: #11006f; */
-    font-size: 15px;
+    font-size: 14px;
+}
+.subnavCategory:hover a {
+    color: red;
 }
 .headerClientAbove__Cart {
     display: flex;
@@ -182,10 +242,11 @@
     display: flex;
     gap: 4px;
     align-items: center;
+    flex-direction: column;
 }
 .boxUserAlreadyLogin__AvatarAndName span {
     font-size: 13px;
-    color: #000;
+    color: #ffffffcc;
 }
 .headerClientAbove__LoginOut {
     vertical-align: middle;
@@ -195,7 +256,12 @@
     padding: 4px;
 }
 .headerClientAbove__LoginOut span {
-    font-size: 15px;
+    font-size: 13px;
+    color: #ffffffcc;
+    text-transform: uppercase;
+}
+.headerClientAbove__LoginOut span:hover {
+    color: red;
 }
 .btnLoginClick {
     font-size: 15px;
@@ -218,4 +284,26 @@
     display: flex;
     flex-direction: column;
     gap: 4px;
+}
+.headerInforStore__Item {
+    display: flex;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+.headerInforStore__Item__Social p {
+    text-transform: uppercase;
+    font-size: 12px;
+}
+.headerInforStore__Item__Social p > a {
+    margin-left: 4px;
+}
+.subNavCategory__Wrapper {
+    min-width: 400px;
+    padding: 20px;
+}
+.subnavCategory:hover {
+    background-color: #f5f5f5;
+    color: red;
 }

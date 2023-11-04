@@ -624,7 +624,7 @@ export default function DetailProductClient() {
                                                                 <Button
                                                                     type="ghost"
                                                                     style={{
-                                                                        backgroundColor: 'rgb(0, 191, 255)',
+                                                                        backgroundColor: '#222529',
                                                                         minHeight: '40px',
                                                                         color: '#fff',
                                                                         borderRadius: 'initial',
@@ -894,7 +894,7 @@ export default function DetailProductClient() {
                                                                       <Button
                                                                           type="ghost"
                                                                           style={{
-                                                                              backgroundColor: 'rgb(0, 191, 255)',
+                                                                              backgroundColor: '#222529',
                                                                               minHeight: '40px',
                                                                               color: '#fff',
                                                                               borderRadius: 'initial',
@@ -1075,7 +1075,8 @@ export default function DetailProductClient() {
                                     <div className="DetailProductClient__content__Infor__ListCorlor">
                                         <div className="ListColor__title">
                                             <span>
-                                                màu sắc:<Button type="text">Xanh cổ vịt</Button>
+                                                màu sắc:
+                                                <Button type="text">{currentDetailProduct?.color?.value}</Button>
                                             </span>
                                         </div>
                                         <div className="ListColor__Image">
@@ -1088,7 +1089,7 @@ export default function DetailProductClient() {
                                                                   style={{
                                                                       border: currentDetailProduct
                                                                           ? currentDetailProduct?.id == item?.id
-                                                                              ? `2px solid rgb(0, 191, 255)`
+                                                                              ? `2px solid #222529`
                                                                               : 'none'
                                                                           : '',
                                                                       borderRadius: 'initial',
@@ -1132,7 +1133,7 @@ export default function DetailProductClient() {
                                                                               backgroundColor:
                                                                                   item?.name == resultSize ||
                                                                                   item?.id == idSize
-                                                                                      ? 'rgb(0, 191, 255, 0.2)'
+                                                                                      ? '#222529'
                                                                                       : '',
                                                                               color:
                                                                                   item?.name == resultSize ||
@@ -1214,7 +1215,7 @@ export default function DetailProductClient() {
                                             style={{
                                                 fontSize: '15px',
                                                 padding: '20px 50px',
-                                                backgroundColor: 'rgb(0, 191, 255)',
+                                                backgroundColor: '#222529',
                                                 borderRadius: 'initial',
                                                 color: '#fff',
                                                 display: 'flex',

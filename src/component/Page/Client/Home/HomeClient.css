@@ -7,14 +7,23 @@
     padding: 40px 50px;
 }
 .HomeClientSaleProduct__title {
-    margin-bottom: 40px;
+    margin-bottom: 20px;
 }
 .HomeClientSaleProduct__title span {
-    font-size: 16px;
     text-transform: uppercase;
-    font-weight: 600;
+    font-weight: 500;
+    font-size: 14px;
 }
 
+/* .HomeClientSaleProduct__title__Heading::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 0;
+    width: 50px;
+    height: 4px;
+    background-color: red;
+} */
 .HomeClientSaleBanner__Static {
     margin-right: 10px;
 }
@@ -29,7 +38,7 @@
 }
 .HomeClientSaleProduct__title {
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
 }
 /* .HomeClientWrapper__slider {
 } */
@@ -39,4 +48,69 @@
 }
 .slick-slide div {
     padding-bottom: 2px;
+}
+.image-gallery-content .image-gallery-slide .image-gallery-image {
+    max-height: 480px !important;
+    max-width: 100% !important;
+}
+.image-gallery-slide .image-gallery-image {
+    object-fit: cover;
+    /* object-position:; */
+}
+/* .HomeClientSaleProduct__title__Heading {
+    span {
+        font-size: 20px;
+    }
+} */
+.ant-tabs-tab-btn {
+    font-size: 18px;
+    line-height: 1.6;
+    margin: 0;
+    padding: 5px 0;
+    font-weight: 500;
+    position: relative;
+    display: inline-block;
+    text-transform: uppercase;
+    border: 0;
+}
+:where(.css-dev-only-do-not-override-12jzuas).ant-tabs .ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn {
+    color: var(--promary-color);
+}
+:where(.css-dev-only-do-not-override-12jzuas).ant-tabs .ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn {
+    color: var(--promary-color);
+}
+.ant-tabs-ink-bar {
+    background-color: var(--promary-color) !important;
+}
+.ant-tabs-nav-wrap {
+    display: flex;
+    justify-content: center;
+}
+.SliderImage__Col {
+    height: 650px;
+    background-repeat: repeat;
+    background-size: cover;
+    cursor: pointer;
+}
+.SliderImage {
+    padding: 0 40px;
+}
+.SliderImage__Col__title {
+    padding: 20px;
+    border-bottom: 2px solid #fff;
+}
+
+.SliderImage__Col__title span {
+    font-size: 20px;
+    text-transform: uppercase;
+    color: #fff;
+    font-weight: 600;
+}
+.SliderImage__ColTwo {
+    width: 100%;
+    height: 325px;
+    background-repeat: repeat;
+    background-size: cover;
+    background-position: top;
+    cursor: pointer;
 }

@@ -41,13 +41,24 @@ export const handleOrderProduct = async (
         }
     }
 };
-export const handleuseVoucher = async (dispatch: any, data: { voucherCode: string }): Promise<void> => {
+export const handleuseVoucher = async (
+    dispatch: any,
+    data: { voucherCode: string },
+    setIsLoading: React.Dispatch<React.SetStateAction<boolean>>,
+): Promise<void> => {
     try {
+        setIsLoading(true);
         const response = await VoucherUseApi(data);
         if (response && response.status == 200) {
             dispatch(updateCartAction(response?.data));
+            message.success('Đã Áp dụng mã giảm giá');
+            setIsLoading(false);
         } else {
-            message.error(response.data?.message);
+            message.error('Mã giảm giá không phù hợp với sản phẩm này');
+            setIsLoading(false);
+            setTimeout(() => {
+                window.location.reload();
+            }, 1000);
         }
         console.log(response);
     } catch (error) {

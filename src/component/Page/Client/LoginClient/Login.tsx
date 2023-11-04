@@ -37,9 +37,9 @@ export default function LoginClient() {
                 autoComplete="off"
                 className="LoginClientForm"
             >
-                <div className="LoginClient__logo">
+                {/* <div className="LoginClient__logo">
                     <Image src={images.logo} preview={false} width={120} />
-                </div>
+                </div> */}
                 <div className="LoginClient__title">
                     <h3>ĐĂNG NHẬP</h3>
                 </div>
@@ -80,7 +80,7 @@ export default function LoginClient() {
                                     response && response.status == 201 && message.success('Vui lòng kiểm tra email  ');
                                 }}
                             >
-                                Quên mật khẩu
+                                Quên mật khẩu ?
                             </Button>
                         </Form.Item>
                     </Col>

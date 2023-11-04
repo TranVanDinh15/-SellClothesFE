@@ -1,5 +1,5 @@
 .checkOutWrapper {
-    margin-top: 100px;
+    margin-top: 130px;
     min-height: 100vh;
     margin-bottom: 40px;
 }
@@ -129,6 +129,8 @@
     font-size: 20px;
     font-weight: 600;
     color: rgb(0, 191, 255);
+    display: flex;
+    flex-direction: column;
 }
 .checkOutVoucher {
     margin: 10px 40px;
@@ -300,4 +302,8 @@
 .AddresAddCheckOut {
     display: flex;
     justify-content: right;
+}
+.originalPriceHaveVoucher {
+    color: #ccc;
+    text-decoration: line-through;
 }

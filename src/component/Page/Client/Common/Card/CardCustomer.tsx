@@ -37,10 +37,10 @@ export default function CardCustomer({ item, clickCard, width }: props) {
     console.log(item);
     return (
         <>
-            {currentDetail?.discountPrice ? (
+            {currentDetail?.discountPrice != currentDetail?.originalPrice ? (
                 <Card
                     hoverable
-                    style={{ width: width ? width : '220px' }}
+                    style={{ width: width ? width : '240px' }}
                     cover={
                         <div
                             className="tabProductWrapper"

@@ -68,13 +68,13 @@ export const getListProduct = (page: any, size: any) => {
 };
 // get Product by Category
 export const getProductByCategory = (categoryId: string) => {
-    return AxiosInstance.get(`/product?page=1&size=2000&categoryId=${categoryId}`);
+    return AxiosInstance.get(`/product?page=1&size=2000&categoryId=${categoryId}&statusId=ACTIVE`);
 };
 export const getProductById = (id: string) => {
     return AxiosInstance.get(`/product/${id}`);
 };
 export const getProductByQuery = (query: string) => {
-    return AxiosInstance.get(`/product?${query}`);
+    return AxiosInstance.get(`/product?${query}&statusId=ACTIVE`);
 };
 // create new Prodcut
 export const createNewProduct = (data: any) => {
@@ -161,7 +161,8 @@ export const getAllBanner = (query: string) => {
 };
 // get filter Product
 export const getProductByCat = (query: string) => {
-    return AxiosInstance.get(`/product?${query}`);
+    // &statusId=ACTIVE
+    return AxiosInstance.get(`/product?${query}&statusId=ACTIVE`);
 };
 // get Color  Category
 export const getCategoryColor = () => {
@@ -485,8 +486,8 @@ export const VoucherUseApi = (data: { voucherCode: string }) => {
     return AxiosInstance.put(`/cart`, data);
 };
 // history Order
-export const historyOrder = (id: number, currentPage: number, size: number) => {
-    return AxiosInstance.get(`/order?userId=${id}&page=${currentPage}&size=${size}`);
+export const historyOrder = (id: number, currentPage: number, size: number, code: string) => {
+    return AxiosInstance.get(`/order?userId=${id}&page=${currentPage}&size=${size}&statusId=${code}`);
 };
 // Get All Order
 export const getAllOrder = (currentPage: number, size: number, code: string) => {
@@ -504,4 +505,8 @@ export const updateStatusOrder = (
     },
 ) => {
     return AxiosInstance.patch(`/order/change-status/${id}`, data);
+};
+// cancel order
+export const CancelOrder = (id: number) => {
+    return AxiosInstance.patch(`/order/cancel/${id}`);
 };
